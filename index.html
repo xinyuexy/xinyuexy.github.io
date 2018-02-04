@@ -181,18 +181,9 @@
       
         <p>以前运行Java代码都是在Eclipse或IDEA中进行，当开发大型项目的时候用这些IDE确实很方便，但有时候自己仅仅是像用Java写写简单的算法或小demo，这样每次打开这样大型的IDE太不方便了。于是想到了sublime text，之前只是用其搭建过C++和python的环境，没想到搭建Java也如此的方便强大，下面简单写下自己搭建的过程。</p>
 <h2 id="搭建Java编译环境"><a href="#搭建Java编译环境" class="headerlink" title="搭建Java编译环境"></a>搭建Java编译环境</h2><p>在此之前请确保已配置好jdk环境变量。打开sublime text，依次点击Tools-&gt; Build System-&gt; New Build System，添加如下内容：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    // 命令和参数，未指定路径则在PATH环境变量中找</span><br><span class="line">    "cmd": ["javac","-encoding","UTF-8","-d",".","$file"],</span><br><span class="line">    // 可选。获取cmd的错误输出</span><br><span class="line">    "file_regex": "^(...*?):([0-9]*):?([0-9]*)",</span><br><span class="line">    // 可选。`工具`菜单中`编译`为`自动`时生效</span><br><span class="line">    "selector": "source.java",</span><br><span class="line">    // 可选。输出"cmd"的编码。必须是合法的Python编码，缺省为"UTF-8"</span><br><span class="line">    "encoding":"UTF-8",</span><br><span class="line">    // variants 可选。用来替代主构建系统的备选。如果构建系统的"selector"与激活的文件匹配，变量"name"则会出现在 Command Palette 中。</span><br><span class="line">    "variants":</span><br><span class="line">        [</span><br><span class="line">            &#123;</span><br><span class="line">                 // 仅在"variants"中是合法的 (详见 variants)。用来标识系统中不同的构建系统。如果"name"是"Run" ,则会显示在Tools | Build System 菜单下，并且可以使用Ctrl + Shift + B调用</span><br><span class="line">                "name": "Run in cmd",</span><br><span class="line">                // 可选。如果该选项为"true" ，"cmd"则可以通过shell运行。</span><br><span class="line">                "shell": true,</span><br><span class="line">                "cmd" :  ["start","cmd","/c", "java $&#123;file_base_name&#125; &amp;echo. &amp; pause"],</span><br><span class="line">                "working_dir": "$&#123;file_path&#125;",</span><br><span class="line">                "encoding":"UTF-8"</span><br><span class="line">            &#125;,</span><br><span class="line"></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">"name"</span>: <span class="string">"Run in sublime"</span>,</span><br><span class="line">                <span class="attr">"shell_cmd"</span>: <span class="string">"runJava.bat \"$file\""</span>,</span><br><span class="line">                <span class="attr">"file_regex"</span>: <span class="string">"^(...*?):([0-9]*):?([0-9]*)"</span>,</span><br><span class="line">                <span class="attr">"selector"</span>: <span class="string">"source.java"</span>,</span><br><span class="line">                <span class="attr">"encoding"</span>: <span class="string">"UTF-8"</span></span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里采用了两种方式，注意variants里的内容，其实配置C++等其他语言也是类似的。第一种我给的“name”为：Run in cmd，表示在控制台下运行，第二种为在sublime text中运行。ctrl-s保存，文件名我这里命名为MyJava。</p>
-<p>其中在sublime text中运行时还要添加如下文件，在jdk的安装目录下的bin目录下新建runJava.bat文件，内容为：</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> @echo off</span><br><span class="line"> cd%~dp1</span><br><span class="line"> echo Compiling %~nx1......</span><br><span class="line"> <span class="keyword">if</span> exist %~n1.class (</span><br><span class="line"> del %~n1.class</span><br><span class="line"> )</span><br><span class="line">javac %~nx1</span><br><span class="line"><span class="keyword">if</span> exist %~n1.class (</span><br><span class="line">echo ------Output------</span><br><span class="line">java %~n1</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>（注意在如果在sublime下运行则无法支持输入，在cmd中可以）</p>
-<p>Ctrl+Shift+P选择运行方式：</p>
-<p><img src="http://ou5lyiz64.bkt.clouddn.com/img/sublimeGIF1.gif" style="zoom:80%"></p>
-<h2 id="Java代码提示补全"><a href="#Java代码提示补全" class="headerlink" title="Java代码提示补全"></a>Java代码提示补全</h2><p>光能编译运行还不够，最好还需要能够智能提示，这里推荐JavaIME插件，安装好即可使用，无需任何配置。具体演示如下：</p>
-<p><img src="http://ou5lyiz64.bkt.clouddn.com/img/sublimeGIF2.gif" style="zoom:60%"></p>
-<p>参考资料如下：<br><a href="https://packagecontrol.io/packages/JavaIME" target="_blank" rel="noopener">https://packagecontrol.io/packages/JavaIME</a></p>
-<p><a href="https://www.zybuluo.com/king/note/47271#%E7%BC%96%E8%AF%91%E8%BF%90%E8%A1%8Cjava" target="_blank" rel="noopener">https://www.zybuluo.com/king/note/47271#%E7%BC%96%E8%AF%91%E8%BF%90%E8%A1%8Cjava</a></p>
-
+        
+          <a class="article-more-a" href="/2018/02/04/Sublime-text搭建Java编译环境/#more">more >></a>
+        
       
 
       
@@ -209,7 +200,7 @@
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">sublime-text</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">sublime</a>
         		</li>
       		
 		</ul>
@@ -661,6 +652,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">阿里云</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">sublime</a>
               </li>
             
             <div class="clearfix"></div>
