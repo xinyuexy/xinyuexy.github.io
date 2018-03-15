@@ -6,18 +6,28 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://xinyuexy.github.io">
-  <title>Tag: Java | 新月的博客</title>
+  <title>Servlet中的ServletConfig和ServletContext | 新月的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="学习笔记，个人总结，IT技术">
-<meta property="og:type" content="website">
-<meta property="og:title" content="新月的博客">
-<meta property="og:url" content="http://xinyuexy.github.io/tags/Java/index.html">
+  <meta name="description" content="最近在学习Servlet时，看到有些时候会用到ServletConfig和ServletContext两个类，而且这两个类还有点相似之处，所以写篇博客总结一下。首先看一下整个Servlet的层次结构。">
+<meta name="keywords" content="JavaWeb,Servlet">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Servlet中的ServletConfig和ServletContext">
+<meta property="og:url" content="http://xinyuexy.github.io/2018/03/15/Servlet中的ServletConfig和ServletContext/index.html">
 <meta property="og:site_name" content="新月的博客">
-<meta property="og:description" content="学习笔记，个人总结，IT技术">
+<meta property="og:description" content="最近在学习Servlet时，看到有些时候会用到ServletConfig和ServletContext两个类，而且这两个类还有点相似之处，所以写篇博客总结一下。首先看一下整个Servlet的层次结构。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ou5lyiz64.bkt.clouddn.com/img/servlet10.jpg">
+<meta property="og:image" content="http://ou5lyiz64.bkt.clouddn.com/img/servlet11.jpg">
+<meta property="og:image" content="http://ou5lyiz64.bkt.clouddn.com/img/servlet12.jpg">
+<meta property="og:image" content="http://ou5lyiz64.bkt.clouddn.com/img/servlet13.jpg">
+<meta property="og:image" content="http://ou5lyiz64.bkt.clouddn.com/img/servlet15.jpg">
+<meta property="og:image" content="http://ou5lyiz64.bkt.clouddn.com/img/servlet14.jpg">
+<meta property="og:image" content="http://ou5lyiz64.bkt.clouddn.com/img/servlet16.jpg">
+<meta property="og:updated_time" content="2018-03-15T11:38:21.583Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="新月的博客">
-<meta name="twitter:description" content="学习笔记，个人总结，IT技术">
+<meta name="twitter:title" content="Servlet中的ServletConfig和ServletContext">
+<meta name="twitter:description" content="最近在学习Servlet时，看到有些时候会用到ServletConfig和ServletContext两个类，而且这两个类还有点相似之处，所以写篇博客总结一下。首先看一下整个Servlet的层次结构。">
+<meta name="twitter:image" content="http://ou5lyiz64.bkt.clouddn.com/img/servlet10.jpg">
   
     <link rel="alternative" href="/atom.xml" title="新月的博客" type="application/atom+xml">
   
@@ -163,75 +173,228 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Servlet中的ServletConfig和ServletContext" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/04/Sublime-text搭建Java编译环境/" class="archive-article-date">
-  	<time datetime="2018-02-04T10:28:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-04</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/04/Sublime-text搭建Java编译环境/">Sublime-text搭建Java编译环境</a>
+    <h1 class="article-title" itemprop="name">
+      Servlet中的ServletConfig和ServletContext
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/03/15/Servlet中的ServletConfig和ServletContext/" class="archive-article-date">
+  	<time datetime="2018-03-15T08:49:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-15</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近在学习Servlet时，看到有些时候会用到ServletConfig和ServletContext两个类，而且这两个类还有点相似之处，所以写篇博客总结一下。首先看一下整个Servlet的层次结构。</p>
+<p><img src="http://ou5lyiz64.bkt.clouddn.com/img/servlet10.jpg" style="zoom: 80%"></p>
+<a id="more"></a>
+<p>基本上主要的和Servlet相关的类就这么多了，可以看到ServletConfig和ServletContext在其中的位置和其他类的关系。</p>
+<h2 id="ServletConfig-API"><a href="#ServletConfig-API" class="headerlink" title="ServletConfig API"></a>ServletConfig API</h2><p>ServletConfig接口被用于传递一些配置信息给Servlet，每一个Servlet都独享一个自己的ServletConfig对象，然后servlet容器负责创建这个对象。我们可以在web.xml或者是WebInitParam注解方式设置一些servlet的初始参数信息，servlet通过得到ServletConfig对象实例调用其中的方法来得到这些初始信息。</p>
+<p>常用的方法如下：</p>
+<p><code>java.lang.String getInitParameter(java.lang.String name)  根据名称获取参数值</code></p>
+<p><code>java.util.Enumeration getInitParameterNames()         得到所有参数</code></p>
+<p><code>ServletContext getServletContext()                   获取servlet上下文对象</code></p>
+<p><code>java.lang.String getServletName()                    得到servlet名称</code></p>
+<p>通过在web.xml或注解中设置servlet初始参数，然后可以用上述方法获得这些参数：</p>
+<p>web.xml配置文件:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">servlet</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>LoginServlet<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet-class</span>&gt;</span>com.journaldev.servlet.LoginServlet<span class="tag">&lt;/<span class="name">servlet-class</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 在web.xml中设置servlet初始参数(也可以使用注解方式) --&gt;</span></span><br><span class="line">  	<span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">  		<span class="tag">&lt;<span class="name">param-name</span>&gt;</span>user<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">  		<span class="tag">&lt;<span class="name">param-value</span>&gt;</span>xinyue<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">servlet</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>获取方式如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String user = getServletConfig().getInitParameter(<span class="string">"user"</span>);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：这里有个问题，为什么可以直接调用getServletConfig()方法，在Eclipse里Ctrl+鼠标点进去看发现调用的是GenericServlet类里的getServletConfig()方法。这是因为我们的Servlet类继承自HttpServlet，而HttpServlet又继承了GenericServlet类。</p>
+</blockquote>
+<p>GenericServlet类的定义如下：</p>
+<p><img src="http://ou5lyiz64.bkt.clouddn.com/img/servlet11.jpg" style="zoom:80%"></p>
+<p>可以看到GenericServlet类中定义了ServletConfig对象的引用，而且还是实现了ServletConfig接口。</p>
+<p><img src="http://ou5lyiz64.bkt.clouddn.com/img/servlet12.jpg" style="zoom:80%"></p>
+<p>其实也可以直接使用getInitParameter(“user”)，由于GenericServlet类实现了ServletConfig接口，所以其也会重载ServletConfig接口中的函数。</p>
+<h2 id="ServletContext-API"><a href="#ServletContext-API" class="headerlink" title="ServletContext API"></a>ServletContext API</h2><p>不同于ServletConfig，ServletContext接口主要用于保存web应用中全局信息，所有Servlet都可以共享这些信息。其会在web应用被加载时创建，然后其他servlet就可以调用它了。</p>
+<p>主要的方法如下:</p>
+<p>（1）得到web应用的上下文路径：</p>
+<p>​    <code>java.lang.String getContextPath()</code></p>
+<p> （2）获取web应用的全局参数 ：         </p>
+<p>　　 <code>java.lang.String getInitParameter(java.lang.String name)</code> </p>
+<p>　　 <code>java.util.Enumeration getInitParameterNames()</code>  </p>
+<p> （3）域对象相关的方法：</p>
+<p>　　  <code>java.lang.Object getAttribute(java.lang.String name)</code>    </p>
+<p>　　 <code>void setAttribute(java.lang.String name, java.lang.Object object)</code></p>
+<p>　　 <code>void removeAttribute(java.lang.String name)</code></p>
+<p> （4）用于转发：</p>
+<p>　　  <code>RequestDispatcher getRequestDispatcher(java.lang.String path)</code>  </p>
+<p> （5）web应用加载资源文件方法：</p>
+<p>　　  <code>java.lang.String getRealPath(java.lang.String path)</code>   </p>
+<p>　　  <code>java.io.InputStream getResourceAsStream(java.lang.String path)</code></p>
+<h2 id="ServletConfig和ServletContext的应用"><a href="#ServletConfig和ServletContext的应用" class="headerlink" title="ServletConfig和ServletContext的应用"></a>ServletConfig和ServletContext的应用</h2><p>下面通过一个登陆的例子来看一下两者的用法，参考：<a href="https://www.journaldev.com/1877/servlet-tutorial-java#servlet-interface。" target="_blank" rel="noopener">https://www.journaldev.com/1877/servlet-tutorial-java#servlet-interface。</a></p>
+<p>在html表单里请求LoginServlet，用户输入指定的用户名和密码即可登陆成功，跳转到登陆成功页面，失败则显示登陆失败。</p>
+<p>我们主要讲解一下Servlet中的代码。首先在注解（或web.xml）中将用户名和密码作为servlet的初始参数存储（即前面讲ServletConfig相关的）：</p>
+<p><img src="http://ou5lyiz64.bkt.clouddn.com/img/servlet13.jpg" style="zoom:60%"></p>
+<p>通过ServletContext中的方法获取web应用的全局配置信息：</p>
+<p><img src="http://ou5lyiz64.bkt.clouddn.com/img/servlet15.jpg" style="zoom:60%"></p>
+<p>这里将数据库的配置作为全局信息，定义在web.xml文件的context-param中：</p>
+<p><img src="http://ou5lyiz64.bkt.clouddn.com/img/servlet14.jpg" style="60%"></p>
+<p>在doPost方法中通过ServletConfig获取servlet的初始参数：</p>
+<p><img src="http://ou5lyiz64.bkt.clouddn.com/img/servlet16.jpg" style="zoom:60%"></p>
+<p>如果登陆成功，通过sendRedirect方法重定向到LoginSuccess.jsp页面，否则转发到登陆页面。（这里要注意sendRedirect和getRequestDispatcher方法的区别）</p>
+<h2 id="总结和感想"><a href="#总结和感想" class="headerlink" title="总结和感想"></a>总结和感想</h2><p>1.源码是最好的学习资料，遇到问题时，要学会从源码中寻找答案。包括类的层次结构和每个方法的作用。</p>
+<p>2.在遇到一个新知识时，首先要知道这个知识涉及到哪些主要的类，这些类的关系是怎样的，然后再看每个类的方法。</p>
+<p>参考资料：</p>
+<p><a href="http://www.cnblogs.com/vmax-tam/p/4127396.html" target="_blank" rel="noopener">http://www.cnblogs.com/vmax-tam/p/4127396.html</a></p>
+<p><a href="https://www.journaldev.com/1877/servlet-tutorial-java#servlet-interface" target="_blank" rel="noopener">https://www.journaldev.com/1877/servlet-tutorial-java#servlet-interface</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">JavaWeb</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">sublime</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Servlet</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        			<a href="/categories/JavaWeb//" class="article-tag-list-link color3">JavaWeb</a>
         		</li>
       		
 		</ul>
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://xinyuexy.github.io/2018/03/15/Servlet中的ServletConfig和ServletContext/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2018/03/11/关于leetcode上链表题目的一些trick/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">关于链表题目的一些trick</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ServletConfig-API"><span class="toc-number">1.</span> <span class="toc-text">ServletConfig API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ServletContext-API"><span class="toc-number">2.</span> <span class="toc-text">ServletContext API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ServletConfig和ServletContext的应用"><span class="toc-number">3.</span> <span class="toc-text">ServletConfig和ServletContext的应用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结和感想"><span class="toc-number">4.</span> <span class="toc-text">总结和感想</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -254,9 +417,9 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
