@@ -6,18 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://xinyuexy.github.io">
-  <title>Archives: 2018/1 | 新月的博客</title>
+  <title>关于Java中读取和修改SQL大文件的问题 | 新月的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="学习笔记，个人总结，IT技术">
-<meta property="og:type" content="website">
-<meta property="og:title" content="新月的博客">
-<meta property="og:url" content="http://xinyuexy.github.io/archives/2018/01/index.html">
+  <meta name="description" content="最近在项目中需要读取sql文件，并修改里面的一部分内容。主要问题是sql文件里的插入语句中的日期是Oracle形式的，需要将其替换为Mysql形式的，其他的不变。项目中的sql文件有几十万条记录，数据量比较大，这可能在读取文件的时候带来一些问题。  如上图所示，由于MySQL中没有to_date函数，而且里面的日期格式不对，也就是需要将画红线的部分替换为’2014-06-25’。（注意一行中有多个">
+<meta name="keywords" content="Java,MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于Java中读取和修改SQL大文件的问题">
+<meta property="og:url" content="http://xinyuexy.github.io/2018/03/26/关于Java中读取和修改大文件的问题/index.html">
 <meta property="og:site_name" content="新月的博客">
-<meta property="og:description" content="学习笔记，个人总结，IT技术">
+<meta property="og:description" content="最近在项目中需要读取sql文件，并修改里面的一部分内容。主要问题是sql文件里的插入语句中的日期是Oracle形式的，需要将其替换为Mysql形式的，其他的不变。项目中的sql文件有几十万条记录，数据量比较大，这可能在读取文件的时候带来一些问题。  如上图所示，由于MySQL中没有to_date函数，而且里面的日期格式不对，也就是需要将画红线的部分替换为’2014-06-25’。（注意一行中有多个">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ou5lyiz64.bkt.clouddn.com/img/mysql17.jpg">
+<meta property="og:updated_time" content="2018-03-26T02:22:40.571Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="新月的博客">
-<meta name="twitter:description" content="学习笔记，个人总结，IT技术">
+<meta name="twitter:title" content="关于Java中读取和修改SQL大文件的问题">
+<meta name="twitter:description" content="最近在项目中需要读取sql文件，并修改里面的一部分内容。主要问题是sql文件里的插入语句中的日期是Oracle形式的，需要将其替换为Mysql形式的，其他的不变。项目中的sql文件有几十万条记录，数据量比较大，这可能在读取文件的时候带来一些问题。  如上图所示，由于MySQL中没有to_date函数，而且里面的日期格式不对，也就是需要将画红线的部分替换为’2014-06-25’。（注意一行中有多个">
+<meta name="twitter:image" content="http://ou5lyiz64.bkt.clouddn.com/img/mysql17.jpg">
   
     <link rel="alternative" href="/atom.xml" title="新月的博客" type="application/atom+xml">
   
@@ -163,124 +167,202 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-关于Java中读取和修改大文件的问题" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/01/30/阿里云服务器部署Web项目/" class="archive-article-date">
-  	<time datetime="2018-01-30T12:05:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-30</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/01/30/阿里云服务器部署Web项目/">阿里云服务器部署Java Web项目全过程</a>
+    <h1 class="article-title" itemprop="name">
+      关于Java中读取和修改SQL大文件的问题
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/03/26/关于Java中读取和修改大文件的问题/" class="archive-article-date">
+  	<time datetime="2018-03-26T00:39:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近在项目中需要读取sql文件，并修改里面的一部分内容。主要问题是sql文件里的插入语句中的日期是Oracle形式的，需要将其替换为Mysql形式的，其他的不变。项目中的sql文件有几十万条记录，数据量比较大，这可能在读取文件的时候带来一些问题。</p>
+<p><img src="http://ou5lyiz64.bkt.clouddn.com/img/mysql17.jpg" style="zoom:80%"></p>
+<p>如上图所示，由于MySQL中没有to_date函数，而且里面的日期格式不对，也就是需要将画红线的部分替换为’2014-06-25’。（注意一行中有多个to_date）</p>
+<a id="more"></a>
+<h2 id="使用正则表达式进行查找替换"><a href="#使用正则表达式进行查找替换" class="headerlink" title="使用正则表达式进行查找替换"></a>使用正则表达式进行查找替换</h2><p>最直接想到就是使用Java中的正则表达式来匹配到相应的字符串并替换。这里可以先对少量几行的数据进行测试，如果成功了再考虑对整个文件进行替换。</p>
+<p>Java中的正则表达式主要是两个类：Pattern类和Matcher类。Pattern类将正则表达式字符串编译为pattern对象以调用相应的匹配方法。Matcher类是对输入字符串进行解释和匹配操作的引擎。一个典型的使用正则表达式的代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Pattern p = Pattern.compile(<span class="string">"a*b"</span>);</span><br><span class="line">Matcher m = p.matcher(<span class="string">"aaaaab"</span>);</span><br><span class="line"><span class="keyword">boolean</span> b = m.matches();</span><br></pre></td></tr></table></figure>
+<p>matches()对整个字符串进行匹配,只有整个字符串都匹配了才返回true ，这显然和我们的要求不符，Matcher类中还提供了一个find方法可以进行多次匹配。如果在文本中多次匹配，find() 方法返回第一个，之后每次调用 find() 都会返回下一个，而且可以调用start()和end()方法返回匹配到的字符串在整个字符串中的下标。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">String patternString = <span class="string">"to_date.&#123;2&#125;\\d&#123;2&#125;-\\d&#123;2&#125;-\\d&#123;4&#125;.\\d&#123;2&#125;:\\d&#123;2&#125;:\\d&#123;2&#125;.&#123;27&#125;"</span>;</span><br><span class="line">Pattern pattern = Pattern.compile(patternString)</span><br><span class="line">Matcher matcher = pattern.matcher(line);</span><br><span class="line"><span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span>(matcher.find()) &#123; </span><br><span class="line">  String findStr = line.substring(matcher.start(), matcher.end());</span><br><span class="line">  count++;</span><br><span class="line">  System.out.println(<span class="string">"found: "</span> + count + <span class="string">" : "</span>  + matcher.start() + <span class="string">" - "</span> + matcher.end());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样我们定义一个匹配to_date日期的正则表达式，通过每次调用find方法既可依次匹配到所有的。这里还需要对匹配的字符串进行替换，我们可以用String substring方法将需要的日期截取出来，然后使用正则表达式中的替换方法。</p>
+<p>正则表达式的替换方法主要有以下几个：</p>
+<p><code>1.replaceAll()</code></p>
+<p><code>2.replaceFirst()</code></p>
+<p><code>3.appendReplacement()</code></p>
+<p><code>4.appendTail()</code></p>
+<p>如果直接使用replaceFirst每次都只会替换第一个，而我们一行中有多个需要替换，如果使用replaceAll会一次将所有的替换为相同的，而我们每次替换的内容都不一样，所以需要进行动态替换，这里可以使用appendReplacement()和appendTail()方法。具体参考如下：<a href="http://ifeve.com/java-regex/" target="_blank" rel="noopener">http://ifeve.com/java-regex/</a></p>
+<h2 id="关于读写大文件的问题"><a href="#关于读写大文件的问题" class="headerlink" title="关于读写大文件的问题"></a>关于读写大文件的问题</h2><h4 id="缓冲流读写"><a href="#缓冲流读写" class="headerlink" title="缓冲流读写"></a>缓冲流读写</h4><p>在对测试的小数据替换成功后就需要对整个大文件进行替换了。这里需要读取每行进行替换后并写入到新的文件里，如果每次读取一行就写如一行，由于频繁的IO操作会导致速度很慢。但如果一次性将其读取到StringBuffer里然后再一次写入，会因为数据量大而导致内存堆栈溢出。</p>
+<p>相关代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"> BufferedReader br = <span class="keyword">null</span>;</span><br><span class="line"> BufferedWriter bw = <span class="keyword">null</span>;</span><br><span class="line"> String line = <span class="keyword">null</span>;</span><br><span class="line"> StringBuffer buf = <span class="keyword">new</span> StringBuffer();</span><br><span class="line"></span><br><span class="line">InputStreamReader read = <span class="keyword">new</span> InputStreamReader(<span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> File(rfileName)), <span class="string">"utf-8"</span>);</span><br><span class="line">br = <span class="keyword">new</span> BufferedReader(read);</span><br><span class="line"></span><br><span class="line">OutputStreamWriter write = <span class="keyword">new</span> OutputStreamWriter(<span class="keyword">new</span> FileOutputStream(<span class="keyword">new</span> File(wfileName)),<span class="string">"utf-8"</span>);        </span><br><span class="line">bw = <span class="keyword">new</span> BufferedWriter(write);</span><br><span class="line"><span class="keyword">while</span>((line = br.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">  <span class="comment">//执行替换操作</span></span><br><span class="line">  ...</span><br><span class="line">  buf.append(line.toString()).append(<span class="string">"\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line">bw.write(buf.toString());</span><br></pre></td></tr></table></figure>
+<p>这里可以使用缓冲的读写，不带缓冲的操作，每读一个字节就要写入一个字节，由于涉及磁盘的IO操作相比内存的操作要慢很多，所以不带缓冲的流效率很低，带缓冲的流，可以一次读很多字节，但不向磁盘中写入，只是先放到内存里。等凑够了缓冲区大小的时候一次性写入磁盘，这种方式可以减少磁盘操作次数，速度就会提高很多！（注意需要调用flush方法刷新缓冲区）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">BufferedInputStream bis = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> File(rfileName)));</span><br><span class="line">            br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(bis, <span class="string">"utf-8"</span>), <span class="number">20</span> * <span class="number">1024</span> * <span class="number">1024</span>);<span class="comment">// 20M缓存</span></span><br></pre></td></tr></table></figure>
+<p>（需要注意编码的问题，否则中文会出现乱码）</p>
+<h4 id="分割大文件"><a href="#分割大文件" class="headerlink" title="分割大文件"></a>分割大文件</h4><p>这里也可以将一个大文件按行分割成若干个文件，再分别对每个小文件进行处理。</p>
+<p>相应代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> timer = System.currentTimeMillis();  </span><br><span class="line"> <span class="keyword">int</span> bufferSize = <span class="number">20</span> * <span class="number">1024</span> * <span class="number">1024</span>;<span class="comment">//设读取文件的缓存为20MB   </span></span><br><span class="line">   </span><br><span class="line"> <span class="comment">//建立缓冲文本输入流   </span></span><br><span class="line"> File file = <span class="keyword">new</span> File(<span class="string">"E:\\Code-Sublime\\Java\\jysg.sql"</span>);  </span><br><span class="line"> FileInputStream fileInputStream = <span class="keyword">new</span> FileInputStream(file);  </span><br><span class="line"> BufferedInputStream bufferedInputStream = <span class="keyword">new</span> BufferedInputStream(fileInputStream);  </span><br><span class="line"> InputStreamReader inputStreamReader = <span class="keyword">new</span> InputStreamReader(bufferedInputStream, <span class="string">"gbk"</span>);  </span><br><span class="line"> BufferedReader input = <span class="keyword">new</span> BufferedReader(inputStreamReader, bufferSize);  </span><br><span class="line">   </span><br><span class="line"> <span class="keyword">int</span> splitNum = <span class="number">10</span>-<span class="number">1</span>;<span class="comment">//要分割的块数减一   </span></span><br><span class="line"> <span class="keyword">int</span> fileLines = <span class="number">920080</span>;<span class="comment">//输入文件的行数   </span></span><br><span class="line"> <span class="keyword">long</span> perSplitLines = fileLines / splitNum;<span class="comment">//每个块的行数   </span></span><br><span class="line"> <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= splitNum; ++i)  </span><br><span class="line"> &#123;  </span><br><span class="line">     <span class="comment">//分割   </span></span><br><span class="line">     <span class="comment">//每个块建立一个输出   </span></span><br><span class="line">     FileWriter output = <span class="keyword">new</span> FileWriter(<span class="string">"E:\\Code-Sublime\\Java\\split"</span> + i + <span class="string">".sql"</span>);  </span><br><span class="line">     String line = <span class="keyword">null</span>;  </span><br><span class="line">     <span class="comment">//逐行读取，逐行输出   </span></span><br><span class="line">     <span class="keyword">for</span> (<span class="keyword">long</span> lineCounter = <span class="number">0</span>; lineCounter &lt; perSplitLines &amp;&amp; (line = input.readLine()) != <span class="keyword">null</span>; ++lineCounter)  </span><br><span class="line">     &#123;  </span><br><span class="line">         output.append(line + <span class="string">"\r\n"</span>);  </span><br><span class="line">     &#125;  </span><br><span class="line">     output.flush();  </span><br><span class="line">     output.close();  </span><br><span class="line">     output = <span class="keyword">null</span>;  </span><br><span class="line"> &#125;  </span><br><span class="line"> input.close();  </span><br><span class="line"> timer = System.currentTimeMillis() - timer;  </span><br><span class="line"> System.out.println(<span class="string">"处理时间："</span> + timer);</span><br></pre></td></tr></table></figure>
+<h2 id="总结和感想"><a href="#总结和感想" class="headerlink" title="总结和感想"></a>总结和感想</h2><p>学会发现和定位问题，并在规定时间内解决（不管用什么方法）</p>
+<p>参考资料：</p>
+<p><a href="http://ifeve.com/java-regex/" target="_blank" rel="noopener">http://ifeve.com/java-regex/</a></p>
+<p><a href="https://blog.csdn.net/niyingxunzong/article/details/33335485" target="_blank" rel="noopener">https://blog.csdn.net/niyingxunzong/article/details/33335485</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Java Web</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">阿里云</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">MySQL</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/随笔//" class="article-tag-list-link color3">随笔</a>
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
         		</li>
       		
 		</ul>
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://xinyuexy.github.io/2018/03/26/关于Java中读取和修改大文件的问题/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/01/27/hello-world/" class="archive-article-date">
-  	<time datetime="2018-01-27T06:24:35.957Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-27</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2018/03/15/Servlet中的ServletConfig和ServletContext/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Servlet中的ServletConfig和ServletContext</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/01/27/hello-world/">Hello World</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/草稿//" class="article-tag-list-link color3">草稿</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用正则表达式进行查找替换"><span class="toc-number">1.</span> <span class="toc-text">使用正则表达式进行查找替换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关于读写大文件的问题"><span class="toc-number">2.</span> <span class="toc-text">关于读写大文件的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#缓冲流读写"><span class="toc-number">2.0.1.</span> <span class="toc-text">缓冲流读写</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#分割大文件"><span class="toc-number">2.0.2.</span> <span class="toc-text">分割大文件</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结和感想"><span class="toc-number">3.</span> <span class="toc-text">总结和感想</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+        
+    </div>
+</aside>
+
+
+
   
   
-    </div></section>
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -303,8 +385,8 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
