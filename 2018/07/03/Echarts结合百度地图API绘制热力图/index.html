@@ -6,18 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://xinyuexy.github.io">
-  <title>Category: 草稿 | 新月的博客</title>
+  <title>Echarts结合百度地图API绘制热力图 | 新月的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="学习笔记，个人总结，IT技术">
-<meta property="og:type" content="website">
-<meta property="og:title" content="新月的博客">
-<meta property="og:url" content="http://xinyuexy.github.io/categories/草稿/index.html">
+  <meta name="description" content="最近项目中需要使用echarts与百度地图API结合来绘制事故发生热力图，在将其与百度地图结合的过程中遇到了一些问题，现将其过程与解决方案记录下，以供日后参考。echarts中结合百度地图API的热力图demo：http://gallery.echartsjs.com/editor.html?c=xSJNKs7EX">
+<meta name="keywords" content="echarts,可视化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Echarts结合百度地图API绘制热力图">
+<meta property="og:url" content="http://xinyuexy.github.io/2018/07/03/Echarts结合百度地图API绘制热力图/index.html">
 <meta property="og:site_name" content="新月的博客">
-<meta property="og:description" content="学习笔记，个人总结，IT技术">
+<meta property="og:description" content="最近项目中需要使用echarts与百度地图API结合来绘制事故发生热力图，在将其与百度地图结合的过程中遇到了一些问题，现将其过程与解决方案记录下，以供日后参考。echarts中结合百度地图API的热力图demo：http://gallery.echartsjs.com/editor.html?c=xSJNKs7EX">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ou5lyiz64.bkt.clouddn.com/img/echarts/echarts1.jpg">
+<meta property="og:image" content="http://ou5lyiz64.bkt.clouddn.com/img/echarts/echarts2.jpg">
+<meta property="og:updated_time" content="2018-07-03T05:32:47.145Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="新月的博客">
-<meta name="twitter:description" content="学习笔记，个人总结，IT技术">
+<meta name="twitter:title" content="Echarts结合百度地图API绘制热力图">
+<meta name="twitter:description" content="最近项目中需要使用echarts与百度地图API结合来绘制事故发生热力图，在将其与百度地图结合的过程中遇到了一些问题，现将其过程与解决方案记录下，以供日后参考。echarts中结合百度地图API的热力图demo：http://gallery.echartsjs.com/editor.html?c=xSJNKs7EX">
+<meta name="twitter:image" content="http://ou5lyiz64.bkt.clouddn.com/img/echarts/echarts1.jpg">
   
     <link rel="alternative" href="/atom.xml" title="新月的博客" type="application/atom+xml">
   
@@ -163,71 +168,196 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Echarts结合百度地图API绘制热力图" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/01/27/hello-world/" class="archive-article-date">
-  	<time datetime="2018-01-27T06:24:35.957Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-27</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/01/27/hello-world/">Hello World</a>
+    <h1 class="article-title" itemprop="name">
+      Echarts结合百度地图API绘制热力图
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/07/03/Echarts结合百度地图API绘制热力图/" class="archive-article-date">
+  	<time datetime="2018-07-03T05:32:47.144Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-03</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近项目中需要使用echarts与百度地图API结合来绘制事故发生热力图，在将其与百度地图结合的过程中遇到了一些问题，现将其过程与解决方案记录下，以供日后参考。echarts中结合百度地图API的热力图demo：<a href="http://gallery.echartsjs.com/editor.html?c=xSJNKs7EX" target="_blank" rel="noopener">http://gallery.echartsjs.com/editor.html?c=xSJNKs7EX</a></p>
+<p><img src="http://ou5lyiz64.bkt.clouddn.com/img/echarts/echarts1.jpg" style="zoom: 60%"></p>
+<a id="more"></a>
+<h2 id="使用步骤"><a href="#使用步骤" class="headerlink" title="使用步骤"></a>使用步骤</h2><p><strong>1.引用echarts与百度地图扩展js文件</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--引入百度地图的jssdk，这里需要使用你在百度地图开发者平台申请的 ak--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://api.map.baidu.com/api?v=2.0&amp;ak="</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 引入 ECharts --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"dist/echarts.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 引入百度地图扩展 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"dist/extension/bmap.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>其实有个简单的方法直接在下载demo中的HTML页面即可，会以http形式引入相关文件，直接拿来用就好。</p>
+<p><strong>2.获取dom以及echarts初始化</strong></p>
+<p>需要获取放置地图div的dom元素，然后将echarts初始化，假如有多个js功能文件都要用到绘图的，这部分最后在主页面HTML中进行，相关代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> dom = <span class="built_in">document</span>.getElementById(<span class="string">"map"</span>);</span><br><span class="line"><span class="keyword">var</span> myChart = echarts.init(dom);</span><br></pre></td></tr></table></figure>
+<p><strong>3.设置option绘制图形</strong></p>
+<p>使用echarts画图都需要定义好option配置项，然后调用函数进行设置，这部分最好单独放入一个函数中，方便后续其他需要绘图的调用，相关代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">drawHeatMap</span>(<span class="params">points</span>) </span>&#123;</span><br><span class="line"><span class="comment">//		var dom = document.getElementById("contentD");</span></span><br><span class="line"><span class="comment">//		var myChart = echarts.init(dom);</span></span><br><span class="line"><span class="comment">//		var app = &#123;&#125;;</span></span><br><span class="line">		option = <span class="literal">null</span>;</span><br><span class="line"><span class="comment">//		app.title = '热力图与百度地图扩展';</span></span><br><span class="line">		</span><br><span class="line">	    myChart.setOption(option = &#123;</span><br><span class="line">		        animation: <span class="literal">false</span>,</span><br><span class="line">		        bmap: &#123;</span><br><span class="line">		            center: [<span class="number">117.282699092</span>,<span class="number">31.8669422607</span>],</span><br><span class="line">		            zoom: <span class="number">12</span>,</span><br><span class="line">		            roam: <span class="literal">true</span></span><br><span class="line">		        &#125;,</span><br><span class="line">		        visualMap: &#123;</span><br><span class="line">		            show: <span class="literal">false</span>,</span><br><span class="line">		            top: <span class="string">'top'</span>,</span><br><span class="line">		            min: <span class="number">0</span>,</span><br><span class="line">		            max: <span class="number">100</span>,</span><br><span class="line">		            seriesIndex: <span class="number">0</span>,</span><br><span class="line">		            calculable: <span class="literal">true</span>,</span><br><span class="line">		            inRange: &#123;</span><br><span class="line">		                color: [<span class="string">'blue'</span>, <span class="string">'blue'</span>, <span class="string">'green'</span>, <span class="string">'yellow'</span>, <span class="string">'red'</span>]</span><br><span class="line">		            &#125;</span><br><span class="line">		        &#125;,</span><br><span class="line">		        series: [&#123;</span><br><span class="line">		            type: <span class="string">'heatmap'</span>,</span><br><span class="line">		            coordinateSystem: <span class="string">'bmap'</span>,</span><br><span class="line">		            data: points,</span><br><span class="line">		            pointSize: <span class="number">5</span>,</span><br><span class="line">		            blurSize: <span class="number">6</span></span><br><span class="line">		        &#125;]</span><br><span class="line">		    &#125;);</span><br><span class="line"><span class="comment">//		    if (!app.inNode) &#123;</span></span><br><span class="line"><span class="comment">//		        // 添加百度地图插件</span></span><br><span class="line"><span class="comment">//		        var map = myChart.getModel().getComponent('bmap').getBMap();</span></span><br><span class="line"><span class="comment">//		        map.addControl(new BMap.MapTypeControl());</span></span><br><span class="line"><span class="comment">//		    &#125;</span></span><br><span class="line">		    </span><br><span class="line">			<span class="keyword">if</span> (option &amp;&amp; <span class="keyword">typeof</span> option === <span class="string">"object"</span>) &#123;</span><br><span class="line">			    myChart.setOption(option, <span class="literal">true</span>);</span><br><span class="line">			&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>4.获取百度地图扩展</strong></p>
+<p>最后需要获取地图对象，以便后续调用百度地图API，相关代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> map = myChart.getModel().getComponent(<span class="string">'bmap'</span>).getBMap();</span><br><span class="line">map.addControl(<span class="keyword">new</span> BMap.MapTypeControl());</span><br><span class="line">map.centerAndZoom(<span class="string">"合肥"</span>,<span class="number">12</span>);</span><br><span class="line">map.enableScrollWheelZoom(<span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
+<p>注意后续如果需要使用百度地图API中的函数画图，需要每次先调用上述代码第一行获取map对象，否则无法绘制。</p>
+<p><strong>5.最终结果</strong></p>
+<p><img src="http://ou5lyiz64.bkt.clouddn.com/img/echarts/echarts2.jpg" style="zoom: 80%"></p>
+<h2 id="总结与感想"><a href="#总结与感想" class="headerlink" title="总结与感想"></a>总结与感想</h2><p>（1）项目中使用的是ajax获取数据，由于Ajax是异步的，所以需要把绘图的函数放入ajax的回调函数中，不然可能在还没获取完数据时，就已经执行了绘图代码。</p>
+<p>（2）注意引入js文件的顺序，第一次画不出来就是因为没有把百度地图ak的sj文件放到echarts前面</p>
+<p>（3）学会发现问题，定位问题以及解决问题。其实很多代码有bug没有想象中的那复杂，很多时候主体思路和框架都对了，就是一两行细节的问题，这时就需要反复利用调式手段，不断尝试，发现问题所在，不然前面可能都功亏一篑了。</p>
+<p>参考：<a href="https://github.com/apache/incubator-echarts/tree/master/extension/bmap" target="_blank" rel="noopener">https://github.com/apache/incubator-echarts/tree/master/extension/bmap</a></p>
+<p><a href="http://gallery.echartsjs.com/editor.html?c=xSJNKs7EX" target="_blank" rel="noopener">http://gallery.echartsjs.com/editor.html?c=xSJNKs7EX</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">echarts</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">可视化</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/草稿//" class="article-tag-list-link color3">草稿</a>
+        			<a href="/categories/可视化//" class="article-tag-list-link color4">可视化</a>
         		</li>
       		
 		</ul>
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://xinyuexy.github.io/2018/07/03/Echarts结合百度地图API绘制热力图/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2018/03/26/关于Java中读取和修改大文件的问题/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">关于Java中读取和修改SQL大文件的问题</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用步骤"><span class="toc-number">1.</span> <span class="toc-text">使用步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结与感想"><span class="toc-number">2.</span> <span class="toc-text">总结与感想</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -250,10 +380,10 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
-		isCategory: true,
+		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
 		root: "/",
