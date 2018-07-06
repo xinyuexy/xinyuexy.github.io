@@ -23,7 +23,7 @@
 <meta property="og:image" content="http://ou5lyiz64.bkt.clouddn.com/LinkedList5.jpg">
 <meta property="og:image" content="http://ou5lyiz64.bkt.clouddn.com/LinkedList6.jpg">
 <meta property="og:image" content="http://ou5lyiz64.bkt.clouddn.com/LinkedList7.jpg">
-<meta property="og:updated_time" content="2018-07-06T12:28:58.474Z">
+<meta property="og:updated_time" content="2018-07-06T12:58:59.473Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于链表中哨兵结点的问题">
 <meta name="twitter:description" content="最近正在学习UC Berkeley的CS61B这门课，主要是采用Java语言去实现一些数据结构以及运用数据结构去做一些project。这门课不仅告诉你这个东西怎么做，而且一步一步探寻为什么要这样做以及为什么会有这些功能。我们有时在接触某段代码或功能的实现时，可能直接就看到了它最终的面貌，而不知道如何一步步演化而来，其实每一个功能的添加或优化都是对应一个问题的解决。下面就这门课中关于链表中哨兵结点的">
@@ -220,6 +220,9 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Item <span class="title">removeLast</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Item item = sentinel.prev.item;</span><br><span class="line">    Node sl = sentinel.prev.prev;</span><br><span class="line">    sl.next = sl.next.next;</span><br><span class="line">    sl.next.prev = sl;</span><br><span class="line">    size--;</span><br><span class="line">    <span class="keyword">return</span> item;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="总结与感想"><a href="#总结与感想" class="headerlink" title="总结与感想"></a>总结与感想</h2><p>（1）虽然看起来很小很简单的事情，但实现起来却有很多细小问题可以考虑，学会把一件小事做的很漂亮。（small but smart）</p>
 <p>（2）学会分析一个东西的来龙去脉，为什么会有这部分，以及怎么改进的。</p>
+<p>参考：</p>
+<p>1.cs61b:<a href="https://joshhug.gitbooks.io/hug61b/content/chap2/chap23.html" target="_blank" rel="noopener">https://joshhug.gitbooks.io/hug61b/content/chap2/chap23.html</a></p>
+<p>2.算法导论10.2链表</p>
 
       
 
@@ -480,11 +483,11 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">echarts</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">可视化</a>
+                <a href="javascript:void(0)" class="js-tag color3">sublime</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -496,15 +499,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color3">echarts</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
+                <a href="javascript:void(0)" class="js-tag color4">可视化</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -513,10 +520,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Algorithm</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">sublime</a>
               </li>
              
               <li class="article-tag-list-item">
