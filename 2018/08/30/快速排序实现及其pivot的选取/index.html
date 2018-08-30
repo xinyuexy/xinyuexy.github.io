@@ -6,18 +6,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://xinyuexy.github.io">
-  <title>新月的博客</title>
+  <title>快速排序实现及其pivot的选取 | 新月的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="学习笔记，算法，程序员，Java">
-<meta property="og:type" content="website">
-<meta property="og:title" content="新月的博客">
-<meta property="og:url" content="http://xinyuexy.github.io/index.html">
+  <meta name="description" content="coursera上斯坦福的算法专项在讲到快速排序时，称其为最优雅的算法之一。快速排序确实是一种比较有效的排序算法，很多类库中也都采用了这种排序算法，其最坏时间复杂度为$O(n^2)$，平均时间复杂度为$O(nlogn)$，且其不需要额外的存储空间。 基本步骤快速排序主要使用了分治的思想，通过选取一个pivot，将一个数组划分为两个子数组。其步骤为：">
+<meta name="keywords" content="Algorithm,QuickSort">
+<meta property="og:type" content="article">
+<meta property="og:title" content="快速排序实现及其pivot的选取">
+<meta property="og:url" content="http://xinyuexy.github.io/2018/08/30/快速排序实现及其pivot的选取/index.html">
 <meta property="og:site_name" content="新月的博客">
-<meta property="og:description" content="学习笔记，算法，程序员，Java">
+<meta property="og:description" content="coursera上斯坦福的算法专项在讲到快速排序时，称其为最优雅的算法之一。快速排序确实是一种比较有效的排序算法，很多类库中也都采用了这种排序算法，其最坏时间复杂度为$O(n^2)$，平均时间复杂度为$O(nlogn)$，且其不需要额外的存储空间。 基本步骤快速排序主要使用了分治的思想，通过选取一个pivot，将一个数组划分为两个子数组。其步骤为：">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ou5lyiz64.bkt.clouddn.com/img/qsort%E9%80%89%E5%8C%BA_001.png">
+<meta property="og:image" content="http://ou5lyiz64.bkt.clouddn.com/img/qsort%E9%80%89%E5%8C%BA_002.png">
+<meta property="og:image" content="http://ou5lyiz64.bkt.clouddn.com/img/qsort%E9%80%89%E5%8C%BA_003.png">
+<meta property="og:updated_time" content="2018-08-30T01:34:14.430Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="新月的博客">
-<meta name="twitter:description" content="学习笔记，算法，程序员，Java">
+<meta name="twitter:title" content="快速排序实现及其pivot的选取">
+<meta name="twitter:description" content="coursera上斯坦福的算法专项在讲到快速排序时，称其为最优雅的算法之一。快速排序确实是一种比较有效的排序算法，很多类库中也都采用了这种排序算法，其最坏时间复杂度为$O(n^2)$，平均时间复杂度为$O(nlogn)$，且其不需要额外的存储空间。 基本步骤快速排序主要使用了分治的思想，通过选取一个pivot，将一个数组划分为两个子数组。其步骤为：">
+<meta name="twitter:image" content="http://ou5lyiz64.bkt.clouddn.com/img/qsort%E9%80%89%E5%8C%BA_001.png">
   
     <link rel="alternative" href="/atom.xml" title="新月的博客" type="application/atom+xml">
   
@@ -163,16 +169,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-快速排序实现及其pivot的选取" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-快速排序实现及其pivot的选取" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/30/快速排序实现及其pivot的选取/">快速排序实现及其pivot的选取</a>
+    <h1 class="article-title" itemprop="name">
+      快速排序实现及其pivot的选取
     </h1>
   
 
@@ -187,9 +191,48 @@
       
         <p>coursera上斯坦福的算法专项在讲到快速排序时，称其为最优雅的算法之一。快速排序确实是一种比较有效的排序算法，很多类库中也都采用了这种排序算法，其最坏时间复杂度为$O(n^2)$，平均时间复杂度为$O(nlogn)$，且其不需要额外的存储空间。</p>
 <h2 id="基本步骤"><a href="#基本步骤" class="headerlink" title="基本步骤"></a>基本步骤</h2><p>快速排序主要使用了分治的思想，通过选取一个pivot，将一个数组划分为两个子数组。其步骤为：</p>
-        
-          <a class="article-more-a" href="/2018/08/30/快速排序实现及其pivot的选取/#more">more >></a>
-        
+<a id="more"></a>
+<p>１．从数组中选择一个元素作为pivot</p>
+<p>２．重新排列数组，小于pivot的在pivot的左边，大于pivot的在其右边。</p>
+<p>３．递归地对划分后的左右两部分重复上述步骤。</p>
+<p>简单的伪代码如下：</p>
+<p><img src="http://ou5lyiz64.bkt.clouddn.com/img/qsort%E9%80%89%E5%8C%BA_001.png" style="zoom: 50%"></p>
+<p>其中最主要的就是partition划分过程了。</p>
+<h3 id="划分过程"><a href="#划分过程" class="headerlink" title="划分过程"></a>划分过程</h3><p>partition过程需要首先选择一个pivot，然后将小于pivot的元素放到左半部分，大于pivot的放到右半部分，并且最终pivot的位置及为其在排序好的数组中的最终位置。</p>
+<p>这里使用第一个元素作为pivot，若选择其他元素作为pivot，则将其交换到第一个元素，这样可以保证代码的一致性及容易实现。示意图如下：</p>
+<p><img src="http://ou5lyiz64.bkt.clouddn.com/img/qsort%E9%80%89%E5%8C%BA_002.png" style="zoom:50%"></p>
+<p>这里使用i和j，i和j最初为p+1的位置，在遍历的过程中i始终指向&gt;p的第一个元素，j始终指向当前待遍历的元素，若a[j] &lt; p，则将其与a[i]进行交换。相关过程如下:</p>
+<p><img src="http://ou5lyiz64.bkt.clouddn.com/img/qsort%E9%80%89%E5%8C%BA_003.png" style="zoom:50%"></p>
+<p>基本实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* a[l+1],...,a[i-1] &lt; p</span></span><br><span class="line"><span class="comment">* a[i],...,a[j-1] &gt; p</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> l, <span class="keyword">int</span> r)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> p = a[l];</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> i = l + <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> j=l+<span class="number">1</span>; j&lt;=r; j++) &#123;</span><br><span class="line">		<span class="keyword">if</span> (a[j] &lt; p) &#123;</span><br><span class="line">			swap(a, j, i);</span><br><span class="line">			i++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	swap(a, l, i-<span class="number">1</span>);</span><br><span class="line">	<span class="keyword">return</span> i-<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="基本实现"><a href="#基本实现" class="headerlink" title="基本实现"></a>基本实现</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QuickSort</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">qSort</span><span class="params">(<span class="keyword">int</span>[] a)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (a == <span class="keyword">null</span> || a.length &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	</span><br><span class="line">		qSort(a, <span class="number">0</span>, a.length-<span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">qSort</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> l, <span class="keyword">int</span> r)</span> 	</span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (l &gt;= r) &#123;</span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">int</span> pos = partition(a, l, r);</span><br><span class="line"></span><br><span class="line">		qSort(a, l, pos - <span class="number">1</span>);</span><br><span class="line">		qSort(a, pos + <span class="number">1</span>, r);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	* a[l+1],...,a[i-1] &lt; p</span></span><br><span class="line"><span class="comment">	* a[i],...,a[j-1] &gt; p</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> l, <span class="keyword">int</span> r)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> p = a[l];</span><br><span class="line">		<span class="keyword">int</span> i = l + <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> j=l+<span class="number">1</span>; j&lt;=r; j++) &#123;</span><br><span class="line">			<span class="keyword">if</span> (a[j] &lt; p) &#123;</span><br><span class="line">				swap(a, j, i);</span><br><span class="line">				i++;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		swap(a, l, i-<span class="number">1</span>);</span><br><span class="line">		<span class="keyword">return</span> i-<span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//返回pivot下标 选择第一个元素</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">choosePivotFirst</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> l, <span class="keyword">int</span> r)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> l;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">   <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> temp = a[x];</span><br><span class="line">		a[x] = a[y];</span><br><span class="line">		a[y] = temp;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="pivot的选取"><a href="#pivot的选取" class="headerlink" title="pivot的选取"></a>pivot的选取</h2><p>根据斯坦福算法专项课，然我们实现三种不同的pivot选取方式，并计算相应比较次数，分别为<strong>choose first, choose last, median of three</strong>, 还可以进行随机选取，这也是快速排序为什么是一种随机化算法。</p>
+<p>pivot的选取决定了快速排序的运行时间，下面对几种特殊情况进行分析：</p>
+<p><strong>1.最坏情况</strong></p>
+<p>假设我们始终选取第一个元素作为pivot, 并且输入数组是有序的，那么每次划分后面所有元素都大于pivot, 每次只能将问题规模减少１，所以运行时间为$n+n-1+n-2+…+1$ = $O(n^2)$.</p>
+<p><strong>2.最好情况</strong></p>
+<p>最好情况为每次选取的pivot都能将数组平均地划分为两部分，由于划分的过程为$O(n)$，所以总的运行时间为$$T(n) = 2T(n/2) + O(n)$$, 根据主方法，时间复杂度为O(nlogn)。</p>
+<p><strong>3.随机选取</strong></p>
+<p>每次运行过程中，随机选取pivot, 通常能得到比较好的结果。</p>
+<h3 id="选取方式及实现"><a href="#选取方式及实现" class="headerlink" title="选取方式及实现"></a>选取方式及实现</h3><p>斯坦福算法专项课上让我们实现三种不同的选取方式，选取第一个，最后一个，以及三数取中。</p>
+<p><strong>1.choose first</strong></p>
+<p>该种方式最为简单，只需返回子数组的第一个元素下标即可，下面为其实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//返回pivot下标 选择第一个元素</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">choosePivotFirst</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> l, <span class="keyword">int</span> r)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> l;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>2.choose last</strong></p>
+<p>选择最后一个元素，实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//选择最后一个元素作为pivot</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">choosePivotLast</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> l, <span class="keyword">int</span> r)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> r;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>3.median-of-three</strong></p>
+<p>选取第一个、最后一个以及中间的元素的中位数，如4 5 6 7, 第一个4, 最后一个7, 中间的为5, 这三个数的中位数为５, 所以选择5作为pivot，8 2 5 4 7, 三个元素分别为8 5 7, 中位数为7, 所以选择最后一个元素7作为pivot，其实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//median-of-three pivot rule</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">choosePivotMedianOfThree</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> l, <span class="keyword">int</span> r)</span> </span>&#123;	</span><br><span class="line">	<span class="keyword">int</span> mid = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">if</span> ((r-l+<span class="number">1</span>) % <span class="number">2</span> == <span class="number">0</span>) &#123;</span><br><span class="line">		mid = l + (r-l+<span class="number">1</span>)/<span class="number">2</span> - <span class="number">1</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		mid = l + (r-l+<span class="number">1</span>)/<span class="number">2</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//只需要找出中位数即可，不需要交换</span></span><br><span class="line">    <span class="comment">//有的版本也可以进行交换</span></span><br><span class="line">	<span class="keyword">if</span> (((a[l]-a[mid]) * (a[l]-a[r])) &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> l;</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (((a[mid]-a[l]) * (a[mid]-a[r])) &lt;= <span class="number">0</span>) 	&#123;</span><br><span class="line">		<span class="keyword">return</span> mid;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> r;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后的划分过程如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> l, <span class="keyword">int</span> r)</span> </span>&#123;</span><br><span class="line">	<span class="comment">//pivot选择方式</span></span><br><span class="line">	<span class="comment">//int pi = choosePivotFirst(a, l, r);</span></span><br><span class="line">	<span class="comment">//int pi = choosePivotLast(a, l, r);</span></span><br><span class="line">	<span class="keyword">int</span> pi = choosePivotMedianOfThree(a, l, r);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//始终将第一个元素作为pivot, 若不是, 则与之交换</span></span><br><span class="line">	<span class="keyword">if</span> (pi != l) &#123;</span><br><span class="line">		swap(a, pi, l);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">int</span> p = a[l];</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> i = l + <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> j=l+<span class="number">1</span>; j&lt;=r; j++) &#123;</span><br><span class="line">		<span class="keyword">if</span> (a[j] &lt; p) &#123;</span><br><span class="line">			swap(a, j, i);</span><br><span class="line">			i++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	swap(a, l, i-<span class="number">1</span>);</span><br><span class="line">	<span class="keyword">return</span> i-<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意最后的划分过程相比于之前增加的pivot的选取方式，而不是单纯地将第一个元素作为pivot, 可以看到，若第一个元素不是pivot, 需要将pivot与第一个元素进行交换，这样保证代码的统一性。</p>
+<h2 id="总结与感想"><a href="#总结与感想" class="headerlink" title="总结与感想"></a>总结与感想</h2><p>1.学会体会这些算法背后的思想，为什么要这样设计</p>
+<p>2.对于比较复杂的算法，学会使用特殊情况进行分析</p>
+<p>参考资料:</p>
+<p>(1) coursera斯坦福算法专项课part1</p>
+<p>(2) <a href="https://zh.wikipedia.org/wiki/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F" target="_blank" rel="noopener">维基百科快速排序</a></p>
+
       
 
       
@@ -226,16 +269,75 @@
 
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/08/30/快速排序实现及其pivot的选取/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://xinyuexy.github.io/2018/08/30/快速排序实现及其pivot的选取/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2018/08/23/大整数相乘问题总结以及Java实现/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">大整数相乘问题总结以及Java实现</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -250,491 +352,49 @@
         </div>
         
         
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-大整数相乘问题总结以及Java实现" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/23/大整数相乘问题总结以及Java实现/">大整数相乘问题总结以及Java实现</a>
-    </h1>
-  
-
-        
-        <a href="/2018/08/23/大整数相乘问题总结以及Java实现/" class="archive-article-date">
-  	<time datetime="2018-08-23T12:02:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-23</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近在跟coursera上斯坦福大学的算法专项课，其中开篇提到了两个整数相乘的问题，其中最简单的方法就是模拟我们小学的整数乘法，可想而知这不是比较好的算法，这门课可以说非常棒，带领我们不断探索更优的算法，然后介绍可以通过使用分而治之的思想来解决这个问题。下面对该问题的方法以及实现进行介绍。</p>
-<h2 id="问题定义"><a href="#问题定义" class="headerlink" title="问题定义"></a>问题定义</h2><blockquote>
-<p> 输入：2个n位的整数x和y <br>输出：x * y</p>
-<p>如求: 1234567891011121314151617181*2019181716151413121110987654 的结果</p>
-</blockquote>
-        
-          <a class="article-more-a" href="/2018/08/23/大整数相乘问题总结以及Java实现/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Algorithm</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Algorithm//" class="article-tag-list-link color5">Algorithm</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/08/23/大整数相乘问题总结以及Java实现/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本步骤"><span class="toc-number">1.</span> <span class="toc-text">基本步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#划分过程"><span class="toc-number">1.1.</span> <span class="toc-text">划分过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基本实现"><span class="toc-number">1.2.</span> <span class="toc-text">基本实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pivot的选取"><span class="toc-number">2.</span> <span class="toc-text">pivot的选取</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#选取方式及实现"><span class="toc-number">2.1.</span> <span class="toc-text">选取方式及实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结与感想"><span class="toc-number">3.</span> <span class="toc-text">总结与感想</span></a></li></ol>
+                    </div>
+                </span>
             </div>
         </div>
         
-        
     </div>
 </aside>
 
 
 
-
-  
-    <article id="post-关于java中基类构造器的调用问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/16/关于java中基类构造器的调用问题/">关于Java中基类构造器的调用问题</a>
-    </h1>
-  
-
-        
-        <a href="/2018/08/16/关于java中基类构造器的调用问题/" class="archive-article-date">
-  	<time datetime="2018-08-16T12:02:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-16</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>在《Java编程思想》第７章复用类中有这样一段话，值得深思。当子类继承了父类时，就涉及到了基类和导出类（子类）这两个类。从外部来看，导出类就像是一个与基类具有相同接口的新类，或许还会有一些额外的方法和域。但继承并不只是复制基类的接口。当创建一个导出类对象时，该对象包含了一个基类的子对象，这个子对象与你用基类直接创建的对象是一样的，二者区别在于，后者来自于外部，而基类的子对象是被包裹在导出类对象内部。</p>
-</blockquote>
-<p>这就引发出了一个很重要的问题，对基类子对象的正确初始化也是至关重要的（我们可能在子类的使用基类中继承的方法和域），而且也仅有一种方法来保证这一点：在子类构造器中调用基类构造器来执行初始化。</p>
-        
-          <a class="article-more-a" href="/2018/08/16/关于java中基类构造器的调用问题/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Java基础</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Java编程思想</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/08/16/关于java中基类构造器的调用问题/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Java学习资源整理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/09/Java学习资源整理/">Java学习资源整理</a>
-    </h1>
-  
-
-        
-        <a href="/2018/08/09/Java学习资源整理/" class="archive-article-date">
-  	<time datetime="2018-08-09T12:02:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>这里整理一些自己平常搜集的比较好的关于Java的学习资源，主要包括博客站点、书籍、课程等。</p>
-<h2 id="了解Java最新资讯"><a href="#了解Java最新资讯" class="headerlink" title="了解Java最新资讯"></a>了解Java最新资讯</h2><p>这部分主要是了解与Java相关的动态以及信息，能够拓展我们的视野以及寻找一些好的idea。每天早晚都可以刷一刷，可以说是每日必逛。下面列出我采取的几种方式。</p>
-<h3 id="1-关注twitter上的Java组织以及大牛"><a href="#1-关注twitter上的Java组织以及大牛" class="headerlink" title="1.关注twitter上的Java组织以及大牛"></a>1.关注twitter上的Java组织以及大牛</h3><p>许多大牛或公司会在twitter上发布有关Java的最新动态及相关资源，多逛逛说不定会有意外收获。下面推荐几个比较好的：</p>
-        
-          <a class="article-more-a" href="/2018/08/09/Java学习资源整理/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">资源</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/08/09/Java学习资源整理/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-hexo博客绑定域名以及增加gitment评论" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/02/hexo博客绑定域名以及增加gitment评论/">hexo博客绑定域名以及增加gitment评论</a>
-    </h1>
-  
-
-        
-        <a href="/2018/08/02/hexo博客绑定域名以及增加gitment评论/" class="archive-article-date">
-  	<time datetime="2018-08-02T08:34:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近在NameSilo上注册了个域名，并将hexo博客同时部署到Github Page和Coding Page中以及绑定域名，在其中遇到了一些问题，将整个过程记录下来供后续参考。</p>
-<h2 id="购买域名"><a href="#购买域名" class="headerlink" title="购买域名"></a>购买域名</h2><p>首先需要购买一个域名，国内可以在万网上购买，但是需要备案比较麻烦。这里有几个不错的域名购买网站，不需要备案。</p>
-<p><a href="https://www.namesilo.com/index.php" target="_blank" rel="noopener">namesilo</a></p>
-        
-          <a class="article-more-a" href="/2018/08/02/hexo博客绑定域名以及增加gitment评论/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/随笔//" class="article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/08/02/hexo博客绑定域名以及增加gitment评论/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-LeetCode中链表转置问题总结" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/02/LeetCode中链表转置问题总结/">LeetCode中链表转置问题总结</a>
-    </h1>
-  
-
-        
-        <a href="/2018/08/02/LeetCode中链表转置问题总结/" class="archive-article-date">
-  	<time datetime="2018-08-02T02:24:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>链表转置是很常见的一类链表题目，最近在刷LeetCode题目时，发现链表转置还有这么多的变形，在这里对LeetCode中链表转置的题目进行一下总结。</p>
-<h2 id="转置整个链表"><a href="#转置整个链表" class="headerlink" title="转置整个链表"></a>转置整个链表</h2><p><a href="https://leetcode.com/problems/reverse-linked-list/description/" target="_blank" rel="noopener">LeetCode 206</a></p>
-<p>Reverse a singly linked list.</p>
-<p><strong>Example:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: 1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;NULL</span><br><span class="line">Output: 5-&gt;4-&gt;3-&gt;2-&gt;1-&gt;NULL</span><br></pre></td></tr></table></figure>
-        
-          <a class="article-more-a" href="/2018/08/02/LeetCode中链表转置问题总结/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">LinkedList</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Algorithm</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Algorithm//" class="article-tag-list-link color5">Algorithm</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/08/02/LeetCode中链表转置问题总结/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
-    </nav>
+  
+
+  
+
+  
+
+  
+  <div id="gitment-ctn"></div>
+<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: "快速排序实现及其pivot的选取",
+  owner: 'xinyuexy',
+  repo: 'xinyuexy.github.io',
+  oauth: {
+    client_id: 'a8a835ba7a7d16189d85',
+    client_secret: '074649d0e140dd8e35fd462b907bac5a34454102',
+  },
+})
+gitment.render('gitment-ctn')
+</script>
+
   
 
 
@@ -757,8 +417,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: true,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
