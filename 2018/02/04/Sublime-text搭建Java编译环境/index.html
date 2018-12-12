@@ -16,7 +16,7 @@
     <link rel="canonical" href="http://litexy.com/2018/02/04/Sublime-text搭建Java编译环境/">
     
     
-    <title>Sublime-text搭建Java编译环境 | 新月的博客 | can we do better ?</title>
+    <title>Sublime-text搭建Java编译环境 | 程序员修炼之路 | 一名Web开发者修炼之路，专注Web开发/Java/Python/算法等 记录学习过程中的点点滴滴...</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
@@ -28,7 +28,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="Sublime-text搭建Java编译环境">
 <meta property="og:url" content="http://litexy.com/2018/02/04/Sublime-text搭建Java编译环境/index.html">
-<meta property="og:site_name" content="新月的博客">
+<meta property="og:site_name" content="程序员修炼之路">
 <meta property="og:description" content="以前运行Java代码都是在Eclipse或IDEA中进行，当开发大型项目的时候用这些IDE确实很方便，但有时候自己仅仅是像用Java写写简单的算法或小demo，这样每次打开这样大型的IDE太不方便了。于是想到了sublime text，之前只是用其搭建过C++和python的环境，没想到搭建Java也如此的方便强大，下面简单写下自己搭建的过程。 搭建Java编译环境在此之前请确保已配置好jdk环境">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ou5lyiz64.bkt.clouddn.com/img/sublimeGIF1.gif">
@@ -39,7 +39,7 @@
 <meta name="twitter:description" content="以前运行Java代码都是在Eclipse或IDEA中进行，当开发大型项目的时候用这些IDE确实很方便，但有时候自己仅仅是像用Java写写简单的算法或小demo，这样每次打开这样大型的IDE太不方便了。于是想到了sublime text，之前只是用其搭建过C++和python的环境，没想到搭建Java也如此的方便强大，下面简单写下自己搭建的过程。 搭建Java编译环境在此之前请确保已配置好jdk环境">
 <meta name="twitter:image" content="http://ou5lyiz64.bkt.clouddn.com/img/sublimeGIF1.gif">
     
-        <link rel="alternate" type="application/atom+xml" title="新月的博客" href="/atom.xml">
+        <link rel="alternate" type="application/atom+xml" title="程序员修炼之路" href="/atom.xml">
     
     <link rel="shortcut icon" href="/img/favicon2.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -61,10 +61,10 @@
     <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
       <div class="brand">
         <a href="/" class="avatar waves-effect waves-circle waves-light">
-          <img src="http://ou5lyiz64.bkt.clouddn.com/img/avataravatar_betacat_07.png">
+          <img src="/img/avatar.png">
         </a>
         <hgroup class="introduce">
-          <h5 class="nickname">xinyue</h5>
+          <h5 class="nickname">litexy</h5>
           <a href="mailto:xinyue.hfut@qq.com" title="xinyue.hfut@qq.com" class="mail">xinyue.hfut@qq.com</a>
         </hgroup>
       </div>
@@ -238,8 +238,8 @@
     
     <footer>
         <a href="http://litexy.com">
-            <img src="http://ou5lyiz64.bkt.clouddn.com/img/avataravatar_betacat_07.png" alt="xinyue">
-            xinyue
+            <img src="/img/avatar.png" alt="litexy">
+            litexy
         </a>
     </footer>
 </blockquote>
@@ -259,7 +259,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2018/02/04/Sublime-text搭建Java编译环境/&title=《Sublime-text搭建Java编译环境》 — 新月的博客&pic=http://ou5lyiz64.bkt.clouddn.com/img/avataravatar_betacat_07.png" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2018/02/04/Sublime-text搭建Java编译环境/&title=《Sublime-text搭建Java编译环境》 — 程序员修炼之路&pic=http://litexy.com/img/avatar.png" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -269,7 +269,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2018/02/04/Sublime-text搭建Java编译环境/&title=《Sublime-text搭建Java编译环境》 — 新月的博客&source=以前运行Java代码都是在Eclipse或IDEA中进行，当开发大型项目的时候用这些IDE确实很方便，但有时候自己仅仅是像用Java写写简单的算法或小de..." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2018/02/04/Sublime-text搭建Java编译环境/&title=《Sublime-text搭建Java编译环境》 — 程序员修炼之路&source=以前运行Java代码都是在Eclipse或IDEA中进行，当开发大型项目的时候用这些IDE确实很方便，但有时候自己仅仅是像用Java写写简单的算法或小de..." data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -279,7 +279,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Sublime-text搭建Java编译环境》 — 新月的博客&url=http://litexy.com/2018/02/04/Sublime-text搭建Java编译环境/&via=http://litexy.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Sublime-text搭建Java编译环境》 — 程序员修炼之路&url=http://litexy.com/2018/02/04/Sublime-text搭建Java编译环境/&via=http://litexy.com" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
@@ -395,7 +395,7 @@
         </p>
     </div>
     <div class="bottom">
-        <p><span>xinyue &copy; 2018</span>
+        <p><span>litexy &copy; 2018</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
@@ -413,7 +413,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2018/02/04/Sublime-text搭建Java编译环境/&title=《Sublime-text搭建Java编译环境》 — 新月的博客&pic=http://ou5lyiz64.bkt.clouddn.com/img/avataravatar_betacat_07.png" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2018/02/04/Sublime-text搭建Java编译环境/&title=《Sublime-text搭建Java编译环境》 — 程序员修炼之路&pic=http://litexy.com/img/avatar.png" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -423,7 +423,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2018/02/04/Sublime-text搭建Java编译环境/&title=《Sublime-text搭建Java编译环境》 — 新月的博客&source=以前运行Java代码都是在Eclipse或IDEA中进行，当开发大型项目的时候用这些IDE确实很方便，但有时候自己仅仅是像用Java写写简单的算法或小de..." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2018/02/04/Sublime-text搭建Java编译环境/&title=《Sublime-text搭建Java编译环境》 — 程序员修炼之路&source=以前运行Java代码都是在Eclipse或IDEA中进行，当开发大型项目的时候用这些IDE确实很方便，但有时候自己仅仅是像用Java写写简单的算法或小de..." data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -433,7 +433,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Sublime-text搭建Java编译环境》 — 新月的博客&url=http://litexy.com/2018/02/04/Sublime-text搭建Java编译环境/&via=http://litexy.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Sublime-text搭建Java编译环境》 — 程序员修炼之路&url=http://litexy.com/2018/02/04/Sublime-text搭建Java编译环境/&via=http://litexy.com" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>

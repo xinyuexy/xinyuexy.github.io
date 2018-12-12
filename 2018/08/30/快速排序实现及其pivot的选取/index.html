@@ -16,7 +16,7 @@
     <link rel="canonical" href="http://litexy.com/2018/08/30/快速排序实现及其pivot的选取/">
     
     
-    <title>快速排序实现及其pivot的选取 | 新月的博客 | can we do better ?</title>
+    <title>快速排序实现及其pivot的选取 | 程序员修炼之路 | 一名Web开发者修炼之路，专注Web开发/Java/Python/算法等 记录学习过程中的点点滴滴...</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
@@ -28,7 +28,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="快速排序实现及其pivot的选取">
 <meta property="og:url" content="http://litexy.com/2018/08/30/快速排序实现及其pivot的选取/index.html">
-<meta property="og:site_name" content="新月的博客">
+<meta property="og:site_name" content="程序员修炼之路">
 <meta property="og:description" content="coursera上斯坦福的算法专项在讲到快速排序时，称其为最优雅的算法之一。快速排序确实是一种比较有效的排序算法，很多类库中也都采用了这种排序算法，其最坏时间复杂度为$O(n^2)$，平均时间复杂度为$O(nlogn)$，且其不需要额外的存储空间。 基本步骤快速排序主要使用了分治的思想，通过选取一个pivot，将一个数组划分为两个子数组。其步骤为：1.从数组中选择一个元素作为pivot2.重新排列">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ou5lyiz64.bkt.clouddn.com/img/qsort%E9%80%89%E5%8C%BA_001.png">
@@ -40,7 +40,7 @@
 <meta name="twitter:description" content="coursera上斯坦福的算法专项在讲到快速排序时，称其为最优雅的算法之一。快速排序确实是一种比较有效的排序算法，很多类库中也都采用了这种排序算法，其最坏时间复杂度为$O(n^2)$，平均时间复杂度为$O(nlogn)$，且其不需要额外的存储空间。 基本步骤快速排序主要使用了分治的思想，通过选取一个pivot，将一个数组划分为两个子数组。其步骤为：1.从数组中选择一个元素作为pivot2.重新排列">
 <meta name="twitter:image" content="http://ou5lyiz64.bkt.clouddn.com/img/qsort%E9%80%89%E5%8C%BA_001.png">
     
-        <link rel="alternate" type="application/atom+xml" title="新月的博客" href="/atom.xml">
+        <link rel="alternate" type="application/atom+xml" title="程序员修炼之路" href="/atom.xml">
     
     <link rel="shortcut icon" href="/img/favicon2.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -62,10 +62,10 @@
     <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
       <div class="brand">
         <a href="/" class="avatar waves-effect waves-circle waves-light">
-          <img src="http://ou5lyiz64.bkt.clouddn.com/img/avataravatar_betacat_07.png">
+          <img src="/img/avatar.png">
         </a>
         <hgroup class="introduce">
-          <h5 class="nickname">xinyue</h5>
+          <h5 class="nickname">litexy</h5>
           <a href="mailto:xinyue.hfut@qq.com" title="xinyue.hfut@qq.com" class="mail">xinyue.hfut@qq.com</a>
         </hgroup>
       </div>
@@ -265,8 +265,8 @@
     
     <footer>
         <a href="http://litexy.com">
-            <img src="http://ou5lyiz64.bkt.clouddn.com/img/avataravatar_betacat_07.png" alt="xinyue">
-            xinyue
+            <img src="/img/avatar.png" alt="litexy">
+            litexy
         </a>
     </footer>
 </blockquote>
@@ -286,7 +286,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2018/08/30/快速排序实现及其pivot的选取/&title=《快速排序实现及其pivot的选取》 — 新月的博客&pic=http://ou5lyiz64.bkt.clouddn.com/img/avataravatar_betacat_07.png" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2018/08/30/快速排序实现及其pivot的选取/&title=《快速排序实现及其pivot的选取》 — 程序员修炼之路&pic=http://litexy.com/img/avatar.png" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -296,7 +296,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2018/08/30/快速排序实现及其pivot的选取/&title=《快速排序实现及其pivot的选取》 — 新月的博客&source=coursera上斯坦福的算法专项在讲到快速排序时，称其为最优雅的算法之一。快速排序确实是一种比较有效的排序算法，很多类库中也都采用了这种排序算法，其最坏..." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2018/08/30/快速排序实现及其pivot的选取/&title=《快速排序实现及其pivot的选取》 — 程序员修炼之路&source=coursera上斯坦福的算法专项在讲到快速排序时，称其为最优雅的算法之一。快速排序确实是一种比较有效的排序算法，很多类库中也都采用了这种排序算法，其最坏..." data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -306,7 +306,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《快速排序实现及其pivot的选取》 — 新月的博客&url=http://litexy.com/2018/08/30/快速排序实现及其pivot的选取/&via=http://litexy.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《快速排序实现及其pivot的选取》 — 程序员修炼之路&url=http://litexy.com/2018/08/30/快速排序实现及其pivot的选取/&via=http://litexy.com" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
@@ -422,7 +422,7 @@
         </p>
     </div>
     <div class="bottom">
-        <p><span>xinyue &copy; 2018</span>
+        <p><span>litexy &copy; 2018</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
@@ -440,7 +440,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2018/08/30/快速排序实现及其pivot的选取/&title=《快速排序实现及其pivot的选取》 — 新月的博客&pic=http://ou5lyiz64.bkt.clouddn.com/img/avataravatar_betacat_07.png" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2018/08/30/快速排序实现及其pivot的选取/&title=《快速排序实现及其pivot的选取》 — 程序员修炼之路&pic=http://litexy.com/img/avatar.png" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -450,7 +450,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2018/08/30/快速排序实现及其pivot的选取/&title=《快速排序实现及其pivot的选取》 — 新月的博客&source=coursera上斯坦福的算法专项在讲到快速排序时，称其为最优雅的算法之一。快速排序确实是一种比较有效的排序算法，很多类库中也都采用了这种排序算法，其最坏..." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2018/08/30/快速排序实现及其pivot的选取/&title=《快速排序实现及其pivot的选取》 — 程序员修炼之路&source=coursera上斯坦福的算法专项在讲到快速排序时，称其为最优雅的算法之一。快速排序确实是一种比较有效的排序算法，很多类库中也都采用了这种排序算法，其最坏..." data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -460,7 +460,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《快速排序实现及其pivot的选取》 — 新月的博客&url=http://litexy.com/2018/08/30/快速排序实现及其pivot的选取/&via=http://litexy.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《快速排序实现及其pivot的选取》 — 程序员修炼之路&url=http://litexy.com/2018/08/30/快速排序实现及其pivot的选取/&via=http://litexy.com" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
