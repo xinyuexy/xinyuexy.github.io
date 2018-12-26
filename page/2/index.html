@@ -167,6 +167,56 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
+            <article id="post-关于java中基类构造器的调用问题"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2018-08-16 20:02:31" datetime="2018-08-16T12:02:31.000Z"  itemprop="datePublished">2018-08-16</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2018/08/16/关于java中基类构造器的调用问题/">关于Java中基类构造器的调用问题</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        
+在《Java编程思想》第７章复用类中有这样一段话，值得深思。当子类继承了父类时，就涉及到了基类和导出类（子类）这两个类。从外部来看，导出类就像是一个与基类具有相同接口的新类，或许还会有一些额外的方法和域。但继承并不只是复制基类的接口。当创建一个导出类对象时，该对象包含了一个基类的子对象，这个子对象与你用基类直接创建的对象是一样的，二者区别在于，后者来自于外部，而基类的子对象是被包裹在导出类对象内部。
+
+这就引发出了一个很重要的问题，对基类子对象的正确初始化也是至关重要的（我们可能在子类的使用基类中继承的方法和域），而且也仅有一种方法来保证这一点：在子类构造器中调用基类构造器来执行初始化。
+    
+
+        <a href="/2018/08/16/关于java中基类构造器的调用问题/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java基础/">Java基础</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java编程思想/">Java编程思想</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
             <article id="post-Java学习资源整理"
   class="article-card article-type-post" itemprop="blogPost">
 
@@ -405,55 +455,6 @@ Example:
     <div class="post-footer">
         
 	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LinkedList/">LinkedList</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-关于Java中读取和修改大文件的问题"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2018-03-26 08:39:59" datetime="2018-03-26T00:39:59.000Z"  itemprop="datePublished">2018-03-26</time>
-
-        
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
-
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2018/03/26/关于Java中读取和修改大文件的问题/">关于Java中读取和修改SQL大文件的问题</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        最近在项目中需要读取sql文件，并修改里面的一部分内容。主要问题是sql文件里的插入语句中的日期是Oracle形式的，需要将其替换为Mysql形式的，其他的不变。项目中的sql文件有几十万条记录，数据量比较大，这可能在读取文件的时候带来一些问题。
-
-如上图所示，由于MySQL中没有to_date函数，而且里面的日期格式不对，也就是需要将画红线的部分替换为’2014-06-25’。（注意一行中有多个to_date）
-    
-
-        <a href="/2018/03/26/关于Java中读取和修改大文件的问题/" class="post-more waves-effect waves-button">
-            阅读全文…
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/">MySQL</a></li></ul>
 
     </div>
     
