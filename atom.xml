@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>新月的博客</title>
   
-  <subtitle>一名在读硕士的修炼之路，关注Java/Python/数据分析等 记录学习过程中的点点滴滴...</subtitle>
+  <subtitle>一名在读硕士的修炼之路，关注Java/Python/数据分析/数据库等 记录学习过程中的点点滴滴...</subtitle>
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://litexy.com/"/>
@@ -70,9 +70,9 @@
     
       <category term="MySQL" scheme="http://litexy.com/tags/MySQL/"/>
     
-      <category term="flask" scheme="http://litexy.com/tags/flask/"/>
-    
       <category term="Python" scheme="http://litexy.com/tags/Python/"/>
+    
+      <category term="flask" scheme="http://litexy.com/tags/flask/"/>
     
   </entry>
   
@@ -101,9 +101,9 @@
     
       <category term="MySQL" scheme="http://litexy.com/tags/MySQL/"/>
     
-      <category term="flask" scheme="http://litexy.com/tags/flask/"/>
-    
       <category term="Python" scheme="http://litexy.com/tags/Python/"/>
+    
+      <category term="flask" scheme="http://litexy.com/tags/flask/"/>
     
   </entry>
   
