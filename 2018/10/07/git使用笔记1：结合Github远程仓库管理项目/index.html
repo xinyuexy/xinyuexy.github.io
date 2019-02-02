@@ -208,20 +208,20 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <p>git是一个十分好用的版本控制工具，我们经常在本地使用git进行项目开发，Git 并不像 SVN 那样有个中心服务器，如果想要通过 Git 分享你的代码或者与其他开发人员合作，就需要将数据放到一台其他开发人员能够连接的服务器上。我们经常使用GitHub作为远程仓库。</p>
-<h3 id="创建远程仓库"><a href="#创建远程仓库" class="headerlink" title="创建远程仓库"></a>创建远程仓库</h3><p>要想将本地项目传到GitHub上，首先需要在GitHub上新建一个仓库，填入仓库名，如下图所示：<br><img src="/2018/10/07/git使用笔记1：结合Github远程仓库管理项目/001.png" style="zoom: 50%"></p>
+<h3 id="创建远程仓库"><a href="#创建远程仓库" class="headerlink" title="创建远程仓库"></a>创建远程仓库</h3><p>要想将本地项目传到GitHub上，首先需要在GitHub上新建一个仓库，填入仓库名，如下图所示：<br><img src="001.png" style="zoom: 50%"></p>
 <h3 id="本地项目与远程仓库关联"><a href="#本地项目与远程仓库关联" class="headerlink" title="本地项目与远程仓库关联"></a>本地项目与远程仓库关联</h3><p>然后就需要我们将本地项目和GitHub远程仓库关联，这里有两种选择，一种是直接克隆远程仓库，另一种是先创建本地仓库，再用命令添加。</p>
-<h4 id="克隆远程仓库"><a href="#克隆远程仓库" class="headerlink" title="克隆远程仓库"></a>克隆远程仓库</h4><p><strong>1.命令如下：</strong><br><code>git clone git://github.com/xinyuexy/flask-tutorial.git</code><br>这时在本地就会出现一个flask-tutorial目录，这时该命令已经自动创建了本地的 master 分支用于跟踪远程仓库中的 master 分支。<br><strong>2.使用<code>git remote -v</code>查看如下：</strong><br><img src="/2018/10/07/git使用笔记1：结合Github远程仓库管理项目/002.png" style="zoom:50%"><br>可以看到一个名为origin的远程仓库。</p>
-<h4 id="手动添加远程仓库"><a href="#手动添加远程仓库" class="headerlink" title="手动添加远程仓库"></a>手动添加远程仓库</h4><p>我们也可以选择先在本地创建一个仓库，然后与远程仓库关联。<br><strong>1.初始化仓库</strong><br>首先需要使用<code>git init</code>命令初始化，这样才会被标识为一个git项目，并创建一个本地master分支。<br><strong>2.添加远程仓库</strong><br><code>git remote add origin git://github.com/xinyuexy/flask-tutorial.git</code><br>这里添加了一个origin远程仓库与本地master关联，也可以添加多个远程仓库，比如我这里又添加一个为origin2的远程仓库<br><code>git remote add origin2 git://github.com/xinyuexy/Algorithm.git</code><br>使用<code>git remote -v</code>查看:<br><img src="/2018/10/07/git使用笔记1：结合Github远程仓库管理项目/003.png" style="zoom:50%"><br>可以看到现在有origin、origin2两个远程仓库了。<br><strong>3.远程仓库的删除与重命名</strong><br>也可以对远程仓库进行删除和重命名：<br>重命名：<code>git remote rename origin origin3</code><br>删除: <code>git remote rm origin2</code><br>删除后<code>git remote</code>查看：<br><figure class="image-bubble">
+<h4 id="克隆远程仓库"><a href="#克隆远程仓库" class="headerlink" title="克隆远程仓库"></a>克隆远程仓库</h4><p><strong>1.命令如下：</strong><br><code>git clone git://github.com/xinyuexy/flask-tutorial.git</code><br>这时在本地就会出现一个flask-tutorial目录，这时该命令已经自动创建了本地的 master 分支用于跟踪远程仓库中的 master 分支。<br><strong>2.使用<code>git remote -v</code>查看如下：</strong><br><img src="002.png" style="zoom:50%"><br>可以看到一个名为origin的远程仓库。</p>
+<h4 id="手动添加远程仓库"><a href="#手动添加远程仓库" class="headerlink" title="手动添加远程仓库"></a>手动添加远程仓库</h4><p>我们也可以选择先在本地创建一个仓库，然后与远程仓库关联。<br><strong>1.初始化仓库</strong><br>首先需要使用<code>git init</code>命令初始化，这样才会被标识为一个git项目，并创建一个本地master分支。<br><strong>2.添加远程仓库</strong><br><code>git remote add origin git://github.com/xinyuexy/flask-tutorial.git</code><br>这里添加了一个origin远程仓库与本地master关联，也可以添加多个远程仓库，比如我这里又添加一个为origin2的远程仓库<br><code>git remote add origin2 git://github.com/xinyuexy/Algorithm.git</code><br>使用<code>git remote -v</code>查看:<br><img src="003.png" style="zoom:50%"><br>可以看到现在有origin、origin2两个远程仓库了。<br><strong>3.远程仓库的删除与重命名</strong><br>也可以对远程仓库进行删除和重命名：<br>重命名：<code>git remote rename origin origin3</code><br>删除: <code>git remote rm origin2</code><br>删除后<code>git remote</code>查看：<br><figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
-                    <img src="/2018/10/07/git使用笔记1：结合Github远程仓库管理项目/004.png" alt="在这里插入图片描述" title="">
+                    <img src="004.png" alt="在这里插入图片描述" title="">
                 </div>
                 <div class="image-caption">在这里插入图片描述</div>
             </figure></p>
 <h3 id="提交代码到远程仓库"><a href="#提交代码到远程仓库" class="headerlink" title="提交代码到远程仓库"></a>提交代码到远程仓库</h3><p>最后就是将本地写好的代码提交的远程仓库了.<br><strong>1.<code>git add  *</code></strong><br>使用此命令跟踪所有文件，以便于后面提交<br><strong>2.<code>git status</code></strong><br>查看当前已跟踪文件<br><figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
-                    <img src="/2018/10/07/git使用笔记1：结合Github远程仓库管理项目/005.png" alt="在这里插入图片描述" title="">
+                    <img src="005.png" alt="在这里插入图片描述" title="">
                 </div>
                 <div class="image-caption">在这里插入图片描述</div>
             </figure><br><strong>2.<code>git commit -m &quot;init commit&quot;</code></strong><br>使用此命令提交到本地分支<br><strong>3.<code>git pull</code></strong><br>拉取远程仓库到本地，注意可能在多人开发项目时，别人可能对远程仓库进行了修改，这时如果直接提交会发生不一致错误，需要先将远程仓库最新的内容拉取到本地并合并。这条命令其实相当于<code>git fetch</code>和<code>git merge</code>的结合。<br><strong>4.<code>git push origin master</code></strong><br>终于到最后一步可以提交数据到远程仓库了。</p>
@@ -229,7 +229,7 @@
 <p>在使用python虚拟环境时，venv目录便不会提交到远程仓库，同时pycharm产生的一些文件.idea也不会提交到远程。<br>这里推荐一个自动生成.gitignore文件的网站 <a href="https://www.gitignore.io/：" target="_blank" rel="noopener">https://www.gitignore.io/：</a><br><figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
-                    <img src="/2018/10/07/git使用笔记1：结合Github远程仓库管理项目/006.png" alt="在这里插入图片描述" title="">
+                    <img src="006.png" alt="在这里插入图片描述" title="">
                 </div>
                 <div class="image-caption">在这里插入图片描述</div>
             </figure><br>输入你所使用环境的关键词，点击create便能自动生成.gitignore文件了！</p>

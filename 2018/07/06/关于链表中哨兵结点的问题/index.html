@@ -214,16 +214,16 @@
 <h2 id="单链表中的哨兵结点"><a href="#单链表中的哨兵结点" class="headerlink" title="单链表中的哨兵结点"></a>单链表中的哨兵结点</h2><p>首先讨论哨兵结点在单链表中的运用，如果不加哨兵结点在进行头尾删除和插入时需要进行特殊判断。比如在尾部插入结点的代码如下：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">addLast</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (first == <span class="keyword">null</span>) &#123;</span><br><span class="line">    	first = <span class="keyword">new</span> Node(x, <span class="keyword">null</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    Node p = first;</span><br><span class="line">    <span class="keyword">while</span> (p.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">        p = p.next;</span><br><span class="line">    &#125;</span><br><span class="line">    p.next = <span class="keyword">new</span> Node(x, <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>如上所示需要对结点为空的特殊情况进行判断，头部加了一个哨兵结点后就可以不需要判断了（不会为空）</p>
-<p><img src="/2018/07/06/关于链表中哨兵结点的问题/LinkedList1.jpg" style="zoom: 80%"></p>
+<p><img src="./LinkedList1.jpg" style="zoom: 80%"></p>
 <h2 id="双链表中的哨兵结点"><a href="#双链表中的哨兵结点" class="headerlink" title="双链表中的哨兵结点"></a>双链表中的哨兵结点</h2><h3 id="Version-1-双哨兵"><a href="#Version-1-双哨兵" class="headerlink" title="Version 1: 双哨兵"></a>Version 1: 双哨兵</h3><p>在双链表中需要能够在头部和尾部分别进行插入删除操作（可以实现双端队列），为了能快速在尾部进行插入删除，需要引入指向尾部的指针。截图如下（图片来自CS61B）</p>
-<p><img src="/2018/07/06/关于链表中哨兵结点的问题/LinkedList2.jpg" style="zoom: 60%"></p>
-<p><img src="/2018/07/06/关于链表中哨兵结点的问题/LinkedList3.jpg" style="zoom: 60%"></p>
+<p><img src="./LinkedList2.jpg" style="zoom: 60%"></p>
+<p><img src="./LinkedList3.jpg" style="zoom: 60%"></p>
 <p>上述增加了一个指向尾部的last结点，从上图可以看出一个问题，last结点有时指向哨兵结点，有时指向实际结点。这会导致特殊情况的出现，比如在进行addFirst操作时，last指向哨兵结点时插入后需要将last往后移动一个，而第二张图指向实际结点时在头部插入结点后并不需要改变last指针。这时需要在尾部后也引入一个哨兵结点，以使其一致。相应示意图如下：</p>
-<p><img src="/2018/07/06/关于链表中哨兵结点的问题/LinkedList4.jpg" style="zoom: 60%"></p>
-<p><img src="/2018/07/06/关于链表中哨兵结点的问题/LinkedList5.jpg" style="zoom: 60%"></p>
+<p><img src="./LinkedList4.jpg" style="zoom: 60%"></p>
+<p><img src="./LinkedList5.jpg" style="zoom: 60%"></p>
 <h3 id="Version-2：循环双链表"><a href="#Version-2：循环双链表" class="headerlink" title="Version 2：循环双链表"></a>Version 2：循环双链表</h3><p>上述Version1需要两个哨兵结点，可以对其进行改进。可以使用头部结点的prev指针指向尾部，尾部结点的next指针指向哨兵，这样就只需要一个哨兵结点，使链表变成循环链表，比Version1更为简洁优雅。</p>
-<p><img src="/2018/07/06/关于链表中哨兵结点的问题/LinkedList6.jpg" style="zoom:60%"></p>
-<p><img src="/2018/07/06/关于链表中哨兵结点的问题/LinkedList7.jpg" style="zoom:60%"></p>
+<p><img src="./LinkedList6.jpg" style="zoom:60%"></p>
+<p><img src="./LinkedList7.jpg" style="zoom:60%"></p>
 <p>在对如上所示进行插入和删除操作时一定要格外注意，自己在写的时候很容易就漏掉某个指针的关系设置，最好在纸上自己画一遍。（对于要改变的连接可能会影响其他的，这时可将其暂存或最好设置）</p>
 <p>在头部插入的代码如下：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addFirst</span><span class="params">(Item item)</span> </span>&#123;</span><br><span class="line">     Node node = <span class="keyword">new</span> Node(item);</span><br><span class="line">     node.prev = sentinel;</span><br><span class="line">     node.next = sentinel.next;</span><br><span class="line">     sentinel.next.prev = node;</span><br><span class="line">     sentinel.next = node;</span><br><span class="line">     size++;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>

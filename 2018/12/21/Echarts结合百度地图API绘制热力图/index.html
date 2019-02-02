@@ -204,7 +204,7 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <p>最近项目中需要使用echarts与百度地图API结合来绘制事故发生热力图，在将其与百度地图结合的过程中遇到了一些问题，现将其过程与解决方案记录下，以供日后参考。echarts中结合百度地图API的热力图demo：<a href="http://gallery.echartsjs.com/editor.html?c=xSJNKs7EX" target="_blank" rel="noopener">http://gallery.echartsjs.com/editor.html?c=xSJNKs7EX</a></p>
-<p><img src="/2018/12/21/Echarts结合百度地图API绘制热力图/echarts1.jpg" style="zoom: 60%"></p>
+<p><img src="echarts1.jpg" style="zoom: 60%"></p>
 <a id="more"></a>
 <h2 id="使用步骤"><a href="#使用步骤" class="headerlink" title="使用步骤"></a>使用步骤</h2><p><strong>1.引用echarts与百度地图扩展js文件</strong></p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--引入百度地图的jssdk，这里需要使用你在百度地图开发者平台申请的 ak--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://api.map.baidu.com/api?v=2.0&amp;ak="</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 引入 ECharts --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"dist/echarts.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 引入百度地图扩展 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"dist/extension/bmap.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -220,7 +220,7 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> map = myChart.getModel().getComponent(<span class="string">'bmap'</span>).getBMap();</span><br><span class="line">map.addControl(<span class="keyword">new</span> BMap.MapTypeControl());</span><br><span class="line">map.centerAndZoom(<span class="string">"合肥"</span>,<span class="number">12</span>);</span><br><span class="line">map.enableScrollWheelZoom(<span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
 <p>注意后续如果需要使用百度地图API中的函数画图，需要每次先调用上述代码第一行获取map对象，否则无法绘制。</p>
 <p><strong>5.最终结果</strong></p>
-<p><img src="/2018/12/21/Echarts结合百度地图API绘制热力图/echarts2.jpg" style="zoom: 80%"></p>
+<p><img src="echarts2.jpg" style="zoom: 80%"></p>
 <h2 id="总结与感想"><a href="#总结与感想" class="headerlink" title="总结与感想"></a>总结与感想</h2><p>（1）项目中使用的是ajax获取数据，由于Ajax是异步的，所以需要把绘图的函数放入ajax的回调函数中，不然可能在还没获取完数据时，就已经执行了绘图代码。</p>
 <p>（2）注意引入js文件的顺序，第一次画不出来就是因为没有把百度地图ak的sj文件放到echarts前面</p>
 <p>（3）学会发现问题，定位问题以及解决问题。其实很多代码有bug没有想象中的那复杂，很多时候主体思路和框架都对了，就是一两行细节的问题，这时就需要反复利用调式手段，不断尝试，发现问题所在，不然前面可能都功亏一篑了。</p>
