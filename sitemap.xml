@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://litexy.com/2019/02/02/MySQL%E4%BC%98%E5%8C%96%E5%AE%9E%E8%B7%B5-%E4%BD%BF%E7%94%A8Explain%E5%88%86%E6%9E%90%E5%92%8C%E4%BC%98%E5%8C%96MySQL%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B/</loc>
+    
+    <lastmod>2019-02-02T11:28:02.726Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://litexy.com/2019/02/02/ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85flask-mysqldb%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</loc>
     
     <lastmod>2019-02-02T11:09:09.945Z</lastmod>

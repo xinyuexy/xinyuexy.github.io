@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://litexy.com/"/>
-  <updated>2019-02-02T11:09:01.864Z</updated>
+  <updated>2019-02-02T11:28:02.726Z</updated>
   <id>http://litexy.com/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>MySQL优化实践:使用Explain分析和优化MySQL查询过程</title>
+    <link href="http://litexy.com/2019/02/02/MySQL%E4%BC%98%E5%8C%96%E5%AE%9E%E8%B7%B5-%E4%BD%BF%E7%94%A8Explain%E5%88%86%E6%9E%90%E5%92%8C%E4%BC%98%E5%8C%96MySQL%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B/"/>
+    <id>http://litexy.com/2019/02/02/MySQL优化实践-使用Explain分析和优化MySQL查询过程/</id>
+    <published>2019-02-02T11:45:12.000Z</published>
+    <updated>2019-02-02T11:28:02.726Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近项目中使用的数据达到了百万级别，如果不进行优化，在查询时速度就会很慢，现在想的是先在SQL语句上加上索引进行优化，但有时候MySQL并不会像我们预想的那样使用索引。MySQL提供了Explain命令能够很好地查看sql语句执行情况，是否使用了索引，查询的记录数等等。</p><h3 id="where中进行函数运算"><a href="#where中进行函数运算" class="headerlink" title="where中进行函数运算"></a>where中进行函数运算</h3><p>我在项目中需要以时间为筛选条件，如查询<code>2018-01-01</code>到<code>2018-05-31</code>之间的记录数，但我的字段的日期类型是datetime类型的(<code>2018-01-01 17:00:30</code>) ，我首先想到的是使用MySQL的<code>DATE</code>函数进行转换，SQL语句如下：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> lng, lat, <span class="keyword">count</span>(*) <span class="keyword">as</span> <span class="keyword">count</span> </span><br><span class="line"><span class="keyword">FROM</span> jtsg_new </span><br><span class="line"><span class="keyword">WHERE</span> <span class="built_in">DATE</span>(HRSJ) &gt;= <span class="string">'2015-01-01'</span> <span class="keyword">AND</span> <span class="built_in">DATE</span>(HRSJ) &lt;= <span class="string">'2015-05-31'</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> lng, lat</span><br></pre></td></tr></table></figure></p><p>查询时间为<code>7.852</code>秒.<br>使用Explain命令对上述sql语句进行分析：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">EXPLAIN</span> <span class="keyword">SELECT</span> lng, lat, <span class="keyword">count</span>(*) <span class="keyword">as</span> <span class="keyword">count</span> </span><br><span class="line"><span class="keyword">FROM</span> jtsg_new </span><br><span class="line"><span class="keyword">WHERE</span> <span class="built_in">DATE</span>(HRSJ) &gt;= <span class="string">'2015-01-01'</span> <span class="keyword">AND</span> <span class="built_in">DATE</span>(HRSJ) &lt;= <span class="string">'2015-05-31'</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> lng, lat</span><br></pre></td></tr></table></figure></p><figure class="image-bubble">                <div class="img-lightbox">                    <div class="overlay"></div>                    <img src="https://img-blog.csdnimg.cn/20181228160439235.png" alt="在这里插入图片描述" title="">                </div>                <div class="image-caption">在这里插入图片描述</div>            </figure><p>我将<code>HRSJ</code>作为主键放在where里，但是通过结果发现并没有使用索引，type为ALL，key值也为null.<br>经过查询资料发现，在where字句中对索引字段进行函数运算(<code>DATE</code>)将会使MySQL放弃使用索引。于是我想的是在数据库中新增一个<code>HRSJ_DATE</code>字段将<code>HRSJ</code>的日期提取出来</p><h3 id="新增字段使用索引"><a href="#新增字段使用索引" class="headerlink" title="新增字段使用索引"></a>新增字段使用索引</h3><p>首先新增一个<code>date</code>类型字段<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> jtsg_new <span class="keyword">ADD</span> <span class="keyword">COLUMN</span> HRSJ_DATE <span class="built_in">DATE</span></span><br></pre></td></tr></table></figure></p><p>使用<code>update</code>语句更新<code>HRSJ_DATE</code> 字段<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> jtsg_new <span class="keyword">SET</span> HRSJ_DATE = <span class="built_in">DATE</span>(HRSJ)</span><br></pre></td></tr></table></figure></p><p>增加<code>HRSJ_DATE</code>作为索引：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> jtsg_new <span class="keyword">ADD</span> <span class="keyword">INDEX</span>(HRSJ_DATE)</span><br></pre></td></tr></table></figure></p><p>最后执行查询语句：<br><figure class="image-bubble">                <div class="img-lightbox">                    <div class="overlay"></div>                    <img src="https://img-blog.csdnimg.cn/20181228161522709.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" title="">                </div>                <div class="image-caption">在这里插入图片描述</div>            </figure><br>可以看到只需要<code>0.905</code>秒时间，速度快了很多，使用Explain命令分析结果：<br><figure class="image-bubble">                <div class="img-lightbox">                    <div class="overlay"></div>                    <img src="https://img-blog.csdnimg.cn/20181228161645798.png" alt="在这里插入图片描述" title="">                </div>                <div class="image-caption">在这里插入图片描述</div>            </figure><br>type变为了<code>range</code>, 表示区间索引，key值也变为了我们的索引列, rows代表扫描的行数比之前全表扫描减少了很多。</p><p>如果将范围进一步扩大，查询12个月的记录<br><figure class="image-bubble">                <div class="img-lightbox">                    <div class="overlay"></div>                    <img src="https://img-blog.csdnimg.cn/20181228161924826.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" title="">                </div>                <div class="image-caption">在这里插入图片描述</div>            </figure><br>结果type又变为了<code>ALL</code>, 和之前一样做全表扫描了，进一步分析明白原来MySQL中当记录数大于总表记录的百分之多少时，MySQL会放弃使用索引而进行全表扫描。</p><h3 id="强制使用索引"><a href="#强制使用索引" class="headerlink" title="强制使用索引"></a>强制使用索引</h3><p>这时可以在SQL语句中强制使用索引：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> lng, lat, <span class="keyword">count</span>(*) <span class="keyword">as</span> <span class="keyword">count</span> </span><br><span class="line"><span class="keyword">FROM</span> jtsg_new <span class="keyword">FORCE</span> <span class="keyword">INDEX</span>(HRSJ_DATE)</span><br><span class="line"><span class="keyword">WHERE</span> HRSJ_DATE &gt;= <span class="string">'2015-01-01'</span> <span class="keyword">AND</span> HRSJ_DATE &lt;= <span class="string">'2015-12-31'</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> lng, lat</span><br></pre></td></tr></table></figure></p><p>分析结果如下：<br><figure class="image-bubble">                <div class="img-lightbox">                    <div class="overlay"></div>                    <img src="https://img-blog.csdnimg.cn/20181228162546772.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" title="">                </div>                <div class="image-caption">在这里插入图片描述</div>            </figure><br>可以看到，MySQL又使用了索引，并且查询速度也加快了不少。</p><p>这是在项目中第一次进行MySQL性能优化实践，后面还要继续深入研究MySQL的优化技巧。</p><p>参考：<br>1.<a href="https://my.oschina.net/xsh1208/blog/496254" target="_blank" rel="noopener">https://my.oschina.net/xsh1208/blog/496254</a><br>2.<a href="https://blog.csdn.net/lkforce/article/details/79148002" target="_blank" rel="noopener">https://blog.csdn.net/lkforce/article/details/79148002</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;最近项目中使用的数据达到了百万级别，如果不进行优化，在查询时速度就会很慢，现在想的是先在SQL语句上加上索引进行优化，但有时候MySQL并不会像我们预想的那样使用索引。MySQL提供了Explain命令能够很好地查看sql语句执行情况，是否使用了索引，查询的记录数等等。&lt;/
+      
+    
+    </summary>
+    
+      <category term="MySQL" scheme="http://litexy.com/categories/MySQL/"/>
+    
+      <category term="项目记录" scheme="http://litexy.com/categories/%E9%A1%B9%E7%9B%AE%E8%AE%B0%E5%BD%95/"/>
+    
+    
+      <category term="MySQL" scheme="http://litexy.com/tags/MySQL/"/>
+    
+      <category term="查询优化" scheme="http://litexy.com/tags/%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96/"/>
+    
+  </entry>
   
   <entry>
     <title>Python-flask中mysql查询返回json格式数据</title>
@@ -39,9 +68,9 @@
       <category term="项目记录" scheme="http://litexy.com/categories/%E9%A1%B9%E7%9B%AE%E8%AE%B0%E5%BD%95/"/>
     
     
-      <category term="flask" scheme="http://litexy.com/tags/flask/"/>
-    
       <category term="MySQL" scheme="http://litexy.com/tags/MySQL/"/>
+    
+      <category term="flask" scheme="http://litexy.com/tags/flask/"/>
     
       <category term="Python" scheme="http://litexy.com/tags/Python/"/>
     
@@ -70,9 +99,9 @@
       <category term="项目记录" scheme="http://litexy.com/categories/%E9%A1%B9%E7%9B%AE%E8%AE%B0%E5%BD%95/"/>
     
     
-      <category term="flask" scheme="http://litexy.com/tags/flask/"/>
-    
       <category term="MySQL" scheme="http://litexy.com/tags/MySQL/"/>
+    
+      <category term="flask" scheme="http://litexy.com/tags/flask/"/>
     
       <category term="Python" scheme="http://litexy.com/tags/Python/"/>
     
@@ -260,9 +289,9 @@
       <category term="Algorithm" scheme="http://litexy.com/categories/Algorithm/"/>
     
     
-      <category term="Java" scheme="http://litexy.com/tags/Java/"/>
-    
       <category term="Algorithm" scheme="http://litexy.com/tags/Algorithm/"/>
+    
+      <category term="Java" scheme="http://litexy.com/tags/Java/"/>
     
   </entry>
   
@@ -287,9 +316,9 @@
       <category term="Java" scheme="http://litexy.com/categories/Java/"/>
     
     
-      <category term="Java" scheme="http://litexy.com/tags/Java/"/>
-    
       <category term="Java基础" scheme="http://litexy.com/tags/Java%E5%9F%BA%E7%A1%80/"/>
+    
+      <category term="Java" scheme="http://litexy.com/tags/Java/"/>
     
       <category term="Java编程思想" scheme="http://litexy.com/tags/Java%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/"/>
     

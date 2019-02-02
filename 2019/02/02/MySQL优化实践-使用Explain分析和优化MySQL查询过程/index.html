@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <link rel="canonical" href="http://litexy.com/2019/02/02/MySQL优化实践-使用Explain分析和优化MySQL查询过程/">
+    
+    
+    <title>MySQL优化实践:使用Explain分析和优化MySQL查询过程 | 新月的博客 | 一名在读硕士的修炼之路，关注Java/Python/数据分析等 记录学习过程中的点点滴滴...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="MySQL,查询优化">
+    <meta name="description" content="最近项目中使用的数据达到了百万级别，如果不进行优化，在查询时速度就会很慢，现在想的是先在SQL语句上加上索引进行优化，但有时候MySQL并不会像我们预想的那样使用索引。MySQL提供了Explain命令能够很好地查看sql语句执行情况，是否使用了索引，查询的记录数等等。 where中进行函数运算我在项目中需要以时间为筛选条件，如查询2018-01-01到2018-05-31之间的记录数，但我的字段">
+<meta name="keywords" content="MySQL,查询优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL优化实践:使用Explain分析和优化MySQL查询过程">
+<meta property="og:url" content="http://litexy.com/2019/02/02/MySQL优化实践-使用Explain分析和优化MySQL查询过程/index.html">
+<meta property="og:site_name" content="新月的博客">
+<meta property="og:description" content="最近项目中使用的数据达到了百万级别，如果不进行优化，在查询时速度就会很慢，现在想的是先在SQL语句上加上索引进行优化，但有时候MySQL并不会像我们预想的那样使用索引。MySQL提供了Explain命令能够很好地查看sql语句执行情况，是否使用了索引，查询的记录数等等。 where中进行函数运算我在项目中需要以时间为筛选条件，如查询2018-01-01到2018-05-31之间的记录数，但我的字段">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20181228160439235.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20181228161522709.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20181228161645798.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20181228161924826.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20181228162546772.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_16,color_FFFFFF,t_70">
+<meta property="og:updated_time" content="2019-02-02T11:28:02.726Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL优化实践:使用Explain分析和优化MySQL查询过程">
+<meta name="twitter:description" content="最近项目中使用的数据达到了百万级别，如果不进行优化，在查询时速度就会很慢，现在想的是先在SQL语句上加上索引进行优化，但有时候MySQL并不会像我们预想的那样使用索引。MySQL提供了Explain命令能够很好地查看sql语句执行情况，是否使用了索引，查询的记录数等等。 where中进行函数运算我在项目中需要以时间为筛选条件，如查询2018-01-01到2018-05-31之间的记录数，但我的字段">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20181228160439235.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="新月的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon2.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">litexy</h5>
+          <a href="mailto:xinyue.hfut@qq.com" title="xinyue.hfut@qq.com" class="mail">xinyue.hfut@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/xinyuexy" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                About
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">MySQL优化实践:使用Explain分析和优化MySQL查询过程</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">MySQL优化实践:使用Explain分析和优化MySQL查询过程</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-02-02T11:45:12.000Z" itemprop="datePublished" class="page-time">
+  2019-02-02
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/MySQL/">MySQL</a></li><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/项目记录/">项目记录</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#where中进行函数运算"><span class="post-toc-number">1.</span> <span class="post-toc-text">where中进行函数运算</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#新增字段使用索引"><span class="post-toc-number">2.</span> <span class="post-toc-text">新增字段使用索引</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#强制使用索引"><span class="post-toc-number">3.</span> <span class="post-toc-text">强制使用索引</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-MySQL优化实践-使用Explain分析和优化MySQL查询过程"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">MySQL优化实践:使用Explain分析和优化MySQL查询过程</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-02-02 19:45:12" datetime="2019-02-02T11:45:12.000Z"  itemprop="datePublished">2019-02-02</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/MySQL/">MySQL</a></li><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/项目记录/">项目记录</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>最近项目中使用的数据达到了百万级别，如果不进行优化，在查询时速度就会很慢，现在想的是先在SQL语句上加上索引进行优化，但有时候MySQL并不会像我们预想的那样使用索引。MySQL提供了Explain命令能够很好地查看sql语句执行情况，是否使用了索引，查询的记录数等等。</p>
+<h3 id="where中进行函数运算"><a href="#where中进行函数运算" class="headerlink" title="where中进行函数运算"></a>where中进行函数运算</h3><p>我在项目中需要以时间为筛选条件，如查询<code>2018-01-01</code>到<code>2018-05-31</code>之间的记录数，但我的字段的日期类型是datetime类型的(<code>2018-01-01 17:00:30</code>) ，我首先想到的是使用MySQL的<code>DATE</code>函数进行转换，SQL语句如下：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> lng, lat, <span class="keyword">count</span>(*) <span class="keyword">as</span> <span class="keyword">count</span> </span><br><span class="line"><span class="keyword">FROM</span> jtsg_new </span><br><span class="line"><span class="keyword">WHERE</span> <span class="built_in">DATE</span>(HRSJ) &gt;= <span class="string">'2015-01-01'</span> <span class="keyword">AND</span> <span class="built_in">DATE</span>(HRSJ) &lt;= <span class="string">'2015-05-31'</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> lng, lat</span><br></pre></td></tr></table></figure></p>
+<p>查询时间为<code>7.852</code>秒.<br>使用Explain命令对上述sql语句进行分析：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">EXPLAIN</span> <span class="keyword">SELECT</span> lng, lat, <span class="keyword">count</span>(*) <span class="keyword">as</span> <span class="keyword">count</span> </span><br><span class="line"><span class="keyword">FROM</span> jtsg_new </span><br><span class="line"><span class="keyword">WHERE</span> <span class="built_in">DATE</span>(HRSJ) &gt;= <span class="string">'2015-01-01'</span> <span class="keyword">AND</span> <span class="built_in">DATE</span>(HRSJ) &lt;= <span class="string">'2015-05-31'</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> lng, lat</span><br></pre></td></tr></table></figure></p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20181228160439235.png" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure>
+<p>我将<code>HRSJ</code>作为主键放在where里，但是通过结果发现并没有使用索引，type为ALL，key值也为null.<br>经过查询资料发现，在where字句中对索引字段进行函数运算(<code>DATE</code>)将会使MySQL放弃使用索引。于是我想的是在数据库中新增一个<code>HRSJ_DATE</code>字段将<code>HRSJ</code>的日期提取出来</p>
+<h3 id="新增字段使用索引"><a href="#新增字段使用索引" class="headerlink" title="新增字段使用索引"></a>新增字段使用索引</h3><p>首先新增一个<code>date</code>类型字段<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> jtsg_new <span class="keyword">ADD</span> <span class="keyword">COLUMN</span> HRSJ_DATE <span class="built_in">DATE</span></span><br></pre></td></tr></table></figure></p>
+<p>使用<code>update</code>语句更新<code>HRSJ_DATE</code> 字段<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> jtsg_new <span class="keyword">SET</span> HRSJ_DATE = <span class="built_in">DATE</span>(HRSJ)</span><br></pre></td></tr></table></figure></p>
+<p>增加<code>HRSJ_DATE</code>作为索引：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> jtsg_new <span class="keyword">ADD</span> <span class="keyword">INDEX</span>(HRSJ_DATE)</span><br></pre></td></tr></table></figure></p>
+<p>最后执行查询语句：<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20181228161522709.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure><br>可以看到只需要<code>0.905</code>秒时间，速度快了很多，使用Explain命令分析结果：<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20181228161645798.png" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure><br>type变为了<code>range</code>, 表示区间索引，key值也变为了我们的索引列, rows代表扫描的行数比之前全表扫描减少了很多。</p>
+<p>如果将范围进一步扩大，查询12个月的记录<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20181228161924826.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure><br>结果type又变为了<code>ALL</code>, 和之前一样做全表扫描了，进一步分析明白原来MySQL中当记录数大于总表记录的百分之多少时，MySQL会放弃使用索引而进行全表扫描。</p>
+<h3 id="强制使用索引"><a href="#强制使用索引" class="headerlink" title="强制使用索引"></a>强制使用索引</h3><p>这时可以在SQL语句中强制使用索引：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> lng, lat, <span class="keyword">count</span>(*) <span class="keyword">as</span> <span class="keyword">count</span> </span><br><span class="line"><span class="keyword">FROM</span> jtsg_new <span class="keyword">FORCE</span> <span class="keyword">INDEX</span>(HRSJ_DATE)</span><br><span class="line"><span class="keyword">WHERE</span> HRSJ_DATE &gt;= <span class="string">'2015-01-01'</span> <span class="keyword">AND</span> HRSJ_DATE &lt;= <span class="string">'2015-12-31'</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> lng, lat</span><br></pre></td></tr></table></figure></p>
+<p>分析结果如下：<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20181228162546772.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure><br>可以看到，MySQL又使用了索引，并且查询速度也加快了不少。</p>
+<p>这是在项目中第一次进行MySQL性能优化实践，后面还要继续深入研究MySQL的优化技巧。</p>
+<p>参考：<br>1.<a href="https://my.oschina.net/xsh1208/blog/496254" target="_blank" rel="noopener">https://my.oschina.net/xsh1208/blog/496254</a><br>2.<a href="https://blog.csdn.net/lkforce/article/details/79148002" target="_blank" rel="noopener">https://blog.csdn.net/lkforce/article/details/79148002</a></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-02-02T11:28:02.726Z" itemprop="dateUpdated">2019-02-02 19:28:02</time>
+</span><br>
+
+
+        
+        原文链接：<a href="/2019/02/02/MySQL优化实践-使用Explain分析和优化MySQL查询过程/" target="_blank" rel="external">http://litexy.com/2019/02/02/MySQL优化实践-使用Explain分析和优化MySQL查询过程/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://litexy.com">
+            <img src="/img/avatar.png" alt="litexy">
+            litexy
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/">MySQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/查询优化/">查询优化</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2019/02/02/MySQL优化实践-使用Explain分析和优化MySQL查询过程/&title=《MySQL优化实践:使用Explain分析和优化MySQL查询过程》 — 新月的博客&pic=http://litexy.com/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2019/02/02/MySQL优化实践-使用Explain分析和优化MySQL查询过程/&title=《MySQL优化实践:使用Explain分析和优化MySQL查询过程》 — 新月的博客&source=web,学习笔记,算法,程序员,Java,Python" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://litexy.com/2019/02/02/MySQL优化实践-使用Explain分析和优化MySQL查询过程/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《MySQL优化实践:使用Explain分析和优化MySQL查询过程》 — 新月的博客&url=http://litexy.com/2019/02/02/MySQL优化实践-使用Explain分析和优化MySQL查询过程/&via=http://litexy.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://litexy.com/2019/02/02/MySQL优化实践-使用Explain分析和优化MySQL查询过程/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/02/02/Python-flask中mysql查询返回json格式数据/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Python-flask中mysql查询返回json格式数据</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "7NlxEKd8qTg4UUeULk4ed5lb-gzGzoHsz",
+            appKey: "6OdIgn0fr7ifpSup5Q9qYKT9",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>litexy &copy; 2018 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2019/02/02/MySQL优化实践-使用Explain分析和优化MySQL查询过程/&title=《MySQL优化实践:使用Explain分析和优化MySQL查询过程》 — 新月的博客&pic=http://litexy.com/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2019/02/02/MySQL优化实践-使用Explain分析和优化MySQL查询过程/&title=《MySQL优化实践:使用Explain分析和优化MySQL查询过程》 — 新月的博客&source=web,学习笔记,算法,程序员,Java,Python" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://litexy.com/2019/02/02/MySQL优化实践-使用Explain分析和优化MySQL查询过程/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《MySQL优化实践:使用Explain分析和优化MySQL查询过程》 — 新月的博客&url=http://litexy.com/2019/02/02/MySQL优化实践-使用Explain分析和优化MySQL查询过程/&via=http://litexy.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://litexy.com/2019/02/02/MySQL优化实践-使用Explain分析和优化MySQL查询过程/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAADMUlEQVR42u3aQW7CQAwFUO5/abqtVBK+7VQi5mWFKpLJGxau/efxiK/nr+v3X/5+Pv/+0TePnpM87eiuCy5sbGzsm7Cfp1e+8PnyCfvorvNtSt7qxSrY2NjY69jnS1ZfNy9s1ecnP0/yJtjY2NjfzJ6UuvzJvR8AGxsbGztnnw93klepjrGqoy5sbGzsb2Pn/+JXl6kO/c/frRobXDBLw8bGxv54dl5OPv/zv+Tb2NjY2B/MfhavXjyQR7n5uCovWi/uwsbGxl7EngOqzUMe2fa2pvD+2NjY2IvYeRlIotl89NPbjrzxSCJkbGxs7N3s+dA/Wri4erXsvdkmbGxs7JuzkwA1KUjVUCH5ftLwJKtgY2NjfwO72mDkGzGpq1dFFC/WwsbGxl7ErgalveJXjW973ym3N9jY2NiL2L2RULXITYb78ye8wWNjY2OvZhduLh6ySUZFObIaV2NjY2NvYl/beEwGQ70DQ/lQDBsbG3s3e3J8p3ewJh8h5eWt0BphY2Njr2D3Wo5qf9MbPCX48xJ7eC82Njb2OnZ+zCWPB6ojqsmwKXkHbGxs7K3saqSaDJuSu+aHbHrpBzY2NvZW9qQZ6AUD1W3qtUaP6oWNjY19c3aveMyXn4yu8mJ5+D7Y2NjYi9jNgy/xkpNmJj+g0ws8sLGxse/LnoepyUvM///P14pE2NjY2KvZvQdNAuBqw9MbkJWzBWxsbOxbsasj+Hy01Ctp+erNdbGxsbHXsZNBf3XwVM1Vq2FwXrRefMbGxsZexO7FpTnjqqi4d8Sn0JBgY2Nj35ydA/KmohfQVoOESWHDxsbG3sTuDWh64UG1EFYPFRVKJjY2NvZSdq8ZKC8ZF6erxl5vChg2Njb2OnahgxnHtD3AZLuxsbGxN7F7xy7zUVG+cdWwNtm46MgONjY29s3ZV9XASbTQO+Iz2SBsbGzsfez5QZmrytV89J9EHdjY2Nhb2dVhU+8AZR4qz9uJNz8MNjY29hez5wOm/+ilyhuHjY2N/cXsvPBM2phq8FBuVLCxsbHXsZOhUrLw5OBmNYSobgo2Njb2VnZ1QJMP95OIdz4qyg8VYWNjY69j/wD1Yu05W7whjQAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
