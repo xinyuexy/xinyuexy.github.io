@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <link rel="canonical" href="http://litexy.com/2019/02/02/Python-flask中mysql查询返回json格式数据/">
+    
+    
+    <title>Python-flask中mysql查询返回json格式数据 | 新月的博客 | 一名在读硕士的修炼之路，关注Java/Python/数据分析等 记录学习过程中的点点滴滴...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Python,flask,MySQL">
+    <meta name="description" content="在进行web项目开发时，经常需要查询数据库并返回json格式给前端，Java中可以使用JSONObject或mybatis直接就可以映射成map结构，而python中返回的是元组的形式((&amp;#39;a&amp;#39;,1,2), (&amp;#39;b&amp;#39;,2,3), ...)。下面提供几种在python flask中转换为json格式的方式。 循环遍历最简单粗暴的方式就是遍历结果集，使用字典进行包装，最">
+<meta name="keywords" content="Python,flask,MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python-flask中mysql查询返回json格式数据">
+<meta property="og:url" content="http://litexy.com/2019/02/02/Python-flask中mysql查询返回json格式数据/index.html">
+<meta property="og:site_name" content="新月的博客">
+<meta property="og:description" content="在进行web项目开发时，经常需要查询数据库并返回json格式给前端，Java中可以使用JSONObject或mybatis直接就可以映射成map结构，而python中返回的是元组的形式((&amp;#39;a&amp;#39;,1,2), (&amp;#39;b&amp;#39;,2,3), ...)。下面提供几种在python flask中转换为json格式的方式。 循环遍历最简单粗暴的方式就是遍历结果集，使用字典进行包装，最">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-02-02T11:04:23.166Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python-flask中mysql查询返回json格式数据">
+<meta name="twitter:description" content="在进行web项目开发时，经常需要查询数据库并返回json格式给前端，Java中可以使用JSONObject或mybatis直接就可以映射成map结构，而python中返回的是元组的形式((&amp;#39;a&amp;#39;,1,2), (&amp;#39;b&amp;#39;,2,3), ...)。下面提供几种在python flask中转换为json格式的方式。 循环遍历最简单粗暴的方式就是遍历结果集，使用字典进行包装，最">
+    
+        <link rel="alternate" type="application/atom+xml" title="新月的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon2.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">litexy</h5>
+          <a href="mailto:xinyue.hfut@qq.com" title="xinyue.hfut@qq.com" class="mail">xinyue.hfut@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/xinyuexy" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                About
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Python-flask中mysql查询返回json格式数据</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Python-flask中mysql查询返回json格式数据</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-02-02T11:41:12.000Z" itemprop="datePublished" class="page-time">
+  2019-02-02
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Python-项目记录/">-[Python] -[项目记录]</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#循环遍历"><span class="post-toc-number">1.</span> <span class="post-toc-text">循环遍历</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#直接设置Mysqldb返回字典结构"><span class="post-toc-number">2.</span> <span class="post-toc-text">直接设置Mysqldb返回字典结构</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#在flask中设置"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">在flask中设置</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#参考"><span class="post-toc-number">3.</span> <span class="post-toc-text">参考</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Python-flask中mysql查询返回json格式数据"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Python-flask中mysql查询返回json格式数据</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-02-02 19:41:12" datetime="2019-02-02T11:41:12.000Z"  itemprop="datePublished">2019-02-02</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Python-项目记录/">-[Python] -[项目记录]</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>在进行web项目开发时，经常需要查询数据库并返回json格式给前端，Java中可以使用JSONObject或mybatis直接就可以映射成map结构，而python中返回的是元组的形式<code>((&#39;a&#39;,1,2), (&#39;b&#39;,2,3), ...)</code>。下面提供几种在python flask中转换为json格式的方式。</p>
+<h3 id="循环遍历"><a href="#循环遍历" class="headerlink" title="循环遍历"></a>循环遍历</h3><p>最简单粗暴的方式就是遍历结果集，使用字典进行包装，最后使用flask的jsonify将其转换为json格式，参考代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">   cur = mysql.connection.cursor()</span><br><span class="line">   cur.execute(<span class="string">'''SELECT * FROM Users WHERE id=1'''</span>)</span><br><span class="line">   rv = cur.fetchall()</span><br><span class="line">   payload = []</span><br><span class="line">   content = &#123;&#125;</span><br><span class="line">   <span class="keyword">for</span> result <span class="keyword">in</span> rv:</span><br><span class="line">       content = &#123;<span class="string">'id'</span>: result[<span class="number">0</span>], <span class="string">'username'</span>: result[<span class="number">1</span>], <span class="string">'password'</span>: result[<span class="number">2</span>]&#125;</span><br><span class="line">       payload.append(content)</span><br><span class="line">       content = &#123;&#125;</span><br><span class="line">   <span class="keyword">return</span> jsonify(payload)</span><br></pre></td></tr></table></figure></p>
+<h3 id="直接设置Mysqldb返回字典结构"><a href="#直接设置Mysqldb返回字典结构" class="headerlink" title="直接设置Mysqldb返回字典结构"></a>直接设置Mysqldb返回字典结构</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">db  = MySQLdb.connect(host=<span class="string">'localhost'</span>, user=<span class="string">'root'</span>, passwd=<span class="string">'123456'</span>, db=<span class="string">'test'</span>)</span><br><span class="line">cur = db.cursor(cursorclass=MySQLdb.cursors.DictCursor)</span><br></pre></td></tr></table></figure>
+<p>只需要在最后设置cursorclass可选参数即可</p>
+<h4 id="在flask中设置"><a href="#在flask中设置" class="headerlink" title="在flask中设置"></a>在flask中设置</h4><p>我使用的是flask-mysqldb扩展，只需要在配置中设置<code>MYSQL_CURSORCLASS=&#39;DictCursor&#39;</code>即可。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a href="https://stackoverflow.com/questions/43796423/python-converting-mysql-query-result-to-json" target="_blank" rel="noopener">https://stackoverflow.com/questions/43796423/python-converting-mysql-query-result-to-json</a></li>
+<li><a href="http://chenxiaoyu.org/2009/11/10/python-mysqldb-return-dict/" target="_blank" rel="noopener">http://chenxiaoyu.org/2009/11/10/python-mysqldb-return-dict/</a></li>
+<li><a href="https://stackoverflow.com/questions/38980044/looking-for-the-equivalent-of-dictcursor-in-flaskext-mysql" target="_blank" rel="noopener">https://stackoverflow.com/questions/38980044/looking-for-the-equivalent-of-dictcursor-in-flaskext-mysql</a></li>
+<li><a href="https://flask-mysqldb.readthedocs.io/en/latest/" target="_blank" rel="noopener">https://flask-mysqldb.readthedocs.io/en/latest/</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-02-02T11:04:23.166Z" itemprop="dateUpdated">2019-02-02 19:04:23</time>
+</span><br>
+
+
+        
+        原文链接：<a href="/2019/02/02/Python-flask中mysql查询返回json格式数据/" target="_blank" rel="external">http://litexy.com/2019/02/02/Python-flask中mysql查询返回json格式数据/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://litexy.com">
+            <img src="/img/avatar.png" alt="litexy">
+            litexy
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/">MySQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/flask/">flask</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2019/02/02/Python-flask中mysql查询返回json格式数据/&title=《Python-flask中mysql查询返回json格式数据》 — 新月的博客&pic=http://litexy.com/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2019/02/02/Python-flask中mysql查询返回json格式数据/&title=《Python-flask中mysql查询返回json格式数据》 — 新月的博客&source=web,学习笔记,算法,程序员,Java,Python" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://litexy.com/2019/02/02/Python-flask中mysql查询返回json格式数据/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Python-flask中mysql查询返回json格式数据》 — 新月的博客&url=http://litexy.com/2019/02/02/Python-flask中mysql查询返回json格式数据/&via=http://litexy.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://litexy.com/2019/02/02/Python-flask中mysql查询返回json格式数据/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/02/02/ubuntu下安装flask-mysqldb问题记录/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">ubuntu下安装flask-mysqldb问题记录</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "7NlxEKd8qTg4UUeULk4ed5lb-gzGzoHsz",
+            appKey: "6OdIgn0fr7ifpSup5Q9qYKT9",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>litexy &copy; 2018 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2019/02/02/Python-flask中mysql查询返回json格式数据/&title=《Python-flask中mysql查询返回json格式数据》 — 新月的博客&pic=http://litexy.com/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2019/02/02/Python-flask中mysql查询返回json格式数据/&title=《Python-flask中mysql查询返回json格式数据》 — 新月的博客&source=web,学习笔记,算法,程序员,Java,Python" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://litexy.com/2019/02/02/Python-flask中mysql查询返回json格式数据/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Python-flask中mysql查询返回json格式数据》 — 新月的博客&url=http://litexy.com/2019/02/02/Python-flask中mysql查询返回json格式数据/&via=http://litexy.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://litexy.com/2019/02/02/Python-flask中mysql查询返回json格式数据/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACsUlEQVR42u3aS3LcMAwFQN//0s4BHMkPv2QWrZVLM0Ox6SoSAvD1FV/fP66f95/uPI2WPzH/VfPCw8PDG0+9N+n3Sfy8ny/E+3yevoOHh4d3zXuf0PvQ1T25dwBUv4OHh4f3ObwE/D7pwrY+WAI8PDy8T+Ml4XI13ZCE0Xh4eHifw8u39ep0k0C8F1Iv51rw8PDwalFrVEX6nL9P6nt4eHh446p6tV2glwKuHieF2eLh4eEd8LYSB3kDQbJA1Wf9Mk88PDy8VV4+6FYTQC99UE2U4OHh4d3xqkWsZgkq3vrzcDxPH+Ph4eHt8ibNUnnCN0+/zgtvf3lXwMPDwzvj9YbIGwLytOxWqwEeHh7eHa93Jy+PTZoVEtgv9T08PDy8VV5+SOSl/XxRqiWxUfCNh4eHt8RLQthqyaoaNFePpcI/Bg8PD++Y10tSzJMXvSMkCrvx8PDwznjVa76VV9sXeocTHh4e3r/k3SVYC+Wr1rOi6B4PDw9viTffiHthdB4iV0txeHh4eHe83gbdY+RNBr2mq8fOCDw8PLxVXp7MnRS38naE6pHzuBx4eHh4Z7z8kZPCWHUpJyPg4eHh3fF2p1VNK2wF36Olx8PDw2vxkoA4/7S3QNWQupAIxsPDwzvg9V7+e6nbPAm7m/bFw8PD2+VVMb04fbI0yW8LmWA8PDy8Y141FE7SCsn3t1q+8PDw8O54+dS3Pk3SCnmi+fEOHh4e3irvu3hFG3E80XzTr4bReHh4eHe8XgNBNTWQTHHr2Fjoj8DDw8MLeJPy/CS5UB0/X+K17gM8PDy8V14SzuYhdXVzL59U1TMNDw8P77/yqsjq8ZO3LJwcDHh4eHhnvF1G77CJFhcPDw/vjNfbsvMQvJcyzhsFFnIteHh4eDFv/kafBLiTtMWoLQAPDw9vk/cHCSzFOlMp1TYAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
