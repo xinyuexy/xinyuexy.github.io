@@ -16,7 +16,7 @@
     <link rel="canonical" href="http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/">
     
     
-    <title>Servlet中的ServletConfig和ServletContext | 程序员修炼之路 | 一名Web开发者修炼之路，专注Web开发/Java/Python/算法等 记录学习过程中的点点滴滴...</title>
+    <title>Servlet中的ServletConfig和ServletContext | 新月的博客 | 一名在读硕士的修炼之路，关注Java/Python/数据分析等 记录学习过程中的点点滴滴...</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
@@ -28,7 +28,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="Servlet中的ServletConfig和ServletContext">
 <meta property="og:url" content="http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/index.html">
-<meta property="og:site_name" content="程序员修炼之路">
+<meta property="og:site_name" content="新月的博客">
 <meta property="og:description" content="最近在学习Servlet时，看到有些时候会用到ServletConfig和ServletContext两个类，而且这两个类还有点相似之处，所以写篇博客总结一下。首先看一下整个Servlet的层次结构。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/01.png">
@@ -44,7 +44,7 @@
 <meta name="twitter:description" content="最近在学习Servlet时，看到有些时候会用到ServletConfig和ServletContext两个类，而且这两个类还有点相似之处，所以写篇博客总结一下。首先看一下整个Servlet的层次结构。">
 <meta name="twitter:image" content="http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/01.png">
     
-        <link rel="alternate" type="application/atom+xml" title="程序员修炼之路" href="/atom.xml">
+        <link rel="alternate" type="application/atom+xml" title="新月的博客" href="/atom.xml">
     
     <link rel="shortcut icon" href="/img/favicon2.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -298,7 +298,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/&title=《Servlet中的ServletConfig和ServletContext》 — 程序员修炼之路&pic=http://litexy.com/img/avatar.png" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/&title=《Servlet中的ServletConfig和ServletContext》 — 新月的博客&pic=http://litexy.com/img/avatar.png" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -308,7 +308,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/&title=《Servlet中的ServletConfig和ServletContext》 — 程序员修炼之路&source=最近在学习Servlet时，看到有些时候会用到ServletConfig和ServletContext两个类，而且这两个类还有点相似之处，所以写篇博客总结..." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/&title=《Servlet中的ServletConfig和ServletContext》 — 新月的博客&source=最近在学习Servlet时，看到有些时候会用到ServletConfig和ServletContext两个类，而且这两个类还有点相似之处，所以写篇博客总结..." data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -318,7 +318,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Servlet中的ServletConfig和ServletContext》 — 程序员修炼之路&url=http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/&via=http://litexy.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Servlet中的ServletConfig和ServletContext》 — 新月的博客&url=http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/&via=http://litexy.com" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
@@ -455,7 +455,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/&title=《Servlet中的ServletConfig和ServletContext》 — 程序员修炼之路&pic=http://litexy.com/img/avatar.png" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/&title=《Servlet中的ServletConfig和ServletContext》 — 新月的博客&pic=http://litexy.com/img/avatar.png" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -465,7 +465,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/&title=《Servlet中的ServletConfig和ServletContext》 — 程序员修炼之路&source=最近在学习Servlet时，看到有些时候会用到ServletConfig和ServletContext两个类，而且这两个类还有点相似之处，所以写篇博客总结..." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/&title=《Servlet中的ServletConfig和ServletContext》 — 新月的博客&source=最近在学习Servlet时，看到有些时候会用到ServletConfig和ServletContext两个类，而且这两个类还有点相似之处，所以写篇博客总结..." data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -475,7 +475,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Servlet中的ServletConfig和ServletContext》 — 程序员修炼之路&url=http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/&via=http://litexy.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Servlet中的ServletConfig和ServletContext》 — 新月的博客&url=http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/&via=http://litexy.com" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>

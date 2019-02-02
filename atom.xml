@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>程序员修炼之路</title>
+  <title>新月的博客</title>
   
-  <subtitle>一名Web开发者修炼之路，专注Web开发/Java/Python/算法等 记录学习过程中的点点滴滴...</subtitle>
+  <subtitle>一名在读硕士的修炼之路，关注Java/Python/数据分析等 记录学习过程中的点点滴滴...</subtitle>
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://litexy.com/"/>
@@ -225,9 +225,9 @@
       <category term="Java" scheme="http://litexy.com/categories/Java/"/>
     
     
-      <category term="Java" scheme="http://litexy.com/tags/Java/"/>
-    
       <category term="Java基础" scheme="http://litexy.com/tags/Java%E5%9F%BA%E7%A1%80/"/>
+    
+      <category term="Java" scheme="http://litexy.com/tags/Java/"/>
     
       <category term="Java编程思想" scheme="http://litexy.com/tags/Java%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/"/>
     

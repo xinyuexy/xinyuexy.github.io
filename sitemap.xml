@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://litexy.com/about/index.html</loc>
+    
+    <lastmod>2019-02-02T07:29:22.935Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://litexy.com/2018/03/15/Servlet%E4%B8%AD%E7%9A%84ServletConfig%E5%92%8CServletContext/</loc>
     
     <lastmod>2019-02-02T03:37:18.099Z</lastmod>
@@ -89,13 +96,6 @@
     <loc>http://litexy.com/2018/08/02/hexo%E5%8D%9A%E5%AE%A2%E7%BB%91%E5%AE%9A%E5%9F%9F%E5%90%8D%E4%BB%A5%E5%8F%8A%E5%A2%9E%E5%8A%A0gitment%E8%AF%84%E8%AE%BA/</loc>
     
     <lastmod>2018-12-12T16:01:25.248Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://litexy.com/about/index.html</loc>
-    
-    <lastmod>2018-12-12T15:41:15.874Z</lastmod>
     
   </url>
   
