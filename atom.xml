@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://litexy.com/"/>
-  <updated>2019-02-02T10:54:05.428Z</updated>
+  <updated>2019-02-02T10:57:24.028Z</updated>
   <id>http://litexy.com/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://litexy.com/2019/02/02/ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85flask-mysqldb%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/"/>
     <id>http://litexy.com/2019/02/02/ubuntu下安装flask-mysqldb问题记录/</id>
     <published>2019-02-02T11:41:12.000Z</published>
-    <updated>2019-02-02T10:54:05.428Z</updated>
+    <updated>2019-02-02T10:57:24.028Z</updated>
     
     <content type="html"><![CDATA[<p>python中使用mysql的包有pymysql和mysqldb，同样地，flask也为其提供了扩展：flask-mysql（貌似基于pymysql），flask-mysqldb，但flask-mysql只支持python2，而flask-mysqldb同时兼容python2和python3。</p><p>在虚拟环境中安装flask-mysqldb:<br><code>pip install flask-mysqldb</code><br>出现如下错误：<br><figure class="image-bubble">                <div class="img-lightbox">                    <div class="overlay"></div>                    <img src="https://img-blog.csdn.net/20181010164239253?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="在这里插入图片描述" title="">                </div>                <div class="image-caption">在这里插入图片描述</div>            </figure><br>在Google中搜索<strong>OSError: mysql_config not found</strong><br>最终在Stack Overflow中找到答案(差点放弃…)<br>需要安装如下包：<br><code>sudo apt-get install libmysqlclient-dev</code><br>再次安装成功：<br><figure class="image-bubble">                <div class="img-lightbox">                    <div class="overlay"></div>                    <img src="https://img-blog.csdn.net/20181010164607804?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="在这里插入图片描述" title="">                </div>                <div class="image-caption">在这里插入图片描述</div>            </figure></p><h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><p><a href="https://stackoverflow.com/questions/5178292/pip-install-mysql-python-fails-with-environmenterror-mysql-config-not-found" target="_blank" rel="noopener">https://stackoverflow.com/questions/5178292/pip-install-mysql-python-fails-with-environmenterror-mysql-config-not-found</a></p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>遇到别轻易放弃，再多找找，多尝试，相信能够成功<br>（stack overflow是个好地方）</p>]]></content>
     
@@ -34,9 +34,7 @@
     
     </summary>
     
-      <category term="Python" scheme="http://litexy.com/categories/Python/"/>
-    
-      <category term="项目记录" scheme="http://litexy.com/categories/%E9%A1%B9%E7%9B%AE%E8%AE%B0%E5%BD%95/"/>
+      <category term="-[Python] -[项目记录]" scheme="http://litexy.com/categories/Python-%E9%A1%B9%E7%9B%AE%E8%AE%B0%E5%BD%95/"/>
     
     
       <category term="Python" scheme="http://litexy.com/tags/Python/"/>
@@ -229,9 +227,9 @@
       <category term="Algorithm" scheme="http://litexy.com/categories/Algorithm/"/>
     
     
-      <category term="Algorithm" scheme="http://litexy.com/tags/Algorithm/"/>
-    
       <category term="Java" scheme="http://litexy.com/tags/Java/"/>
+    
+      <category term="Algorithm" scheme="http://litexy.com/tags/Algorithm/"/>
     
   </entry>
   
@@ -256,9 +254,9 @@
       <category term="Java" scheme="http://litexy.com/categories/Java/"/>
     
     
-      <category term="Java基础" scheme="http://litexy.com/tags/Java%E5%9F%BA%E7%A1%80/"/>
-    
       <category term="Java" scheme="http://litexy.com/tags/Java/"/>
+    
+      <category term="Java基础" scheme="http://litexy.com/tags/Java%E5%9F%BA%E7%A1%80/"/>
     
       <category term="Java编程思想" scheme="http://litexy.com/tags/Java%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/"/>
     
