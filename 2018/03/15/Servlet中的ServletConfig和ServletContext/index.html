@@ -1,0 +1,638 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Servlet中的ServletConfig和ServletContext | 程序员修炼之路</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="litexy">
+    
+
+    
+    <meta name="description" content="最近在学习Servlet时，看到有些时候会用到ServletConfig和ServletContext两个类，而且这两个类还有点相似之处，所以写篇博客总结一下。首先看一下整个Servlet的层次结构。">
+<meta name="keywords" content="Java,JavaWeb,Servlet">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Servlet中的ServletConfig和ServletContext">
+<meta property="og:url" content="http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/index.html">
+<meta property="og:site_name" content="程序员修炼之路">
+<meta property="og:description" content="最近在学习Servlet时，看到有些时候会用到ServletConfig和ServletContext两个类，而且这两个类还有点相似之处，所以写篇博客总结一下。首先看一下整个Servlet的层次结构。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/01.png">
+<meta property="og:image" content="http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/02.png">
+<meta property="og:image" content="http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/03.png">
+<meta property="og:image" content="http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/04.png">
+<meta property="og:image" content="http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/05.png">
+<meta property="og:image" content="http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/06.png">
+<meta property="og:image" content="http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/07.png">
+<meta property="og:updated_time" content="2019-02-02T03:37:18.099Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Servlet中的ServletConfig和ServletContext">
+<meta name="twitter:description" content="最近在学习Servlet时，看到有些时候会用到ServletConfig和ServletContext两个类，而且这两个类还有点相似之处，所以写篇博客总结一下。首先看一下整个Servlet的层次结构。">
+<meta name="twitter:image" content="http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/01.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="程序员修炼之路" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="程序员修炼之路" title="程序员修炼之路"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="程序员修炼之路">程序员修炼之路</a></h1>
+				<h2 class="blog-motto">一名Web开发者修炼之路，专注Web开发/Java/Python/算法等 记录学习过程中的点点滴滴...</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:litexy.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2018/03/15/Servlet中的ServletConfig和ServletContext/" title="Servlet中的ServletConfig和ServletContext" itemprop="url">Servlet中的ServletConfig和ServletContext</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="litexy" target="_blank" itemprop="author">litexy</a>
+		
+  <p class="article-time">
+    <time datetime="2018-03-15T08:49:52.000Z" itemprop="datePublished"> 发表于 2018-03-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ServletConfig-API"><span class="toc-number">1.</span> <span class="toc-text">ServletConfig API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ServletContext-API"><span class="toc-number">2.</span> <span class="toc-text">ServletContext API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ServletConfig和ServletContext的应用"><span class="toc-number">3.</span> <span class="toc-text">ServletConfig和ServletContext的应用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结和感想"><span class="toc-number">4.</span> <span class="toc-text">总结和感想</span></a></li></ol>
+		
+		</div>
+		
+		<p>最近在学习Servlet时，看到有些时候会用到ServletConfig和ServletContext两个类，而且这两个类还有点相似之处，所以写篇博客总结一下。首先看一下整个Servlet的层次结构。</p>
+<p><img src="/2018/03/15/Servlet中的ServletConfig和ServletContext/01.png" style="zoom: 80%"></p>
+<a id="more"></a>
+<p>基本上主要的和Servlet相关的类就这么多了，可以看到ServletConfig和ServletContext在其中的位置和其他类的关系。</p>
+<h2 id="ServletConfig-API"><a href="#ServletConfig-API" class="headerlink" title="ServletConfig API"></a>ServletConfig API</h2><p>ServletConfig接口被用于传递一些配置信息给Servlet，每一个Servlet都独享一个自己的ServletConfig对象，然后servlet容器负责创建这个对象。我们可以在web.xml或者是WebInitParam注解方式设置一些servlet的初始参数信息，servlet通过得到ServletConfig对象实例调用其中的方法来得到这些初始信息。</p>
+<p>常用的方法如下：</p>
+<p><code>java.lang.String getInitParameter(java.lang.String name)  根据名称获取参数值</code></p>
+<p><code>java.util.Enumeration getInitParameterNames()         得到所有参数</code></p>
+<p><code>ServletContext getServletContext()                   获取servlet上下文对象</code></p>
+<p><code>java.lang.String getServletName()                    得到servlet名称</code></p>
+<p>通过在web.xml或注解中设置servlet初始参数，然后可以用上述方法获得这些参数：</p>
+<p>web.xml配置文件:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">servlet</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>LoginServlet<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet-class</span>&gt;</span>com.journaldev.servlet.LoginServlet<span class="tag">&lt;/<span class="name">servlet-class</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 在web.xml中设置servlet初始参数(也可以使用注解方式) --&gt;</span></span><br><span class="line">  	<span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">  		<span class="tag">&lt;<span class="name">param-name</span>&gt;</span>user<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">  		<span class="tag">&lt;<span class="name">param-value</span>&gt;</span>xinyue<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">servlet</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>获取方式如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String user = getServletConfig().getInitParameter(<span class="string">"user"</span>);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：这里有个问题，为什么可以直接调用getServletConfig()方法，在Eclipse里Ctrl+鼠标点进去看发现调用的是GenericServlet类里的getServletConfig()方法。这是因为我们的Servlet类继承自HttpServlet，而HttpServlet又继承了GenericServlet类。</p>
+</blockquote>
+<p>GenericServlet类的定义如下：</p>
+<p><img src="/2018/03/15/Servlet中的ServletConfig和ServletContext/02.png" style="zoom:80%"></p>
+<p>可以看到GenericServlet类中定义了ServletConfig对象的引用，而且还是实现了ServletConfig接口。</p>
+<p><img src="/2018/03/15/Servlet中的ServletConfig和ServletContext/03.png" style="zoom:80%"></p>
+<p>其实也可以直接使用getInitParameter(“user”)，由于GenericServlet类实现了ServletConfig接口，所以其也会重载ServletConfig接口中的函数。</p>
+<h2 id="ServletContext-API"><a href="#ServletContext-API" class="headerlink" title="ServletContext API"></a>ServletContext API</h2><p>不同于ServletConfig，ServletContext接口主要用于保存web应用中全局信息，所有Servlet都可以共享这些信息。其会在web应用被加载时创建，然后其他servlet就可以调用它了。</p>
+<p>主要的方法如下:</p>
+<p>（1）得到web应用的上下文路径：</p>
+<p>​    <code>java.lang.String getContextPath()</code></p>
+<p> （2）获取web应用的全局参数 ：         </p>
+<p>　　 <code>java.lang.String getInitParameter(java.lang.String name)</code> </p>
+<p>　　 <code>java.util.Enumeration getInitParameterNames()</code>  </p>
+<p> （3）域对象相关的方法：</p>
+<p>　　  <code>java.lang.Object getAttribute(java.lang.String name)</code>    </p>
+<p>　　 <code>void setAttribute(java.lang.String name, java.lang.Object object)</code></p>
+<p>　　 <code>void removeAttribute(java.lang.String name)</code></p>
+<p> （4）用于转发：</p>
+<p>　　  <code>RequestDispatcher getRequestDispatcher(java.lang.String path)</code>  </p>
+<p> （5）web应用加载资源文件方法：</p>
+<p>　　  <code>java.lang.String getRealPath(java.lang.String path)</code>   </p>
+<p>　　  <code>java.io.InputStream getResourceAsStream(java.lang.String path)</code></p>
+<h2 id="ServletConfig和ServletContext的应用"><a href="#ServletConfig和ServletContext的应用" class="headerlink" title="ServletConfig和ServletContext的应用"></a>ServletConfig和ServletContext的应用</h2><p>下面通过一个登陆的例子来看一下两者的用法，参考：<a href="https://www.journaldev.com/1877/servlet-tutorial-java#servlet-interface。" target="_blank" rel="noopener">https://www.journaldev.com/1877/servlet-tutorial-java#servlet-interface。</a></p>
+<p>在html表单里请求LoginServlet，用户输入指定的用户名和密码即可登陆成功，跳转到登陆成功页面，失败则显示登陆失败。</p>
+<p>我们主要讲解一下Servlet中的代码。首先在注解（或web.xml）中将用户名和密码作为servlet的初始参数存储（即前面讲ServletConfig相关的）：</p>
+<p><img src="/2018/03/15/Servlet中的ServletConfig和ServletContext/04.png" style="zoom:60%"></p>
+<p>通过ServletContext中的方法获取web应用的全局配置信息：</p>
+<p><img src="/2018/03/15/Servlet中的ServletConfig和ServletContext/05.png" style="zoom:60%"></p>
+<p>这里将数据库的配置作为全局信息，定义在web.xml文件的context-param中：</p>
+<p><img src="/2018/03/15/Servlet中的ServletConfig和ServletContext/06.png" style="60%"></p>
+<p>在doPost方法中通过ServletConfig获取servlet的初始参数：</p>
+<p><img src="/2018/03/15/Servlet中的ServletConfig和ServletContext/07.png" style="zoom:60%"></p>
+<p>如果登陆成功，通过sendRedirect方法重定向到LoginSuccess.jsp页面，否则转发到登陆页面。（这里要注意sendRedirect和getRequestDispatcher方法的区别）</p>
+<h2 id="总结和感想"><a href="#总结和感想" class="headerlink" title="总结和感想"></a>总结和感想</h2><p>1.源码是最好的学习资料，遇到问题时，要学会从源码中寻找答案。包括类的层次结构和每个方法的作用。</p>
+<p>2.在遇到一个新知识时，首先要知道这个知识涉及到哪些主要的类，这些类的关系是怎样的，然后再看每个类的方法。</p>
+<p>参考资料：</p>
+<p><a href="http://www.cnblogs.com/vmax-tam/p/4127396.html" target="_blank" rel="noopener">http://www.cnblogs.com/vmax-tam/p/4127396.html</a></p>
+<p><a href="https://www.journaldev.com/1877/servlet-tutorial-java#servlet-interface" target="_blank" rel="noopener">https://www.journaldev.com/1877/servlet-tutorial-java#servlet-interface</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Java/">Java</a><a href="/tags/JavaWeb/">JavaWeb</a><a href="/tags/Servlet/">Servlet</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://litexy.com/2018/03/15/Servlet中的ServletConfig和ServletContext/" data-title="Servlet中的ServletConfig和ServletContext | 程序员修炼之路" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2018/03/26/关于Java中读取和修改大文件的问题/" title="关于Java中读取和修改SQL大文件的问题">
+  <strong>上一篇：</strong><br/>
+  <span>
+  关于Java中读取和修改SQL大文件的问题</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2018/03/11/关于leetcode上链表题目的一些trick/"  title="关于链表题目的一些trick">
+ <strong>下一篇：</strong><br/> 
+ <span>关于链表题目的一些trick
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ServletConfig-API"><span class="toc-number">1.</span> <span class="toc-text">ServletConfig API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ServletContext-API"><span class="toc-number">2.</span> <span class="toc-text">ServletContext API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ServletConfig和ServletContext的应用"><span class="toc-number">3.</span> <span class="toc-text">ServletConfig和ServletContext的应用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结和感想"><span class="toc-number">4.</span> <span class="toc-text">总结和感想</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Algorithm/" title="Algorithm">Algorithm<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Python/" title="Python">Python<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/工具软件/" title="工具软件">工具软件<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据可视化/" title="数据可视化">数据可视化<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/随笔/" title="随笔">随笔<sup>4</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Algorithm/" title="Algorithm">Algorithm<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/LinkedList/" title="LinkedList">LinkedList<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/随笔/" title="随笔">随笔<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java基础/" title="Java基础">Java基础<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JavaWeb/" title="JavaWeb">JavaWeb<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/sublime/" title="sublime">sublime<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/迭代器/" title="迭代器">迭代器<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/爬虫/" title="爬虫">爬虫<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/资源/" title="资源">资源<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Servlet/" title="Servlet">Servlet<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/可视化/" title="可视化">可视化<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/echarts/" title="echarts">echarts<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MySQL/" title="MySQL">MySQL<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Git/" title="Git">Git<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Github/" title="Github">Github<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java编程思想/" title="Java编程思想">Java编程思想<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/QuickSort/" title="QuickSort">QuickSort<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=&verifier=b3593ceb&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Larry Page in Google. <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2176287895" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2019 
+		
+		<a href="/about" target="_blank" title="litexy">litexy</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

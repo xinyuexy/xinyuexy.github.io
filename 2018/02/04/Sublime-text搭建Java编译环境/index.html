@@ -1,0 +1,592 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Sublime-text搭建Java编译环境 | 程序员修炼之路</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="litexy">
+    
+
+    
+    <meta name="description" content="以前运行Java代码都是在Eclipse或IDEA中进行，当开发大型项目的时候用这些IDE确实很方便，但有时候自己仅仅是像用Java写写简单的算法或小demo，这样每次打开这样大型的IDE太不方便了。于是想到了sublime text，之前只是用其搭建过C++和python的环境，没想到搭建Java也如此的方便强大，下面简单写下自己搭建的过程。 搭建Java编译环境在此之前请确保已配置好jdk环境">
+<meta name="keywords" content="Java,sublime">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sublime-text搭建Java编译环境">
+<meta property="og:url" content="http://litexy.com/2018/02/04/Sublime-text搭建Java编译环境/index.html">
+<meta property="og:site_name" content="程序员修炼之路">
+<meta property="og:description" content="以前运行Java代码都是在Eclipse或IDEA中进行，当开发大型项目的时候用这些IDE确实很方便，但有时候自己仅仅是像用Java写写简单的算法或小demo，这样每次打开这样大型的IDE太不方便了。于是想到了sublime text，之前只是用其搭建过C++和python的环境，没想到搭建Java也如此的方便强大，下面简单写下自己搭建的过程。 搭建Java编译环境在此之前请确保已配置好jdk环境">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ou5lyiz64.bkt.clouddn.com/img/sublimeGIF1.gif">
+<meta property="og:image" content="http://ou5lyiz64.bkt.clouddn.com/img/sublimeGIF2.gif">
+<meta property="og:updated_time" content="2018-02-04T11:28:44.467Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sublime-text搭建Java编译环境">
+<meta name="twitter:description" content="以前运行Java代码都是在Eclipse或IDEA中进行，当开发大型项目的时候用这些IDE确实很方便，但有时候自己仅仅是像用Java写写简单的算法或小demo，这样每次打开这样大型的IDE太不方便了。于是想到了sublime text，之前只是用其搭建过C++和python的环境，没想到搭建Java也如此的方便强大，下面简单写下自己搭建的过程。 搭建Java编译环境在此之前请确保已配置好jdk环境">
+<meta name="twitter:image" content="http://ou5lyiz64.bkt.clouddn.com/img/sublimeGIF1.gif">
+
+    
+    <link rel="alternative" href="/atom.xml" title="程序员修炼之路" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="程序员修炼之路" title="程序员修炼之路"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="程序员修炼之路">程序员修炼之路</a></h1>
+				<h2 class="blog-motto">一名Web开发者修炼之路，专注Web开发/Java/Python/算法等 记录学习过程中的点点滴滴...</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:litexy.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2018/02/04/Sublime-text搭建Java编译环境/" title="Sublime-text搭建Java编译环境" itemprop="url">Sublime-text搭建Java编译环境</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="litexy" target="_blank" itemprop="author">litexy</a>
+		
+  <p class="article-time">
+    <time datetime="2018-02-04T10:28:21.000Z" itemprop="datePublished"> 发表于 2018-02-04</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#搭建Java编译环境"><span class="toc-number">1.</span> <span class="toc-text">搭建Java编译环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java代码提示补全"><span class="toc-number">2.</span> <span class="toc-text">Java代码提示补全</span></a></li></ol>
+		
+		</div>
+		
+		<p>以前运行Java代码都是在Eclipse或IDEA中进行，当开发大型项目的时候用这些IDE确实很方便，但有时候自己仅仅是像用Java写写简单的算法或小demo，这样每次打开这样大型的IDE太不方便了。于是想到了sublime text，之前只是用其搭建过C++和python的环境，没想到搭建Java也如此的方便强大，下面简单写下自己搭建的过程。</p>
+<h2 id="搭建Java编译环境"><a href="#搭建Java编译环境" class="headerlink" title="搭建Java编译环境"></a>搭建Java编译环境</h2><p>在此之前请确保已配置好jdk环境变量。打开sublime text，依次点击Tools-&gt; Build System-&gt; New Build System，添加如下内容：</p>
+<a id="more"></a>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    // 命令和参数，未指定路径则在PATH环境变量中找</span><br><span class="line">    "cmd": ["javac","-encoding","UTF-8","-d",".","$file"],</span><br><span class="line">    // 可选。获取cmd的错误输出</span><br><span class="line">    "file_regex": "^(...*?):([0-9]*):?([0-9]*)",</span><br><span class="line">    // 可选。`工具`菜单中`编译`为`自动`时生效</span><br><span class="line">    "selector": "source.java",</span><br><span class="line">    // 可选。输出"cmd"的编码。必须是合法的Python编码，缺省为"UTF-8"</span><br><span class="line">    "encoding":"UTF-8",</span><br><span class="line">    // variants 可选。用来替代主构建系统的备选。如果构建系统的"selector"与激活的文件匹配，变量"name"则会出现在 Command Palette 中。</span><br><span class="line">    "variants":</span><br><span class="line">        [</span><br><span class="line">            &#123;</span><br><span class="line">                 // 仅在"variants"中是合法的 (详见 variants)。用来标识系统中不同的构建系统。如果"name"是"Run" ,则会显示在Tools | Build System 菜单下，并且可以使用Ctrl + Shift + B调用</span><br><span class="line">                "name": "Run in cmd",</span><br><span class="line">                // 可选。如果该选项为"true" ，"cmd"则可以通过shell运行。</span><br><span class="line">                "shell": true,</span><br><span class="line">                "cmd" :  ["start","cmd","/c", "java $&#123;file_base_name&#125; &amp;echo. &amp; pause"],</span><br><span class="line">                "working_dir": "$&#123;file_path&#125;",</span><br><span class="line">                "encoding":"UTF-8"</span><br><span class="line">            &#125;,</span><br><span class="line"></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">"name"</span>: <span class="string">"Run in sublime"</span>,</span><br><span class="line">                <span class="attr">"shell_cmd"</span>: <span class="string">"runJava.bat \"$file\""</span>,</span><br><span class="line">                <span class="attr">"file_regex"</span>: <span class="string">"^(...*?):([0-9]*):?([0-9]*)"</span>,</span><br><span class="line">                <span class="attr">"selector"</span>: <span class="string">"source.java"</span>,</span><br><span class="line">                <span class="attr">"encoding"</span>: <span class="string">"UTF-8"</span></span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里采用了两种方式，注意variants里的内容，其实配置C++等其他语言也是类似的。第一种我给的“name”为：Run in cmd，表示在控制台下运行，第二种为在sublime text中运行。ctrl-s保存，文件名我这里命名为MyJava。</p>
+<p>其中在sublime text中运行时还要添加如下文件，在jdk的安装目录下的bin目录下新建runJava.bat文件，内容为：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> @echo off</span><br><span class="line"> cd%~dp1</span><br><span class="line"> echo Compiling %~nx1......</span><br><span class="line"> <span class="keyword">if</span> exist %~n1.class (</span><br><span class="line"> del %~n1.class</span><br><span class="line"> )</span><br><span class="line">javac %~nx1</span><br><span class="line"><span class="keyword">if</span> exist %~n1.class (</span><br><span class="line">echo ------Output------</span><br><span class="line">java %~n1</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>（注意在如果在sublime下运行则无法支持输入，在cmd中可以）</p>
+<p>Ctrl+Shift+P选择运行方式：</p>
+<p><img src="http://ou5lyiz64.bkt.clouddn.com/img/sublimeGIF1.gif" style="zoom:60%"></p>
+<h2 id="Java代码提示补全"><a href="#Java代码提示补全" class="headerlink" title="Java代码提示补全"></a>Java代码提示补全</h2><p>光能编译运行还不够，最好还需要能够智能提示，这里推荐JavaIME插件，安装好即可使用，无需任何配置。具体演示如下：</p>
+<p><img src="http://ou5lyiz64.bkt.clouddn.com/img/sublimeGIF2.gif" style="zoom:60%"></p>
+<p>参考资料如下：<br><a href="https://packagecontrol.io/packages/JavaIME" target="_blank" rel="noopener">https://packagecontrol.io/packages/JavaIME</a></p>
+<p><a href="https://www.zybuluo.com/king/note/47271#%E7%BC%96%E8%AF%91%E8%BF%90%E8%A1%8Cjava" target="_blank" rel="noopener">https://www.zybuluo.com/king/note/47271#%E7%BC%96%E8%AF%91%E8%BF%90%E8%A1%8Cjava</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Java/">Java</a><a href="/tags/sublime/">sublime</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://litexy.com/2018/02/04/Sublime-text搭建Java编译环境/" data-title="Sublime-text搭建Java编译环境 | 程序员修炼之路" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2018/03/11/关于leetcode上链表题目的一些trick/" title="关于链表题目的一些trick">
+  <strong>上一篇：</strong><br/>
+  <span>
+  关于链表题目的一些trick</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2018/02/04/关于未来学习的一点定位和规划/"  title="关于未来学习的一点定位和规划">
+ <strong>下一篇：</strong><br/> 
+ <span>关于未来学习的一点定位和规划
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#搭建Java编译环境"><span class="toc-number">1.</span> <span class="toc-text">搭建Java编译环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java代码提示补全"><span class="toc-number">2.</span> <span class="toc-text">Java代码提示补全</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Algorithm/" title="Algorithm">Algorithm<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Python/" title="Python">Python<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/工具软件/" title="工具软件">工具软件<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据可视化/" title="数据可视化">数据可视化<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/随笔/" title="随笔">随笔<sup>4</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Algorithm/" title="Algorithm">Algorithm<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/LinkedList/" title="LinkedList">LinkedList<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/随笔/" title="随笔">随笔<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java基础/" title="Java基础">Java基础<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JavaWeb/" title="JavaWeb">JavaWeb<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/sublime/" title="sublime">sublime<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/迭代器/" title="迭代器">迭代器<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/爬虫/" title="爬虫">爬虫<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/资源/" title="资源">资源<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Servlet/" title="Servlet">Servlet<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/可视化/" title="可视化">可视化<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/echarts/" title="echarts">echarts<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MySQL/" title="MySQL">MySQL<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Git/" title="Git">Git<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Github/" title="Github">Github<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java编程思想/" title="Java编程思想">Java编程思想<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/QuickSort/" title="QuickSort">QuickSort<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=&verifier=b3593ceb&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Larry Page in Google. <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2176287895" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2019 
+		
+		<a href="/about" target="_blank" title="litexy">litexy</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

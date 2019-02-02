@@ -1,0 +1,612 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>大整数相乘问题总结以及Java实现 | 程序员修炼之路</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="litexy">
+    
+
+    
+    <meta name="description" content="最近在跟coursera上斯坦福大学的算法专项课，其中开篇提到了两个整数相乘的问题，其中最简单的方法就是模拟我们小学的整数乘法，可想而知这不是比较好的算法，这门课可以说非常棒，带领我们不断探索更优的算法，然后介绍可以通过使用分而治之的思想来解决这个问题。下面对该问题的方法以及实现进行介绍。 问题定义  输入：2个n位的整数x和y 输出：x * y  如求: 12345678910111213141">
+<meta name="keywords" content="Java,Algorithm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大整数相乘问题总结以及Java实现">
+<meta property="og:url" content="http://litexy.com/2018/08/23/大整数相乘问题总结以及Java实现/index.html">
+<meta property="og:site_name" content="程序员修炼之路">
+<meta property="og:description" content="最近在跟coursera上斯坦福大学的算法专项课，其中开篇提到了两个整数相乘的问题，其中最简单的方法就是模拟我们小学的整数乘法，可想而知这不是比较好的算法，这门课可以说非常棒，带领我们不断探索更优的算法，然后介绍可以通过使用分而治之的思想来解决这个问题。下面对该问题的方法以及实现进行介绍。 问题定义  输入：2个n位的整数x和y 输出：x * y  如求: 12345678910111213141">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://litexy.com/2018/08/23/大整数相乘问题总结以及Java实现/01.jpg">
+<meta property="og:image" content="http://litexy.com/2018/08/23/大整数相乘问题总结以及Java实现/02.jpg">
+<meta property="og:image" content="http://litexy.com/2018/08/23/大整数相乘问题总结以及Java实现/03.jpg">
+<meta property="og:updated_time" content="2019-01-09T16:12:40.511Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="大整数相乘问题总结以及Java实现">
+<meta name="twitter:description" content="最近在跟coursera上斯坦福大学的算法专项课，其中开篇提到了两个整数相乘的问题，其中最简单的方法就是模拟我们小学的整数乘法，可想而知这不是比较好的算法，这门课可以说非常棒，带领我们不断探索更优的算法，然后介绍可以通过使用分而治之的思想来解决这个问题。下面对该问题的方法以及实现进行介绍。 问题定义  输入：2个n位的整数x和y 输出：x * y  如求: 12345678910111213141">
+<meta name="twitter:image" content="http://litexy.com/2018/08/23/大整数相乘问题总结以及Java实现/01.jpg">
+
+    
+    <link rel="alternative" href="/atom.xml" title="程序员修炼之路" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="程序员修炼之路" title="程序员修炼之路"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="程序员修炼之路">程序员修炼之路</a></h1>
+				<h2 class="blog-motto">一名Web开发者修炼之路，专注Web开发/Java/Python/算法等 记录学习过程中的点点滴滴...</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:litexy.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2018/08/23/大整数相乘问题总结以及Java实现/" title="大整数相乘问题总结以及Java实现" itemprop="url">大整数相乘问题总结以及Java实现</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="litexy" target="_blank" itemprop="author">litexy</a>
+		
+  <p class="article-time">
+    <time datetime="2018-08-23T12:02:31.000Z" itemprop="datePublished"> 发表于 2018-08-23</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题定义"><span class="toc-number">1.</span> <span class="toc-text">问题定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模拟小学乘法"><span class="toc-number">2.</span> <span class="toc-text">模拟小学乘法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分治：Karatsuba算法"><span class="toc-number">3.</span> <span class="toc-text">分治：Karatsuba算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结与感想"><span class="toc-number">4.</span> <span class="toc-text">总结与感想</span></a></li></ol>
+		
+		</div>
+		
+		<p>最近在跟coursera上斯坦福大学的算法专项课，其中开篇提到了两个整数相乘的问题，其中最简单的方法就是模拟我们小学的整数乘法，可想而知这不是比较好的算法，这门课可以说非常棒，带领我们不断探索更优的算法，然后介绍可以通过使用分而治之的思想来解决这个问题。下面对该问题的方法以及实现进行介绍。</p>
+<h2 id="问题定义"><a href="#问题定义" class="headerlink" title="问题定义"></a>问题定义</h2><blockquote>
+<p> 输入：2个n位的整数x和y <br>输出：x * y</p>
+<p> 如求: 1234567891011121314151617181*2019181716151413121110987654 的结果</p>
+</blockquote>
+<a id="more"></a>
+<p>求解该问题要注意的是由于整数的位数可能超过基本类型的表示范围，所以一种方式是将其转化为字符串进行表示，另一种方式是可以使用一些语言自带的大整数类型（如Java的BigInteger）。参考一些资料才发现，该问题的解法其实有很多种，主要列举以下：</p>
+<p><strong>１．模拟小学乘法：</strong> 竖式乘法累加。<br><strong>２．分治乘法：</strong> 最简单的是Karatsuba乘法，一般化以后有Toom-Cook乘法.<br><strong>３．快速傅里叶变换</strong><br><strong>４．中国剩余定理</strong> </p>
+<p>我们主要介绍模拟乘法累加以及使用分治思想的Karatsuba乘法，最后使用Java进行实现。</p>
+<h2 id="模拟小学乘法"><a href="#模拟小学乘法" class="headerlink" title="模拟小学乘法"></a>模拟小学乘法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">      7 8 9 6 5 2</span><br><span class="line">×         3 2 1 1</span><br><span class="line">-----------------</span><br><span class="line">      7 8 9 6 5 2   &lt;---- 第1趟 </span><br><span class="line">    7 8 9 6 5 2     &lt;---- 第2趟 </span><br><span class="line">   ..........       &lt;---- 第n趟 </span><br><span class="line">-----------------</span><br><span class="line">  ? ? ? ? ? ? ? ?   &lt;---- 最后的值用另一个数组表示</span><br></pre></td></tr></table></figure>
+<p>如上所示，需要将乘数与被乘数逐位相乘，最后再进行累加，时间复杂度为${O(n^2)}$.模拟乘法累加还有一个改进版，上述方法在实现时，每次计算乘法都需要考虑进位，最后在加法时也需要进位，比较麻烦。一种改进的版本如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">        9  8</span><br><span class="line">×       2  1</span><br><span class="line">-------------</span><br><span class="line">       (9)(8)  &lt;---- 第1趟: 98×1的每一位结果 </span><br><span class="line">  (18)(16)     &lt;---- 第2趟: 98×2的每一位结果 </span><br><span class="line">-------------</span><br><span class="line">  (18)(25)(8)  &lt;---- 这里就是相对位的和，还没有累加进位</span><br></pre></td></tr></table></figure></p>
+<p>改进的方法先不算任何的进位，也就是说，将每一位相乘，相加的结果保存到同一个位置，到最后才计算进位。我们可以先将结果保存到一个数组中（不考虑进位），最后对数组从右向左进行遍历，大于10进行进位。Java实现如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BigNumMul</span> </span>&#123;</span><br><span class="line">    <span class="comment">//simple method 模拟乘法累加</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">bigNumberMul</span><span class="params">(String num1, String num2)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 分配一个空间，用来存储运算的结果，num1长的数 * num2长的数，结果不会超过num1+num2长</span></span><br><span class="line">        <span class="keyword">int</span>[] res = <span class="keyword">new</span> <span class="keyword">int</span>[num1.length() + num2.length()];</span><br><span class="line">        <span class="comment">// 先不考虑进位问题，根据竖式的乘法运算，num1的第i位与num2的第j位相乘，结果应该存放在结果的第i+j位上</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;num1.length(); i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> a = num1.charAt(i) - <span class="string">'0'</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j=<span class="number">0</span>; j&lt;num2.length(); j++) &#123;</span><br><span class="line">                <span class="keyword">int</span> b = num2.charAt(j) - <span class="string">'0'</span>;</span><br><span class="line">                res[i+j] += a * b;      <span class="comment">//max: num1.length()+num2.length()-2</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        <span class="comment">//单独处理进位</span></span><br><span class="line">        <span class="keyword">int</span> carry = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">//最多就到res.length-2, 最后一个元素没有被占用，还是初始值0</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> k=res.length-<span class="number">2</span>; k &gt;= <span class="number">0</span>; k--) &#123;</span><br><span class="line">            <span class="keyword">int</span> digit = (res[k] + carry) % <span class="number">10</span>;</span><br><span class="line">            carry = (res[k] + carry) / <span class="number">10</span>;</span><br><span class="line">            sb.insert(<span class="number">0</span>, digit);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (carry &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            sb.insert(<span class="number">0</span>, carry);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        String str = sb.toString().replaceFirst(<span class="string">"^0*"</span>, <span class="string">""</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> str.substring(<span class="number">0</span>,str.length()-<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>显然使用$O(n^2)$的算法是不够好的，我们应该想一下有没有更好的算法，就像这门课上经常说的一句：<code>Can we do better ?</code></p>
+<h2 id="分治：Karatsuba算法"><a href="#分治：Karatsuba算法" class="headerlink" title="分治：Karatsuba算法"></a>分治：Karatsuba算法</h2><p>分治算法的主要思想是能将问题分解为输入规模更小的子问题，然后递归求解子问题，最后将子问题的结果合并得到原问题的结果，最典型的如归并排序算法。为了得到规模更小的子问题，就要将较大的整数拆分为位数较少的两个整数，参考coursera上的算法专项课，主要计算过程如下：</p>
+<p><img src="/2018/08/23/大整数相乘问题总结以及Java实现/01.jpg" style="zoom: 50%"> </p>
+<p>如上图所示，将每个数分别拆分为两部分，分别计算ac, bd, 以及(a+b)(c+d)，最后再减去前面两个，将其组合成最终的结果。我们采用更一般的方式将其表达出来，相应计算方法如下：</p>
+<p><img src="/2018/08/23/大整数相乘问题总结以及Java实现/02.jpg" style="zoom:50%"></p>
+<p>上述给出了更通用的写法，将ｘ和ｙ同分解后的更小的整数进行表示，最后通过递归的计算ac, ad, bc, bd就可以得到x*y的结果。上述是没有优化过的分治算法，每次递归需要４次乘法，合并结果需要O(n)时间复杂度，所以可以得到时间复杂度的表示：</p>
+<p>$${T(n) = 4T(n/2) + O(n)}$$</p>
+<p>通过主方法，可以求得上述时间复杂度为$O(n^2)$，并没有得到好的改善。</p>
+<p>Karatsuba算法将上述的４次乘法优化为３次从而减少了时间复杂度。具体过程如下：<br><img src="/2018/08/23/大整数相乘问题总结以及Java实现/03.jpg" style="zoom: 50%"></p>
+<p>可以看到上述利用(a+b)(c+d)的结果减去ac和bd得到ad+bc的结果，从而只需要计算三次乘法，其时间复杂度可以表示为：</p>
+<p>$$T(n)=3T(n/2)+6n=O(n^{log_{2}3})$$</p>
+<p>根据上述算法，使用Java进行实现代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Karatsuba乘法</span></span><br><span class="line"><span class="comment">//此种情况使用long时,数过大可能出现越界,应考虑使用BigInteger</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">karatsuba</span><span class="params">(<span class="keyword">long</span> num1, <span class="keyword">long</span> num2)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//递归终止条件</span></span><br><span class="line">    <span class="keyword">if</span> (num1 &lt; <span class="number">10</span> || num2 &lt; <span class="number">10</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> num1 * num2;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 计算拆分长度</span></span><br><span class="line">    <span class="keyword">int</span> size1 = String.valueOf(num1).length();</span><br><span class="line">    <span class="keyword">int</span> size2 = String.valueOf(num2).length();</span><br><span class="line">    <span class="keyword">int</span> halfN = Math.max(size1, size2) / <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 拆分为a, b, c, d */</span></span><br><span class="line">    <span class="keyword">long</span> a = Long.valueOf(String.valueOf(num1).substring(<span class="number">0</span>, size1-halfN));</span><br><span class="line">    <span class="keyword">long</span> b = Long.valueOf(String.valueOf(num1).substring(size1-halfN));</span><br><span class="line">    <span class="keyword">long</span> c = Long.valueOf(String.valueOf(num2).substring(<span class="number">0</span>, size2-halfN));</span><br><span class="line">    <span class="keyword">long</span> d = Long.valueOf(String.valueOf(num2).substring(size2-halfN));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 计算z2, z0, z1, 此处的乘法使用递归</span></span><br><span class="line">    <span class="keyword">long</span> z1 = karatsuba(a, c);</span><br><span class="line">    <span class="keyword">long</span> z2 = karatsuba(b, d);</span><br><span class="line">    <span class="keyword">long</span> z3 = karatsuba((a + b), (c + d)) - z1 - z2;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (<span class="keyword">long</span>)(z1 * Math.pow(<span class="number">10</span>, <span class="number">2</span>*halfN) + z2 + z3 * Math.pow(<span class="number">10</span>, halfN));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意上述递归的终止条件以及如何表示a, b, c, d. 上述实现使用的是Java中的long类型，但是当整数变大时，使用long类型可能会发生溢出，这里可以使用String来模拟整数的加法及乘法，或者使用Java的BigInteger类型，其实BigInteger内部也是使用的String进行存储，我使用的是BigInteger类型，实现代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用BigInteger的karatsuba算法</span></span><br><span class="line"> <span class="comment">//注意BigInteger的运算没有操作符重载</span></span><br><span class="line"> <span class="comment">//参考: coursera算法专项1</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> BigInteger <span class="title">karatsuba</span><span class="params">(BigInteger num1, BigInteger num2)</span> </span>&#123;</span><br><span class="line">     <span class="keyword">if</span> (num1.compareTo(BigInteger.valueOf(<span class="number">10</span>)) &lt; <span class="number">0</span> || num2.compareTo(BigInteger.valueOf(<span class="number">10</span>)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">         <span class="keyword">return</span> num1.multiply(num2);</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     <span class="keyword">int</span> n = Math.max(num1.toString().length(), num2.toString().length());</span><br><span class="line">     <span class="keyword">int</span> halfN = n / <span class="number">2</span> + n % <span class="number">2</span>;  <span class="comment">//另一种划分方法</span></span><br><span class="line"></span><br><span class="line">     <span class="comment">//返回num1 / halfN 和 num1 % halfN</span></span><br><span class="line">     BigInteger[] a_b = num1.divideAndRemainder(BigInteger.valueOf(<span class="number">10</span>).pow(halfN));</span><br><span class="line">     BigInteger a = a_b[<span class="number">0</span>];</span><br><span class="line">     BigInteger b = a_b[<span class="number">1</span>];</span><br><span class="line">     BigInteger[] c_d = num2.divideAndRemainder(BigInteger.valueOf(<span class="number">10</span>).pow(halfN));</span><br><span class="line">     BigInteger c = c_d[<span class="number">0</span>];</span><br><span class="line">     BigInteger d = c_d[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">     BigInteger step1 = karatsuba(a, c);</span><br><span class="line">     BigInteger step2 = karatsuba(b, d);</span><br><span class="line">     BigInteger step3 = karatsuba(a.add(b), c.add(d));</span><br><span class="line">     BigInteger step4 = step3.subtract(step2).subtract(step1);   <span class="comment">//step3-step2-step1</span></span><br><span class="line">     BigInteger res = step1.multiply(BigInteger.valueOf(<span class="number">10</span>).pow(<span class="number">2</span>*halfN)).add(step2)</span><br><span class="line">             .add(step4.multiply(BigInteger.valueOf(<span class="number">10</span>).pow(halfN)));</span><br><span class="line"></span><br><span class="line">     <span class="keyword">return</span> res;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后的测试代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">    String a = sc.next();</span><br><span class="line">    String b = sc.next();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 开始计算</span></span><br><span class="line">    <span class="comment">//String str = BigNumMul.bigNumberMul(a, b);</span></span><br><span class="line">    <span class="comment">//long res = BigNumMul.karatsuba(Long.valueOf(a), Long.valueOf(b));</span></span><br><span class="line">    <span class="comment">//String str = Long.toString(res);</span></span><br><span class="line">    BigInteger res = BigNumMul.karatsuba(<span class="keyword">new</span> BigInteger(a), <span class="keyword">new</span> BigInteger(b));</span><br><span class="line">    String str = res.toString();</span><br><span class="line">    System.out.println(a + <span class="string">" * "</span> + b + <span class="string">" = "</span> + str);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="总结与感想"><a href="#总结与感想" class="headerlink" title="总结与感想"></a>总结与感想</h2><p>（1）对一个问题要深入调研和分析，多尝试不同的解决方法。</p>
+<p>（2）可以多分析一些诸如此类的经典问题，还是比较有意思的。</p>
+<p>参考资料：</p>
+<p>1.<a href="https://www.coursera.org/learn/algorithms-divide-conquer/home/welcome" target="_blank" rel="noopener">coursera算法专项</a></p>
+<p>2.<a href="https://itimetraveler.github.io/2017/08/22/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E5%A4%A7%E6%95%B0%E7%9B%B8%E4%B9%98%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E9%AB%98%E6%95%88%E7%AE%97%E6%B3%95/" target="_blank" rel="noopener">大数乘法问题及其高效算法</a></p>
+<p>3.<a href="https://stackoverflow.com/questions/17531042/karatsuba-algorithm-without-biginteger-usage" target="_blank" rel="noopener">https://stackoverflow.com/questions/17531042/karatsuba-algorithm-without-biginteger-usage</a></p>
+<p>4.<a href="https://chenyvehtung.github.io/2017/03/02/about-multiplication.html" target="_blank" rel="noopener">https://chenyvehtung.github.io/2017/03/02/about-multiplication.html</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Algorithm/">Algorithm</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Java/">Java</a><a href="/tags/Algorithm/">Algorithm</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://litexy.com/2018/08/23/大整数相乘问题总结以及Java实现/" data-title="大整数相乘问题总结以及Java实现 | 程序员修炼之路" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2018/08/30/快速排序实现及其pivot的选取/" title="快速排序实现及其pivot的选取">
+  <strong>上一篇：</strong><br/>
+  <span>
+  快速排序实现及其pivot的选取</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2018/08/16/关于java中基类构造器的调用问题/"  title="关于Java中基类构造器的调用问题">
+ <strong>下一篇：</strong><br/> 
+ <span>关于Java中基类构造器的调用问题
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题定义"><span class="toc-number">1.</span> <span class="toc-text">问题定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模拟小学乘法"><span class="toc-number">2.</span> <span class="toc-text">模拟小学乘法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分治：Karatsuba算法"><span class="toc-number">3.</span> <span class="toc-text">分治：Karatsuba算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结与感想"><span class="toc-number">4.</span> <span class="toc-text">总结与感想</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Algorithm/" title="Algorithm">Algorithm<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Python/" title="Python">Python<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/工具软件/" title="工具软件">工具软件<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据可视化/" title="数据可视化">数据可视化<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/随笔/" title="随笔">随笔<sup>4</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Algorithm/" title="Algorithm">Algorithm<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/LinkedList/" title="LinkedList">LinkedList<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/随笔/" title="随笔">随笔<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java基础/" title="Java基础">Java基础<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JavaWeb/" title="JavaWeb">JavaWeb<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/sublime/" title="sublime">sublime<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/迭代器/" title="迭代器">迭代器<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/爬虫/" title="爬虫">爬虫<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/资源/" title="资源">资源<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Servlet/" title="Servlet">Servlet<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/可视化/" title="可视化">可视化<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/echarts/" title="echarts">echarts<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MySQL/" title="MySQL">MySQL<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Git/" title="Git">Git<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Github/" title="Github">Github<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java编程思想/" title="Java编程思想">Java编程思想<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/QuickSort/" title="QuickSort">QuickSort<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=&verifier=b3593ceb&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Larry Page in Google. <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2176287895" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2019 
+		
+		<a href="/about" target="_blank" title="litexy">litexy</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

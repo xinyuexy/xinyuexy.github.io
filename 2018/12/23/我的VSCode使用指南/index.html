@@ -1,0 +1,622 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>我的VSCode使用指南 | 程序员修炼之路</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="litexy">
+    
+
+    
+    <meta name="description" content="之前一直使用sublime text作为编辑器，但是用上了vscode后，发现其是真心好用，主要相比sublime配置简单，插件丰富，自身就内置了很多的功能，如非常友好的前端开发环境以及python等。下面主要记录一下vscode的一些简单配置和相关的开发插件。 基本配置vscode也是使用json配置文件的方式，但是其提供了可视化的操作界面，非常适合小白入门，点击左下方的设置按钮，选择Setti">
+<meta name="keywords" content="vscode,工具软件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我的VSCode使用指南">
+<meta property="og:url" content="http://litexy.com/2018/12/23/我的VSCode使用指南/index.html">
+<meta property="og:site_name" content="程序员修炼之路">
+<meta property="og:description" content="之前一直使用sublime text作为编辑器，但是用上了vscode后，发现其是真心好用，主要相比sublime配置简单，插件丰富，自身就内置了很多的功能，如非常友好的前端开发环境以及python等。下面主要记录一下vscode的一些简单配置和相关的开发插件。 基本配置vscode也是使用json配置文件的方式，但是其提供了可视化的操作界面，非常适合小白入门，点击左下方的设置按钮，选择Setti">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://litexy.com/2018/12/23/我的VSCode使用指南/001.jpg">
+<meta property="og:image" content="http://litexy.com/2018/12/23/我的VSCode使用指南/002.jpg">
+<meta property="og:image" content="http://litexy.com/2018/12/23/我的VSCode使用指南/003.jpg">
+<meta property="og:image" content="http://litexy.com/2018/12/23/我的VSCode使用指南/004.jpg">
+<meta property="og:image" content="http://litexy.com/2018/12/23/我的VSCode使用指南/005.jpg">
+<meta property="og:image" content="http://litexy.com/2018/12/23/我的VSCode使用指南/006.jpg">
+<meta property="og:updated_time" content="2018-12-23T12:17:04.854Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="我的VSCode使用指南">
+<meta name="twitter:description" content="之前一直使用sublime text作为编辑器，但是用上了vscode后，发现其是真心好用，主要相比sublime配置简单，插件丰富，自身就内置了很多的功能，如非常友好的前端开发环境以及python等。下面主要记录一下vscode的一些简单配置和相关的开发插件。 基本配置vscode也是使用json配置文件的方式，但是其提供了可视化的操作界面，非常适合小白入门，点击左下方的设置按钮，选择Setti">
+<meta name="twitter:image" content="http://litexy.com/2018/12/23/我的VSCode使用指南/001.jpg">
+
+    
+    <link rel="alternative" href="/atom.xml" title="程序员修炼之路" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="程序员修炼之路" title="程序员修炼之路"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="程序员修炼之路">程序员修炼之路</a></h1>
+				<h2 class="blog-motto">一名Web开发者修炼之路，专注Web开发/Java/Python/算法等 记录学习过程中的点点滴滴...</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:litexy.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2018/12/23/我的VSCode使用指南/" title="我的VSCode使用指南" itemprop="url">我的VSCode使用指南</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="litexy" target="_blank" itemprop="author">litexy</a>
+		
+  <p class="article-time">
+    <time datetime="2018-12-23T11:41:12.000Z" itemprop="datePublished"> 发表于 2018-12-23</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本配置"><span class="toc-number">1.</span> <span class="toc-text">基本配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#主题插件"><span class="toc-number">2.</span> <span class="toc-text">主题插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#前端开发插件"><span class="toc-number">3.</span> <span class="toc-text">前端开发插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python"><span class="toc-number">4.</span> <span class="toc-text">Python</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java"><span class="toc-number">5.</span> <span class="toc-text">Java</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Markdown"><span class="toc-number">6.</span> <span class="toc-text">Markdown</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他"><span class="toc-number">7.</span> <span class="toc-text">其他</span></a></li></ol>
+		
+		</div>
+		
+		<p>之前一直使用sublime text作为编辑器，但是用上了vscode后，发现其是真心好用，主要相比sublime配置简单，插件丰富，自身就内置了很多的功能，如非常友好的前端开发环境以及python等。下面主要记录一下vscode的一些简单配置和相关的开发插件。</p>
+<h3 id="基本配置"><a href="#基本配置" class="headerlink" title="基本配置"></a>基本配置</h3><p>vscode也是使用json配置文件的方式，但是其提供了可视化的操作界面，非常适合小白入门，点击左下方的设置按钮，选择Settings，用户可以搜索相关的配置项进行更改，如配置vscode编辑器字体：</p>
+<p><img src="/2018/12/23/我的VSCode使用指南/001.jpg" style="zoom: 60%"></p>
+<p>同时也可以打开配置文件查看和修改：</p>
+<p><img src="/2018/12/23/我的VSCode使用指南/002.jpg" style="zoom: 60%"></p>
+<p>点击扩展按钮，可以看到已安装的插件和推荐的插件</p>
+<p><img src="/2018/12/23/我的VSCode使用指南/003.jpg" style="zoom: 60%"></p>
+<h3 id="主题插件"><a href="#主题插件" class="headerlink" title="主题插件"></a>主题插件</h3><p>快捷键<code>Ctrl+Shift+p</code>打开控制面板，输入theme，选择Preference：color theme，即可浏览已安装主题。</p>
+<p><img src="/2018/12/23/我的VSCode使用指南/004.jpg" style="zoom: 60%"></p>
+<p>我主要安装的主题插件有：</p>
+<p>1.Atom One Dark Theme</p>
+<p>2.Material Theme</p>
+<p>3.One Dark Pro</p>
+<p>另外还有两款图标主题：</p>
+<p>1.vscode-icons</p>
+<p>2.Material Icon Theme</p>
+<h3 id="前端开发插件"><a href="#前端开发插件" class="headerlink" title="前端开发插件"></a>前端开发插件</h3><p>1.Auto Close Tag</p>
+<p>2.Bootstrap 4, Font awesome 4</p>
+<p>3.HTML CSS Support</p>
+<p>4.HTML Snippets</p>
+<h3 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h3><p><code>Ctr+Shift+p</code>打开面板后输入python可以选择python的解释器，包括虚拟环境的</p>
+<p>1.Python:Linting, Debugging</p>
+<p>2.Jupyter：可以实现Jupyter notebook的功能</p>
+<h3 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h3><p>Java Extension Pack</p>
+<h3 id="Markdown"><a href="#Markdown" class="headerlink" title="Markdown"></a>Markdown</h3><p>1.Markdown All in One</p>
+<p>2.Markdown Preview Enhanced</p>
+<p>3.Markdown Preview Github Styling</p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>1.Beautify</p>
+<p>2.Bookmarks</p>
+<p>3.Git History: Git提交历史信息</p>
+<p>4.open in browser</p>
+<p>5.Path Intellisense: 路径提示和补全</p>
+<p>6.Project Manager: 将当前目录作为一个项目，管理多个项目</p>
+<p><img src="/2018/12/23/我的VSCode使用指南/005.jpg" style="zoom: 60%"></p>
+<p>7.Settings Sync: 多个设备上同步vscode配置和插件</p>
+<p>8.Shell launcher：配置多个终端</p>
+<p><code>Ctrl+Shift+t</code>进行选择</p>
+<p><img src="/2018/12/23/我的VSCode使用指南/006.jpg" style="zoom: 60%"></p>
+<p>9.Terminal</p>
+<p>最后：学会用好vscode命令面板：<code>Ctrl+Shift+p</code>打开面板后，输入插件名称查看相应功能。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/工具软件/">工具软件</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/vscode/">vscode</a><a href="/tags/工具软件/">工具软件</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://litexy.com/2018/12/23/我的VSCode使用指南/" data-title="我的VSCode使用指南 | 程序员修炼之路" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2018/12/26/Python爬虫实战-爬取历史天气数据/" title="Python爬虫实战:爬取历史天气数据">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Python爬虫实战:爬取历史天气数据</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2018/12/21/Echarts结合百度地图API绘制热力图/"  title="Echarts结合百度地图API绘制热力图">
+ <strong>下一篇：</strong><br/> 
+ <span>Echarts结合百度地图API绘制热力图
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本配置"><span class="toc-number">1.</span> <span class="toc-text">基本配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#主题插件"><span class="toc-number">2.</span> <span class="toc-text">主题插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#前端开发插件"><span class="toc-number">3.</span> <span class="toc-text">前端开发插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python"><span class="toc-number">4.</span> <span class="toc-text">Python</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java"><span class="toc-number">5.</span> <span class="toc-text">Java</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Markdown"><span class="toc-number">6.</span> <span class="toc-text">Markdown</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他"><span class="toc-number">7.</span> <span class="toc-text">其他</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Algorithm/" title="Algorithm">Algorithm<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Python/" title="Python">Python<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/工具软件/" title="工具软件">工具软件<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据可视化/" title="数据可视化">数据可视化<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/随笔/" title="随笔">随笔<sup>4</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Algorithm/" title="Algorithm">Algorithm<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/LinkedList/" title="LinkedList">LinkedList<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/随笔/" title="随笔">随笔<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java基础/" title="Java基础">Java基础<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JavaWeb/" title="JavaWeb">JavaWeb<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/sublime/" title="sublime">sublime<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/迭代器/" title="迭代器">迭代器<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/爬虫/" title="爬虫">爬虫<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/资源/" title="资源">资源<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Servlet/" title="Servlet">Servlet<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/可视化/" title="可视化">可视化<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/echarts/" title="echarts">echarts<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MySQL/" title="MySQL">MySQL<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Git/" title="Git">Git<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Github/" title="Github">Github<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java编程思想/" title="Java编程思想">Java编程思想<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/QuickSort/" title="QuickSort">QuickSort<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=&verifier=b3593ceb&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Larry Page in Google. <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2176287895" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2019 
+		
+		<a href="/about" target="_blank" title="litexy">litexy</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
