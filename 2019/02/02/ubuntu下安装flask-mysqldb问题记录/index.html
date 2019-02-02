@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <link rel="canonical" href="http://litexy.com/2019/02/02/ubuntu下安装flask-mysqldb问题记录/">
+    
+    
+    <title>ubuntu下安装flask-mysqldb问题记录 | 新月的博客 | 一名在读硕士的修炼之路，关注Java/Python/数据分析等 记录学习过程中的点点滴滴...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="flask,MySQL">
+    <meta name="description" content="python中使用mysql的包有pymysql和mysqldb，同样地，flask也为其提供了扩展：flask-mysql（貌似基于pymysql），flask-mysqldb，但flask-mysql只支持python2，而flask-mysqldb同时兼容python2和python3。 在虚拟环境中安装flask-mysqldb:pip install flask-mysqldb出现如下错">
+<meta name="keywords" content="flask,MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ubuntu下安装flask-mysqldb问题记录">
+<meta property="og:url" content="http://litexy.com/2019/02/02/ubuntu下安装flask-mysqldb问题记录/index.html">
+<meta property="og:site_name" content="新月的博客">
+<meta property="og:description" content="python中使用mysql的包有pymysql和mysqldb，同样地，flask也为其提供了扩展：flask-mysql（貌似基于pymysql），flask-mysqldb，但flask-mysql只支持python2，而flask-mysqldb同时兼容python2和python3。 在虚拟环境中安装flask-mysqldb:pip install flask-mysqldb出现如下错">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://img-blog.csdn.net/20181010164239253?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://img-blog.csdn.net/20181010164607804?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:updated_time" content="2019-02-02T10:48:13.992Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ubuntu下安装flask-mysqldb问题记录">
+<meta name="twitter:description" content="python中使用mysql的包有pymysql和mysqldb，同样地，flask也为其提供了扩展：flask-mysql（貌似基于pymysql），flask-mysqldb，但flask-mysql只支持python2，而flask-mysqldb同时兼容python2和python3。 在虚拟环境中安装flask-mysqldb:pip install flask-mysqldb出现如下错">
+<meta name="twitter:image" content="https://img-blog.csdn.net/20181010164239253?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+    
+        <link rel="alternate" type="application/atom+xml" title="新月的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon2.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">litexy</h5>
+          <a href="mailto:xinyue.hfut@qq.com" title="xinyue.hfut@qq.com" class="mail">xinyue.hfut@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/xinyuexy" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                About
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">ubuntu下安装flask-mysqldb问题记录</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">ubuntu下安装flask-mysqldb问题记录</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-02-02T11:41:12.000Z" itemprop="datePublished" class="page-time">
+  2019-02-02
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Python/">Python</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#参考："><span class="post-toc-number">1.</span> <span class="post-toc-text">参考：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#总结"><span class="post-toc-number">2.</span> <span class="post-toc-text">总结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-ubuntu下安装flask-mysqldb问题记录"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">ubuntu下安装flask-mysqldb问题记录</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-02-02 19:41:12" datetime="2019-02-02T11:41:12.000Z"  itemprop="datePublished">2019-02-02</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Python/">Python</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>python中使用mysql的包有pymysql和mysqldb，同样地，flask也为其提供了扩展：flask-mysql（貌似基于pymysql），flask-mysqldb，但flask-mysql只支持python2，而flask-mysqldb同时兼容python2和python3。</p>
+<p>在虚拟环境中安装flask-mysqldb:<br><code>pip install flask-mysqldb</code><br>出现如下错误：<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdn.net/20181010164239253?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure><br>在Google中搜索<strong>OSError: mysql_config not found</strong><br>最终在Stack Overflow中找到答案(差点放弃…)<br>需要安装如下包：<br><code>sudo apt-get install libmysqlclient-dev</code><br>再次安装成功：<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdn.net/20181010164607804?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure></p>
+<h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><p><a href="https://stackoverflow.com/questions/5178292/pip-install-mysql-python-fails-with-environmenterror-mysql-config-not-found" target="_blank" rel="noopener">https://stackoverflow.com/questions/5178292/pip-install-mysql-python-fails-with-environmenterror-mysql-config-not-found</a></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>遇到别轻易放弃，再多找找，多尝试，相信能够成功<br>（stack overflow是个好地方）</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-02-02T10:48:13.992Z" itemprop="dateUpdated">2019-02-02 18:48:13</time>
+</span><br>
+
+
+        
+        原文链接：<a href="/2019/02/02/ubuntu下安装flask-mysqldb问题记录/" target="_blank" rel="external">http://litexy.com/2019/02/02/ubuntu下安装flask-mysqldb问题记录/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://litexy.com">
+            <img src="/img/avatar.png" alt="litexy">
+            litexy
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/">MySQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/flask/">flask</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2019/02/02/ubuntu下安装flask-mysqldb问题记录/&title=《ubuntu下安装flask-mysqldb问题记录》 — 新月的博客&pic=http://litexy.com/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2019/02/02/ubuntu下安装flask-mysqldb问题记录/&title=《ubuntu下安装flask-mysqldb问题记录》 — 新月的博客&source=web,学习笔记,算法,程序员,Java,Python" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://litexy.com/2019/02/02/ubuntu下安装flask-mysqldb问题记录/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《ubuntu下安装flask-mysqldb问题记录》 — 新月的博客&url=http://litexy.com/2019/02/02/ubuntu下安装flask-mysqldb问题记录/&via=http://litexy.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://litexy.com/2019/02/02/ubuntu下安装flask-mysqldb问题记录/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/02/02/Echarts结合百度地图API绘制热力图/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Echarts结合百度地图API绘制热力图</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "7NlxEKd8qTg4UUeULk4ed5lb-gzGzoHsz",
+            appKey: "6OdIgn0fr7ifpSup5Q9qYKT9",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>litexy &copy; 2018 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2019/02/02/ubuntu下安装flask-mysqldb问题记录/&title=《ubuntu下安装flask-mysqldb问题记录》 — 新月的博客&pic=http://litexy.com/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2019/02/02/ubuntu下安装flask-mysqldb问题记录/&title=《ubuntu下安装flask-mysqldb问题记录》 — 新月的博客&source=web,学习笔记,算法,程序员,Java,Python" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://litexy.com/2019/02/02/ubuntu下安装flask-mysqldb问题记录/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《ubuntu下安装flask-mysqldb问题记录》 — 新月的博客&url=http://litexy.com/2019/02/02/ubuntu下安装flask-mysqldb问题记录/&via=http://litexy.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://litexy.com/2019/02/02/ubuntu下安装flask-mysqldb问题记录/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACuUlEQVR42u3a0W7jMAwEwP7/T/de74A43RXFIgeMn4LGsTQqYBIkv77i6/uv6/0973+bPOds9dGFh4eHN9j60ybab98//2nTT799+hwdHB4eHt4a7/2LPl8meU5+cPlBPP4dDw8P7wN4bQJ9C4aHh4f3v/Pa1DZ53eckPDw8vE/gJeWGW6WHPMwkqfm1WgseHh5ezMu7SJ/zeaW/h4eHhzfuqrel1fmLfr7Df3aFh4eHt8Brt3L2+s4T9LxtVoxn4eHh4V3lzRc+GxTIR6zye148GQ8PD2+B1zb+z0qoyRhBW669Vp7Aw8PDK3l56+tsmXwrbXBK/iV4eHh4v8NrR5ragYPJsEJbJsbDw8Pb4+XDUskCF/L6QTHiRRkXDw8Pb5l3qynVDk7l5YwimOHh4eEt8PIyQVKkyLd11jxrQwgeHh7eBi9/yV5IcMvBgnbdUa0FDw8Pr+s9RQ3+dlDgrNQ7OdAfQh0eHh7eVV6evLYLJIeSJ82Howl4eHh4y7x562vSHmtDTlQWwcPDw7vKaxPlNuHeaKEVx4eHh4e3xttr/J9t8ayQ8RgY8PDw8H6F1zaZknQ82eikbPHit3h4eHi/wkvGqs7aYEmTbHLQL+7Bw8PDW+blDbBJsns2OpAn648pNR4eHt4lXpGeHrX5kwCQjB207bof9omHh4c35rVDV20gaQHzUkjzNR4eHt45L09Y8+NoW1z5cRclYDw8PLxl3tmoaLJwm7JfO0Q8PDy8q7zv8jorCtwa1aqfiYeHh7fA22h35Q2qfEirDWB4eHh427wkGJwlu5OO3Px+PDw8vG1eXqRI2v/Jy70tYbRHiYeHh/eZvEl4yFtf7ajWtcCAh4eHt5Zz5gXceb0kLxPj4eHhbfPyV3Zbfs1LCW14iBpjeHh4eAu8PCHea2idDQpcu/Dw8PDS6w9vM+4DMYAWUwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
