@@ -13,6 +13,8 @@
     
     
     
+    <link rel="canonical" href="http://litexy.com/2018/10/07/git使用笔记1：结合Github远程仓库管理项目/">
+    
     
     <title>git使用笔记1：结合Github远程仓库管理项目 | 程序员修炼之路 | 一名Web开发者修炼之路，专注Web开发/Java/Python/算法等 记录学习过程中的点点滴滴...</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -43,7 +45,7 @@
     
         <link rel="alternate" type="application/atom+xml" title="程序员修炼之路" href="/atom.xml">
     
-    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="shortcut icon" href="/img/favicon2.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
     <script>window.lazyScripts=[]</script>
 
@@ -63,11 +65,11 @@
     <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
       <div class="brand">
         <a href="/" class="avatar waves-effect waves-circle waves-light">
-          <img src="/img/avatar.jpg">
+          <img src="/img/avatar.png">
         </a>
         <hgroup class="introduce">
           <h5 class="nickname">litexy</h5>
-          <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
+          <a href="mailto:xinyue.hfut@qq.com" title="xinyue.hfut@qq.com" class="mail">xinyue.hfut@qq.com</a>
         </hgroup>
       </div>
     </div>
@@ -103,23 +105,16 @@
             </li>
         
             <li class="waves-block waves-effect">
-              <a href="https://github.com/yscoder" target="_blank" >
+              <a href="https://github.com/xinyuexy" target="_blank" >
                 <i class="icon icon-lg icon-github"></i>
                 Github
               </a>
             </li>
         
             <li class="waves-block waves-effect">
-              <a href="http://www.weibo.com/ysweb" target="_blank" >
-                <i class="icon icon-lg icon-weibo"></i>
-                Weibo
-              </a>
-            </li>
-        
-            <li class="waves-block waves-effect">
-              <a href="/custom"  >
-                <i class="icon icon-lg icon-link"></i>
-                测试
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                About
               </a>
             </li>
         
@@ -211,28 +206,10 @@
 <h3 id="创建远程仓库"><a href="#创建远程仓库" class="headerlink" title="创建远程仓库"></a>创建远程仓库</h3><p>要想将本地项目传到GitHub上，首先需要在GitHub上新建一个仓库，填入仓库名，如下图所示：<br><img src="001.png" style="zoom: 50%"></p>
 <h3 id="本地项目与远程仓库关联"><a href="#本地项目与远程仓库关联" class="headerlink" title="本地项目与远程仓库关联"></a>本地项目与远程仓库关联</h3><p>然后就需要我们将本地项目和GitHub远程仓库关联，这里有两种选择，一种是直接克隆远程仓库，另一种是先创建本地仓库，再用命令添加。</p>
 <h4 id="克隆远程仓库"><a href="#克隆远程仓库" class="headerlink" title="克隆远程仓库"></a>克隆远程仓库</h4><p><strong>1.命令如下：</strong><br><code>git clone git://github.com/xinyuexy/flask-tutorial.git</code><br>这时在本地就会出现一个flask-tutorial目录，这时该命令已经自动创建了本地的 master 分支用于跟踪远程仓库中的 master 分支。<br><strong>2.使用<code>git remote -v</code>查看如下：</strong><br><img src="002.png" style="zoom:50%"><br>可以看到一个名为origin的远程仓库。</p>
-<h4 id="手动添加远程仓库"><a href="#手动添加远程仓库" class="headerlink" title="手动添加远程仓库"></a>手动添加远程仓库</h4><p>我们也可以选择先在本地创建一个仓库，然后与远程仓库关联。<br><strong>1.初始化仓库</strong><br>首先需要使用<code>git init</code>命令初始化，这样才会被标识为一个git项目，并创建一个本地master分支。<br><strong>2.添加远程仓库</strong><br><code>git remote add origin git://github.com/xinyuexy/flask-tutorial.git</code><br>这里添加了一个origin远程仓库与本地master关联，也可以添加多个远程仓库，比如我这里又添加一个为origin2的远程仓库<br><code>git remote add origin2 git://github.com/xinyuexy/Algorithm.git</code><br>使用<code>git remote -v</code>查看:<br><img src="003.png" style="zoom:50%"><br>可以看到现在有origin、origin2两个远程仓库了。<br><strong>3.远程仓库的删除与重命名</strong><br>也可以对远程仓库进行删除和重命名：<br>重命名：<code>git remote rename origin origin3</code><br>删除: <code>git remote rm origin2</code><br>删除后<code>git remote</code>查看：<br><figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="004.png" alt="在这里插入图片描述" title="">
-                </div>
-                <div class="image-caption">在这里插入图片描述</div>
-            </figure></p>
-<h3 id="提交代码到远程仓库"><a href="#提交代码到远程仓库" class="headerlink" title="提交代码到远程仓库"></a>提交代码到远程仓库</h3><p>最后就是将本地写好的代码提交的远程仓库了.<br><strong>1.<code>git add  *</code></strong><br>使用此命令跟踪所有文件，以便于后面提交<br><strong>2.<code>git status</code></strong><br>查看当前已跟踪文件<br><figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="005.png" alt="在这里插入图片描述" title="">
-                </div>
-                <div class="image-caption">在这里插入图片描述</div>
-            </figure><br><strong>2.<code>git commit -m &quot;init commit&quot;</code></strong><br>使用此命令提交到本地分支<br><strong>3.<code>git pull</code></strong><br>拉取远程仓库到本地，注意可能在多人开发项目时，别人可能对远程仓库进行了修改，这时如果直接提交会发生不一致错误，需要先将远程仓库最新的内容拉取到本地并合并。这条命令其实相当于<code>git fetch</code>和<code>git merge</code>的结合。<br><strong>4.<code>git push origin master</code></strong><br>终于到最后一步可以提交数据到远程仓库了。</p>
+<h4 id="手动添加远程仓库"><a href="#手动添加远程仓库" class="headerlink" title="手动添加远程仓库"></a>手动添加远程仓库</h4><p>我们也可以选择先在本地创建一个仓库，然后与远程仓库关联。<br><strong>1.初始化仓库</strong><br>首先需要使用<code>git init</code>命令初始化，这样才会被标识为一个git项目，并创建一个本地master分支。<br><strong>2.添加远程仓库</strong><br><code>git remote add origin git://github.com/xinyuexy/flask-tutorial.git</code><br>这里添加了一个origin远程仓库与本地master关联，也可以添加多个远程仓库，比如我这里又添加一个为origin2的远程仓库<br><code>git remote add origin2 git://github.com/xinyuexy/Algorithm.git</code><br>使用<code>git remote -v</code>查看:<br><img src="003.png" style="zoom:50%"><br>可以看到现在有origin、origin2两个远程仓库了。<br><strong>3.远程仓库的删除与重命名</strong><br>也可以对远程仓库进行删除和重命名：<br>重命名：<code>git remote rename origin origin3</code><br>删除: <code>git remote rm origin2</code><br>删除后<code>git remote</code>查看：<br><img src="004.png" alt="在这里插入图片描述"></p>
+<h3 id="提交代码到远程仓库"><a href="#提交代码到远程仓库" class="headerlink" title="提交代码到远程仓库"></a>提交代码到远程仓库</h3><p>最后就是将本地写好的代码提交的远程仓库了.<br><strong>1.<code>git add  *</code></strong><br>使用此命令跟踪所有文件，以便于后面提交<br><strong>2.<code>git status</code></strong><br>查看当前已跟踪文件<br><img src="005.png" alt="在这里插入图片描述"><br><strong>2.<code>git commit -m &quot;init commit&quot;</code></strong><br>使用此命令提交到本地分支<br><strong>3.<code>git pull</code></strong><br>拉取远程仓库到本地，注意可能在多人开发项目时，别人可能对远程仓库进行了修改，这时如果直接提交会发生不一致错误，需要先将远程仓库最新的内容拉取到本地并合并。这条命令其实相当于<code>git fetch</code>和<code>git merge</code>的结合。<br><strong>4.<code>git push origin master</code></strong><br>终于到最后一步可以提交数据到远程仓库了。</p>
 <h3 id="gitignore文件的使用"><a href="#gitignore文件的使用" class="headerlink" title=".gitignore文件的使用"></a>.gitignore文件的使用</h3><p>最后再补充一下关于.gitignore文件的作用。当我们使用<code>git add *</code>进行添加时，会包含很多我们不想添加的文件，这时在.gitignore文件中可以定义我们想忽略的文件内容，最后就不会提交到远程仓库，比如我的.gitignore文件内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">venv/</span><br><span class="line"></span><br><span class="line">*.pyc</span><br><span class="line">__pycache__/</span><br><span class="line"></span><br><span class="line">.idea/</span><br></pre></td></tr></table></figure></p>
-<p>在使用python虚拟环境时，venv目录便不会提交到远程仓库，同时pycharm产生的一些文件.idea也不会提交到远程。<br>这里推荐一个自动生成.gitignore文件的网站 <a href="https://www.gitignore.io/：" target="_blank" rel="noopener">https://www.gitignore.io/：</a><br><figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="006.png" alt="在这里插入图片描述" title="">
-                </div>
-                <div class="image-caption">在这里插入图片描述</div>
-            </figure><br>输入你所使用环境的关键词，点击create便能自动生成.gitignore文件了！</p>
+<p>在使用python虚拟环境时，venv目录便不会提交到远程仓库，同时pycharm产生的一些文件.idea也不会提交到远程。<br>这里推荐一个自动生成.gitignore文件的网站 <a href="https://www.gitignore.io/：" target="_blank" rel="noopener">https://www.gitignore.io/：</a><br><img src="006.png" alt="在这里插入图片描述"><br>输入你所使用环境的关键词，点击create便能自动生成.gitignore文件了！</p>
 
         </div>
 
@@ -246,23 +223,19 @@
 
 
         
-        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2018/10/07/git使用笔记1：结合Github远程仓库管理项目/" target="_blank" rel="external">http://litexy.com/2018/10/07/git使用笔记1：结合Github远程仓库管理项目/</a>
+        原文链接：<a href="/2018/10/07/git使用笔记1：结合Github远程仓库管理项目/" target="_blank" rel="external">http://litexy.com/2018/10/07/git使用笔记1：结合Github远程仓库管理项目/</a>
         
     </div>
     
     <footer>
         <a href="http://litexy.com">
-            <img src="/img/avatar.jpg" alt="litexy">
+            <img src="/img/avatar.png" alt="litexy">
             litexy
         </a>
     </footer>
 </blockquote>
 
         
-<div class="page-reward">
-    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
-</div>
-
 
 
         <div class="post-footer">
@@ -277,7 +250,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2018/10/07/git使用笔记1：结合Github远程仓库管理项目/&title=《git使用笔记1：结合Github远程仓库管理项目》 — 程序员修炼之路&pic=http://litexy.com/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2018/10/07/git使用笔记1：结合Github远程仓库管理项目/&title=《git使用笔记1：结合Github远程仓库管理项目》 — 程序员修炼之路&pic=http://litexy.com/img/avatar.png" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -353,6 +326,23 @@
 
 
 
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
+    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'xinyuexy',
+            repo: 'xinyuexy.github.io',
+            oauth: {
+                client_id: 'a8a835ba7a7d16189d85',
+                client_secret: '074649d0e140dd8e35fd462b907bac5a34454102',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
 
 
 
@@ -366,32 +356,6 @@
 
 
 </article>
-
-<div id="reward" class="page-modal reward-lay">
-    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <h3 class="reward-title">
-        <i class="icon icon-quote-left"></i>
-        谢谢大爷~
-        <i class="icon icon-quote-right"></i>
-    </h3>
-    <div class="reward-content">
-        
-        <div class="reward-code">
-            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
-        </div>
-        
-        <label class="reward-toggle">
-            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
-                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
-            <div class="reward-toggle-ctrol">
-                <span class="reward-toggle-item wechat">微信</span>
-                <span class="reward-toggle-label"></span>
-                <span class="reward-toggle-item alipay">支付宝</span>
-            </div>
-        </label>
-        
-    </div>
-</div>
 
 
 
@@ -418,7 +382,7 @@
         </p>
     </div>
     <div class="bottom">
-        <p><span>litexy &copy; 2015 - 2019</span>
+        <p><span>litexy &copy; 2018 - 2019</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
@@ -436,7 +400,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2018/10/07/git使用笔记1：结合Github远程仓库管理项目/&title=《git使用笔记1：结合Github远程仓库管理项目》 — 程序员修炼之路&pic=http://litexy.com/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2018/10/07/git使用笔记1：结合Github远程仓库管理项目/&title=《git使用笔记1：结合Github远程仓库管理项目》 — 程序员修炼之路&pic=http://litexy.com/img/avatar.png" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -480,7 +444,7 @@
 
     <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
 <script>
-var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
 
 </script>
@@ -515,23 +479,6 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
-
-<script>
-(function() {
-    var OriginTitile = document.title, titleTime;
-    document.addEventListener('visibilitychange', function() {
-        if (document.hidden) {
-            document.title = '死鬼去哪里了！';
-            clearTimeout(titleTime);
-        } else {
-            document.title = '(つェ⊂)咦!又好了!';
-            titleTime = setTimeout(function() {
-                document.title = OriginTitile;
-            },2000);
-        }
-    });
-})();
-</script>
 
 
 
