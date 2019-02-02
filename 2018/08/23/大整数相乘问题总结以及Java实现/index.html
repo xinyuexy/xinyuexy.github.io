@@ -22,9 +22,9 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="Java,Algorithm">
+    <meta name="keywords" content="Algorithm,Java">
     <meta name="description" content="最近在跟coursera上斯坦福大学的算法专项课，其中开篇提到了两个整数相乘的问题，其中最简单的方法就是模拟我们小学的整数乘法，可想而知这不是比较好的算法，这门课可以说非常棒，带领我们不断探索更优的算法，然后介绍可以通过使用分而治之的思想来解决这个问题。下面对该问题的方法以及实现进行介绍。 问题定义  输入：2个n位的整数x和y 输出：x * y  如求: 12345678910111213141">
-<meta name="keywords" content="Java,Algorithm">
+<meta name="keywords" content="Algorithm,Java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="大整数相乘问题总结以及Java实现">
 <meta property="og:url" content="http://litexy.com/2018/08/23/大整数相乘问题总结以及Java实现/index.html">
@@ -348,25 +348,32 @@
 
 
 
-<section class="comments" id="comments">
-    <div id="gitment_thread"></div>
-    <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
-    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
     <script>
-        var gitment = new Gitment({
-            owner: 'xinyuexy',
-            repo: 'xinyuexy.github.io',
-            oauth: {
-                client_id: 'a8a835ba7a7d16189d85',
-                client_secret: '074649d0e140dd8e35fd462b907bac5a34454102',
-            },
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "",
+            appKey: "",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
         })
-        gitment.render('comments')
     </script>
-</section>
-
-
-
+    <!-- Valine Comments end -->
 
 
 
