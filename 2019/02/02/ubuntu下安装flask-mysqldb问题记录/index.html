@@ -31,13 +31,13 @@
 <meta property="og:site_name" content="新月的博客">
 <meta property="og:description" content="python中使用mysql的包有pymysql和mysqldb，同样地，flask也为其提供了扩展：flask-mysql（貌似基于pymysql），flask-mysqldb，但flask-mysql只支持python2，而flask-mysqldb同时兼容python2和python3。 在虚拟环境中安装flask-mysqldb:pip install flask-mysqldb出现如下错">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://img-blog.csdn.net/20181010164239253?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-<meta property="og:image" content="https://img-blog.csdn.net/20181010164607804?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-<meta property="og:updated_time" content="2019-02-02T11:09:09.945Z">
+<meta property="og:image" content="http://litexy.com/2019/02/02/ubuntu下安装flask-mysqldb问题记录/01.png">
+<meta property="og:image" content="http://litexy.com/2019/02/02/ubuntu下安装flask-mysqldb问题记录/02.png">
+<meta property="og:updated_time" content="2019-02-03T04:44:43.885Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ubuntu下安装flask-mysqldb问题记录">
 <meta name="twitter:description" content="python中使用mysql的包有pymysql和mysqldb，同样地，flask也为其提供了扩展：flask-mysql（貌似基于pymysql），flask-mysqldb，但flask-mysql只支持python2，而flask-mysqldb同时兼容python2和python3。 在虚拟环境中安装flask-mysqldb:pip install flask-mysqldb出现如下错">
-<meta name="twitter:image" content="https://img-blog.csdn.net/20181010164239253?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta name="twitter:image" content="http://litexy.com/2019/02/02/ubuntu下安装flask-mysqldb问题记录/01.png">
     
         <link rel="alternate" type="application/atom+xml" title="新月的博客" href="/atom.xml">
     
@@ -199,19 +199,7 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <p>python中使用mysql的包有pymysql和mysqldb，同样地，flask也为其提供了扩展：flask-mysql（貌似基于pymysql），flask-mysqldb，但flask-mysql只支持python2，而flask-mysqldb同时兼容python2和python3。</p>
-<p>在虚拟环境中安装flask-mysqldb:<br><code>pip install flask-mysqldb</code><br>出现如下错误：<br><figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="https://img-blog.csdn.net/20181010164239253?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="在这里插入图片描述" title="">
-                </div>
-                <div class="image-caption">在这里插入图片描述</div>
-            </figure><br>在Google中搜索<strong>OSError: mysql_config not found</strong><br>最终在Stack Overflow中找到答案(差点放弃…)<br>需要安装如下包：<br><code>sudo apt-get install libmysqlclient-dev</code><br>再次安装成功：<br><figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="https://img-blog.csdn.net/20181010164607804?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="在这里插入图片描述" title="">
-                </div>
-                <div class="image-caption">在这里插入图片描述</div>
-            </figure></p>
+<p>在虚拟环境中安装flask-mysqldb:<br><code>pip install flask-mysqldb</code><br>出现如下错误：<br><img src="01.png" style="zoom:60%"><br>在Google中搜索<strong>OSError: mysql_config not found</strong><br>最终在Stack Overflow中找到答案(差点放弃…)<br>需要安装如下包：<br><code>sudo apt-get install libmysqlclient-dev</code><br>再次安装成功：<br><img src="02.png" style="zoom:60%"></p>
 <h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><p><a href="https://stackoverflow.com/questions/5178292/pip-install-mysql-python-fails-with-environmenterror-mysql-config-not-found" target="_blank" rel="noopener">https://stackoverflow.com/questions/5178292/pip-install-mysql-python-fails-with-environmenterror-mysql-config-not-found</a></p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>遇到别轻易放弃，再多找找，多尝试，相信能够成功<br>（stack overflow是个好地方）</p>
 
@@ -222,7 +210,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-02-02T11:09:09.945Z" itemprop="dateUpdated">2019-02-02 19:09:09</time>
+    最后更新时间：<time datetime="2019-02-03T04:44:43.885Z" itemprop="dateUpdated">2019-02-03 12:44:43</time>
 </span><br>
 
 
