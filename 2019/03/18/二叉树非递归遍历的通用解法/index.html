@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <link rel="canonical" href="http://litexy.com/2019/03/18/二叉树非递归遍历的通用解法/">
+    
+    
+    <title>二叉树非递归遍历的通用解法 | 新月的博客 | 一名在读硕士的修炼之路，关注Java/Python/数据分析/数据库等 记录学习过程中的点点滴滴...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Algorithm,二叉树">
+    <meta name="description" content="最近在跟慕课网上《玩转算法面试》这门课，老师讲的很不错，其中有一节提到了用栈来模拟二叉树的前序，中序，后序遍历。二叉树的遍历的递归解法很简单，但有时面试或做题时往往会要求写出非递归的形式，一般教科书上实现的前序，中序和后序遍历的非递归形式差别都比较大，特别是后序遍历，很难理解。那有没有一种通用的迭代解法能适于这三种遍历呢？下面介绍一下这种通用解法。 基本思想先给出前序遍历的递归形式代码如下：123">
+<meta name="keywords" content="Algorithm,二叉树">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二叉树非递归遍历的通用解法">
+<meta property="og:url" content="http://litexy.com/2019/03/18/二叉树非递归遍历的通用解法/index.html">
+<meta property="og:site_name" content="新月的博客">
+<meta property="og:description" content="最近在跟慕课网上《玩转算法面试》这门课，老师讲的很不错，其中有一节提到了用栈来模拟二叉树的前序，中序，后序遍历。二叉树的遍历的递归解法很简单，但有时面试或做题时往往会要求写出非递归的形式，一般教科书上实现的前序，中序和后序遍历的非递归形式差别都比较大，特别是后序遍历，很难理解。那有没有一种通用的迭代解法能适于这三种遍历呢？下面介绍一下这种通用解法。 基本思想先给出前序遍历的递归形式代码如下：123">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://ws1.sinaimg.cn/mw690/006SQxbply1g12jfhphg7j30cy087t9o.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/mw690/006SQxbply1g12ji5naybj30bz05274x.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/mw690/006SQxbply1g12jk6yz92j305w07jgma.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/mw690/006SQxbply1g12jniyagsj3079091dgv.jpg">
+<meta property="og:updated_time" content="2019-03-17T16:02:40.455Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="二叉树非递归遍历的通用解法">
+<meta name="twitter:description" content="最近在跟慕课网上《玩转算法面试》这门课，老师讲的很不错，其中有一节提到了用栈来模拟二叉树的前序，中序，后序遍历。二叉树的遍历的递归解法很简单，但有时面试或做题时往往会要求写出非递归的形式，一般教科书上实现的前序，中序和后序遍历的非递归形式差别都比较大，特别是后序遍历，很难理解。那有没有一种通用的迭代解法能适于这三种遍历呢？下面介绍一下这种通用解法。 基本思想先给出前序遍历的递归形式代码如下：123">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/mw690/006SQxbply1g12jfhphg7j30cy087t9o.jpg">
+    
+        <link rel="alternate" type="application/atom+xml" title="新月的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon2.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">litexy</h5>
+          <a href="mailto:xinyue.hfut@qq.com" title="xinyue.hfut@qq.com" class="mail">xinyue.hfut@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/xinyuexy" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                About
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">二叉树非递归遍历的通用解法</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">二叉树非递归遍历的通用解法</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-03-18T15:54:09.000Z" itemprop="datePublished" class="page-time">
+  2019-03-18
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Algorithm/">Algorithm</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#基本思想"><span class="post-toc-number">1.</span> <span class="post-toc-text">基本思想</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#前序遍历非递归代码"><span class="post-toc-number">2.</span> <span class="post-toc-text">前序遍历非递归代码</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#中序非递归代码"><span class="post-toc-number">3.</span> <span class="post-toc-text">中序非递归代码</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#后序非递归代码"><span class="post-toc-number">4.</span> <span class="post-toc-text">后序非递归代码</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-二叉树非递归遍历的通用解法"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">二叉树非递归遍历的通用解法</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-03-18 23:54:09" datetime="2019-03-18T15:54:09.000Z"  itemprop="datePublished">2019-03-18</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Algorithm/">Algorithm</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>最近在跟慕课网上《玩转算法面试》这门课，老师讲的很不错，其中有一节提到了用栈来模拟二叉树的前序，中序，后序遍历。<br>二叉树的遍历的递归解法很简单，但有时面试或做题时往往会要求写出非递归的形式，一般教科书上实现的前序，中序和后序遍历的非递归形式差别都比较大，特别是后序遍历，很难理解。那有没有一种通用的迭代解法能适于这三种遍历呢？下面介绍一下这种通用解法。</p>
+<h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>先给出前序遍历的递归形式代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">preorder</span><span class="params">(TreeNode node)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(node != <span class="keyword">null</span>) &#123;</span><br><span class="line">		System.out.println(node.val);</span><br><span class="line">		preorder(node.left);</span><br><span class="line">		preorder(node.right);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>假设有这样一颗二叉树：<br><img src="https://ws1.sinaimg.cn/mw690/006SQxbply1g12jfhphg7j30cy087t9o.jpg"><br>上述递归代码中其实只包含三条指令：打印结点，访问左孩子，访问右孩子，每条指令用一种命令来表示：<br><img src="https://ws1.sinaimg.cn/mw690/006SQxbply1g12ji5naybj30bz05274x.jpg"><br>由于栈具有后进先出的特性，所以上述递归代码等价于向栈中推入三条命令：<br><img src="https://ws1.sinaimg.cn/mw690/006SQxbply1g12jk6yz92j305w07jgma.jpg"><br>上述是遍历结点1的情况，首先打印结点即<code>count 1</code>出栈，然后<code>go 1-L</code>出栈递归访问其左孩子结点2，对于结点2，也会有如上三条命令，将其也按照待访问顺序加入栈中：<br><img src="https://ws1.sinaimg.cn/mw690/006SQxbply1g12jniyagsj3079091dgv.jpg"><br>依次执行上述过程直到栈为空为止。</p>
+<h3 id="前序遍历非递归代码"><a href="#前序遍历非递归代码" class="headerlink" title="前序遍历非递归代码"></a>前序遍历非递归代码</h3><p>根据上述过程，我们将其写成代码，可以用一个<code>Command</code>类来表示一条命令，其代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Command</span> </span>&#123;</span><br><span class="line">	String s;    <span class="comment">// go, print</span></span><br><span class="line">    TreeNode node;</span><br><span class="line">    Command(String s, TreeNode node) &#123;</span><br><span class="line">    	<span class="keyword">this</span>.s = s;</span><br><span class="line">        <span class="keyword">this</span>.node = node;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中<code>print</code>代表打印结点的命令，<code>go</code>代表递归调用。<br>整个前序遍历非递归的代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">   <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span> </span>&#123;</span><br><span class="line">       <span class="keyword">int</span> val;</span><br><span class="line">       TreeNode left;</span><br><span class="line">       TreeNode right;</span><br><span class="line">       TreeNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Command</span> </span>&#123;</span><br><span class="line">       String s;    <span class="comment">// go, print</span></span><br><span class="line">       TreeNode node;</span><br><span class="line">       Command(String s, TreeNode node) &#123;</span><br><span class="line">           <span class="keyword">this</span>.s = s;</span><br><span class="line">           <span class="keyword">this</span>.node = node;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">preorderTraversal</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line"> 	Stack&lt;Command&gt; st = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">       st.add(<span class="keyword">new</span> Command(<span class="string">"go"</span>, root));</span><br><span class="line"></span><br><span class="line">       <span class="keyword">while</span>(!st.isEmpty()) &#123;</span><br><span class="line">           Command cd = st.pop();</span><br><span class="line">           <span class="keyword">if</span>(cd.s.equals(<span class="string">"print"</span>)) &#123;</span><br><span class="line">               System.out.println(cd.node.val)</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">               <span class="keyword">assert</span> cd.s.equals(<span class="string">"go"</span>);</span><br><span class="line">               <span class="keyword">if</span>(cd.node.right != <span class="keyword">null</span>) &#123;</span><br><span class="line">                   st.add(<span class="keyword">new</span> Command(<span class="string">"go"</span>, cd.node.right));</span><br><span class="line">               &#125;</span><br><span class="line">               <span class="keyword">if</span>(cd.node.left != <span class="keyword">null</span>) &#123;</span><br><span class="line">                   st.add(<span class="keyword">new</span> Command(<span class="string">"go"</span>, cd.node.left));</span><br><span class="line">               &#125;</span><br><span class="line">               st.push(<span class="keyword">new</span> Command(<span class="string">"print"</span>, cd.node));</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>写出了前序遍历的非递归代码后，中序和后序遍历就比较简单了，只需要交换一下入栈的顺序即可。</p>
+<h3 id="中序非递归代码"><a href="#中序非递归代码" class="headerlink" title="中序非递归代码"></a>中序非递归代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">inorderTraversal</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line"> 	Stack&lt;Command&gt; st = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">       st.add(<span class="keyword">new</span> Command(<span class="string">"go"</span>, root));</span><br><span class="line"></span><br><span class="line">       <span class="keyword">while</span>(!st.isEmpty()) &#123;</span><br><span class="line">           Command cd = st.pop();</span><br><span class="line">           <span class="keyword">if</span>(cd.s.equals(<span class="string">"print"</span>)) &#123;</span><br><span class="line">               System.out.println(cd.node.val)</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">               <span class="keyword">assert</span> cd.s.equals(<span class="string">"go"</span>);</span><br><span class="line">               <span class="keyword">if</span>(cd.node.right != <span class="keyword">null</span>) &#123;</span><br><span class="line">                   st.add(<span class="keyword">new</span> Command(<span class="string">"go"</span>, cd.node.right));</span><br><span class="line">               &#125;</span><br><span class="line">               st.push(<span class="keyword">new</span> Command(<span class="string">"print"</span>, cd.node));</span><br><span class="line">               <span class="keyword">if</span>(cd.node.left != <span class="keyword">null</span>) &#123;</span><br><span class="line">                   st.add(<span class="keyword">new</span> Command(<span class="string">"go"</span>, cd.node.left));</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到只是将<code>st.push(new Command(&quot;print&quot;, cd.node));</code>放到了中间。</p>
+<h3 id="后序非递归代码"><a href="#后序非递归代码" class="headerlink" title="后序非递归代码"></a>后序非递归代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">postorderTraversal</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line"> 	Stack&lt;Command&gt; st = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">       st.add(<span class="keyword">new</span> Command(<span class="string">"go"</span>, root));</span><br><span class="line"></span><br><span class="line">       <span class="keyword">while</span>(!st.isEmpty()) &#123;</span><br><span class="line">           Command cd = st.pop();</span><br><span class="line">           <span class="keyword">if</span>(cd.s.equals(<span class="string">"print"</span>)) &#123;</span><br><span class="line">               System.out.println(cd.node.val)</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">               <span class="keyword">assert</span> cd.s.equals(<span class="string">"go"</span>);</span><br><span class="line">               st.push(<span class="keyword">new</span> Command(<span class="string">"print"</span>, cd.node));</span><br><span class="line">               <span class="keyword">if</span>(cd.node.right != <span class="keyword">null</span>) &#123;</span><br><span class="line">                   st.add(<span class="keyword">new</span> Command(<span class="string">"go"</span>, cd.node.right));</span><br><span class="line">               &#125;</span><br><span class="line">               <span class="keyword">if</span>(cd.node.left != <span class="keyword">null</span>) &#123;</span><br><span class="line">                   st.add(<span class="keyword">new</span> Command(<span class="string">"go"</span>, cd.node.left));</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>前序，中序和后序非递归遍历的整个形式保持一致，非常好记。可以通过LeetCode上的<a href="https://leetcode.com/problems/binary-tree-preorder-traversal/" target="_blank" rel="noopener">144</a>和<a href="https://leetcode.com/problems/binary-tree-postorder-traversal/" target="_blank" rel="noopener">145</a>题去实践一下。</p>
+<p>参考：<a href="https://coding.imooc.com/class/82.html" target="_blank" rel="noopener">慕课网《玩转算法面试》</a></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-03-17T16:02:40.455Z" itemprop="dateUpdated">2019-03-18 00:02:40</time>
+</span><br>
+
+
+        
+        原文链接：<a href="/2019/03/18/二叉树非递归遍历的通用解法/" target="_blank" rel="external">http://litexy.com/2019/03/18/二叉树非递归遍历的通用解法/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://litexy.com">
+            <img src="/img/avatar.png" alt="litexy">
+            litexy
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/二叉树/">二叉树</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2019/03/18/二叉树非递归遍历的通用解法/&title=《二叉树非递归遍历的通用解法》 — 新月的博客&pic=http://litexy.com/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2019/03/18/二叉树非递归遍历的通用解法/&title=《二叉树非递归遍历的通用解法》 — 新月的博客&source=web,学习笔记,算法,程序员,Java,Python" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://litexy.com/2019/03/18/二叉树非递归遍历的通用解法/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《二叉树非递归遍历的通用解法》 — 新月的博客&url=http://litexy.com/2019/03/18/二叉树非递归遍历的通用解法/&via=http://litexy.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://litexy.com/2019/03/18/二叉树非递归遍历的通用解法/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/02/02/MySQL优化实践-使用Explain分析和优化MySQL查询过程/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">MySQL优化实践:使用Explain分析和优化MySQL查询过程</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "7NlxEKd8qTg4UUeULk4ed5lb-gzGzoHsz",
+            appKey: "6OdIgn0fr7ifpSup5Q9qYKT9",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>litexy &copy; 2018 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2019/03/18/二叉树非递归遍历的通用解法/&title=《二叉树非递归遍历的通用解法》 — 新月的博客&pic=http://litexy.com/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2019/03/18/二叉树非递归遍历的通用解法/&title=《二叉树非递归遍历的通用解法》 — 新月的博客&source=web,学习笔记,算法,程序员,Java,Python" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://litexy.com/2019/03/18/二叉树非递归遍历的通用解法/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《二叉树非递归遍历的通用解法》 — 新月的博客&url=http://litexy.com/2019/03/18/二叉树非递归遍历的通用解法/&via=http://litexy.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://litexy.com/2019/03/18/二叉树非递归遍历的通用解法/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACtklEQVR42u3aQW7jMBAEwPz/09nrAoaZ7hkxayxKJ8NSJJYCcMZNfn3Fx/dfx7uz+X3aO5yf/sCBh4eHtxj66/HumtdhvT7+fOX5bsmV5zHj4eHh3eadJ+vzIDYlIbkyeRFvv8fDw8P7AF5y5XmyLqZ1PDw8vP+I14JnA22LEx4eHt5v8pIw4l4Lnry+61kLHh4eXte1FgHBJ3y+sr6Hh4eHt15VbyfcPHpoo9vZgYeHh3eD17a8ydJUGyjMYtxinHh4eHgXeOehPBUBzBa92tcUhbl4eHh4C95mop/h93Fwsu016tPx8PDwRry8aW5vt4kk8m0KxYYGPDw8vId4+cQ9m9zzstFO+tHCGB4eHt5l3r2wIC8eM9gD63t4eHh4o9z1PLj87CZ4bV9lUa7w8PDwHuLNAoJ9q91GGO2mLjw8PLx7vNnj8xChfUGb2CJq5fHw8PAe4uUDbZfEkpBic7ZeBsPDw8Nb8/IJNwlk83Z5ViTawBcPDw/vBm+2QWqz9Sp/WbO7/ZBP4+Hh4T3Ea8PQPSl5Vttqr2ogHh4eXszbJxl57JsXlfw/s9oNgYeHh7dY+mpLwmarwYbdFhs8PDy8e7x8W8BmEavt8WflpC4PeHh4eCNeHshuNks9NdHXi3Z4eHh413ibMDd/NXlJmBWSt78Y8PDw8C7w2pC0JbXt+H4pDg8PD+93eMkjZw13/qxVGcDDw8P7Rd6saT63v+3Uf77P8MDDw8N7lPddHu3C/6bYPNBk4+Hh4V3gzebYtlTMykMbjqzKCR4eHl759PbWsyAjb9/b8vNDScDDw8O7xsvDiNnn65nKuTDg4eHh/VNeMuhZ2cjb9yKMwMPDw/sA3mwDVp6I5GejDQR4eHh413j7Ra9NMJG34PU2CDw8PLwLvPbP8qg3AeRN/Ox7PDw8vEd5fwCOOhbbj4I+1AAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
