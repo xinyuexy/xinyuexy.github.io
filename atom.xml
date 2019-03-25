@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://litexy.com/"/>
-  <updated>2019-03-17T16:02:40.455Z</updated>
+  <updated>2019-03-25T15:24:08.699Z</updated>
   <id>http://litexy.com/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Java中Redis存储复杂json格式数据</title>
+    <link href="http://litexy.com/2019/03/25/Java%E4%B8%ADRedis%E5%AD%98%E5%82%A8%E5%A4%8D%E6%9D%82json%E6%A0%BC%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%B9%B6%E8%BF%94%E5%9B%9E%E7%BB%99%E5%89%8D%E7%AB%AF/"/>
+    <id>http://litexy.com/2019/03/25/Java中Redis存储复杂json格式数据并返回给前端/</id>
+    <published>2019-03-25T11:45:12.000Z</published>
+    <updated>2019-03-25T15:24:08.699Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h3><p>在Java Web项目中，经常需要前端请求数据，后台从数据库中查询并计算最后返回<code>json</code>格式数据给前端。而每次请求都需要计算一次可能比较浪费时间，这时我们可以将计算好的结果保存在<a href="http://www.redis.net.cn/" target="_blank" rel="noopener">redis</a>中，下次请求时先判断<code>redis</code>中是否已经存在，如果是则直接从redis里取出返回，因为是在内存中，所以比较快。而自己在项目中遇到的json格式数据比较复杂，下面记录一下redis存储对象和json格式数据的几种方式以及遇到的问题。</p><h3 id="存储方式"><a href="#存储方式" class="headerlink" title="存储方式"></a>存储方式</h3><h4 id="1-直接使用String存储"><a href="#1-直接使用String存储" class="headerlink" title="1. 直接使用String存储"></a>1. 直接使用String存储</h4><p><code>String</code>类型是Redis中最简单的类型了，每个<code>key</code>对应一个<code>String</code>，我们可以直接将要存储的对象转换成json字符串，代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//存储</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setJsonString</span><span class="params">(String key, Object obj)</span> </span>&#123;</span><br><span class="line">Jedis jedis = RedisConnection.getJedis();</span><br><span class="line">jedis.set(key, JSON.toJSONString(obj));</span><br><span class="line">jedis.close();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//获取</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getJsonString</span><span class="params">(String key)</span> </span>&#123;</span><br><span class="line">Jedis jedis = RedisConnection.getJedis();</span><br><span class="line">String value = jedis.get(key);</span><br><span class="line">jedis.close();</span><br><span class="line"><span class="keyword">return</span> value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>这里是使用<code>fastjson</code>的相关函数<code>toJSONString</code>将对象转换为字符串进行存储。获取的时候直接返回json字符串给前端就可以了。使用这种方式可能只能存储简单的json字符串，对于复杂格式的可能会解析错误。</p><h4 id="2-使用对象序列化方式存储"><a href="#2-使用对象序列化方式存储" class="headerlink" title="2. 使用对象序列化方式存储"></a>2. 使用对象序列化方式存储</h4><p>先将对象以字节序列化存储，然后再反序列化得到对象，这里可以封装一个序列化和反序列化的工具类：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.ByteArrayInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectOutputStream;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SerializeUtil</span> </span>&#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * 序列化</span></span><br><span class="line"><span class="comment">     * */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] serizlize(Object object)&#123;</span><br><span class="line">        ObjectOutputStream oos = <span class="keyword">null</span>;</span><br><span class="line">        ByteArrayOutputStream baos = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            baos = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">            oos = <span class="keyword">new</span> ObjectOutputStream(baos);</span><br><span class="line">            oos.writeObject(object);</span><br><span class="line">            <span class="keyword">byte</span>[] bytes = baos.toByteArray();</span><br><span class="line">            <span class="keyword">return</span> bytes;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">if</span>(baos != <span class="keyword">null</span>)&#123;</span><br><span class="line">                    baos.close();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (oos != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    oos.close();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e2) &#123;</span><br><span class="line">                e2.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * 反序列化</span></span><br><span class="line"><span class="comment">     * */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">deserialize</span><span class="params">(<span class="keyword">byte</span>[] bytes)</span></span>&#123;</span><br><span class="line">        ByteArrayInputStream bais = <span class="keyword">null</span>;</span><br><span class="line">        ObjectInputStream ois = <span class="keyword">null</span>; </span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            bais = <span class="keyword">new</span> ByteArrayInputStream(bytes);</span><br><span class="line">            ois = <span class="keyword">new</span> ObjectInputStream(bais);</span><br><span class="line">            <span class="keyword">return</span> ois.readObject();</span><br><span class="line">        &#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line"></span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e2) &#123;</span><br><span class="line">                e2.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>相应存储和获取代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setObject</span><span class="params">(String key,Object object)</span></span>&#123;</span><br><span class="line">    Jedis jedis = RedisConnection.getJedis();</span><br><span class="line">    jedis.set(key.getBytes(), SerializeUtil.serizlize(object));</span><br><span class="line">    jedis.close();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">getObject</span><span class="params">(String key)</span></span>&#123;</span><br><span class="line">    Jedis jedis = RedisConnection.getJedis();</span><br><span class="line">    <span class="keyword">byte</span>[] bytes = jedis.get(key.getBytes());</span><br><span class="line">    jedis.close();</span><br><span class="line">    <span class="keyword">return</span> SerializeUtil.deserialize(bytes);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>使用这种方式可能遇到嵌套的对象或者json数组等不太好解决。</p><h4 id="3-使用hash存储"><a href="#3-使用hash存储" class="headerlink" title="3. 使用hash存储"></a>3. 使用hash存储</h4><p>第三种方式也是解决我问题的一种方式，由于我的json格式数据比较复杂，形如：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "cd": [&#123;"Condition": &#123;...&#125;, segs:[1,2,3]&#125;, &#123; &#125;, ...]</span><br><span class="line">  "rs": &#123;"way": "休宁路", "road":[&#123;&#125;,&#123;&#125;,..], "segList": [&#123;object&#125;, &#123;&#125;, ...] &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>我刚开始是直接使用<code>fastjson</code>将其转换为字符串进行存储，但在返回解析时发现格式不太对了。分析其原因可能是json格式太复杂，然后使用redis中hash方式将数据进行分割存储，即<code>cd</code>对应一个<code>key</code>存储，<code>rs</code>为一个<code>key</code>进行存储，将这两部分都放入一个hash中。相应代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Jedis jedis = RedisConnection.getJedis();</span><br><span class="line">JSONObject res = <span class="keyword">new</span> JSONObject();<span class="comment">//最终结果</span></span><br><span class="line"><span class="comment">//如果redis中存在,则直接从redis中取,否则计算并存储至redis</span></span><br><span class="line"><span class="keyword">if</span>(jedis.exists(lm)) &#123;</span><br><span class="line">String rs_value = jedis.hget(lm, <span class="string">"rs"</span>);</span><br><span class="line">String cd_value = jedis.hget(lm, <span class="string">"cd"</span>);</span><br><span class="line">res.put(<span class="string">"cd"</span>, JSONArray.parseArray(cd_value));</span><br><span class="line">res.put(<span class="string">"rs"</span>, JSONObject.parseObject(rs_value));</span><br><span class="line">System.out.println(<span class="string">"redis get success"</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">res = computeRes(lm);</span><br><span class="line"><span class="comment">//更新redis</span></span><br><span class="line">jedis.hset(lm, <span class="string">"cd"</span>, res.getJSONArray(<span class="string">"cd"</span>).toJSONString());</span><br><span class="line">jedis.hset(lm, <span class="string">"rs"</span>, JSON.toJSONString(res.getJSONObject(<span class="string">"rs"</span>)));</span><br><span class="line">System.out.println(<span class="string">"redis set success"</span>);</span><br><span class="line">&#125;</span><br><span class="line">jedis.close();</span><br><span class="line"></span><br><span class="line"><span class="comment">//候选结果集转json字符串</span></span><br><span class="line">String jsonStr = JSON.toJSONString(res, SerializerFeature.DisableCircularReferenceDetect);</span><br><span class="line"><span class="comment">//返回给前端</span></span><br><span class="line">System.out.println(<span class="string">"json string: "</span> + jsonStr);</span><br><span class="line">response.setContentType(<span class="string">"text/html;charset=utf-8"</span>);  <span class="comment">//解决前端中文乱码</span></span><br><span class="line">PrintWriter out = response.getWriter();</span><br><span class="line">out.print(jsonStr);</span><br></pre></td></tr></table></figure></p><p>我是以路名(lm)作为hash的key，首先判断是否存在该key，不存在的话先进行计算<code>res = computeRes(lm);</code>，得到上述的<code>json</code>格式数据，然后使用<code>hset</code>方法将其分别作为两个<code>key</code>进行存储。注意上述<code>cd</code>为一个<code>JSONArray</code>对象，需要使用调用<code>toJSONString()</code>方法转换成字符串，而<code>rs</code>为一个<code>JSONObject</code>对象，使用的是<code>JSON.toJSONString</code>。<br>在获取时首先分别获取其字符串形式，然后分别转换成相应的类型<code>JSONArray.parseArray(cd_value)</code>和<code>JSONObject.parseObject(rs_value)</code>，最终包裹在一个<code>JSONObject</code>中。</p><p>参考：</p><ol><li><a href="https://blog.csdn.net/CrazyLai1996/article/details/76472856" target="_blank" rel="noopener">https://blog.csdn.net/CrazyLai1996/article/details/76472856</a></li><li><a href="http://www.runoob.com/redis/redis-hashes.html" target="_blank" rel="noopener">http://www.runoob.com/redis/redis-hashes.html</a></li><li><a href="https://blog.csdn.net/u011008029/article/details/51315339" target="_blank" rel="noopener">https://blog.csdn.net/u011008029/article/details/51315339</a></li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h3 id=&quot;问题背景&quot;&gt;&lt;a href=&quot;#问题背景&quot; class=&quot;headerlink&quot; title=&quot;问题背景&quot;&gt;&lt;/a&gt;问题背景&lt;/h3&gt;&lt;p&gt;在Java Web项目中，经常需要前端请求数据，后台从数据库中查询并计算最后返回&lt;code&gt;json&lt;/code&gt;格式数据给
+      
+    
+    </summary>
+    
+      <category term="Java" scheme="http://litexy.com/categories/Java/"/>
+    
+      <category term="项目记录" scheme="http://litexy.com/categories/%E9%A1%B9%E7%9B%AE%E8%AE%B0%E5%BD%95/"/>
+    
+    
+      <category term="Java" scheme="http://litexy.com/tags/Java/"/>
+    
+      <category term="Redis" scheme="http://litexy.com/tags/Redis/"/>
+    
+  </entry>
   
   <entry>
     <title>二叉树非递归遍历的通用解法</title>
@@ -90,9 +119,9 @@
     
     </summary>
     
-      <category term="项目记录" scheme="http://litexy.com/categories/%E9%A1%B9%E7%9B%AE%E8%AE%B0%E5%BD%95/"/>
-    
       <category term="Python" scheme="http://litexy.com/categories/Python/"/>
+    
+      <category term="项目记录" scheme="http://litexy.com/categories/%E9%A1%B9%E7%9B%AE%E8%AE%B0%E5%BD%95/"/>
     
     
       <category term="MySQL" scheme="http://litexy.com/tags/MySQL/"/>
@@ -121,9 +150,9 @@
     
     </summary>
     
-      <category term="项目记录" scheme="http://litexy.com/categories/%E9%A1%B9%E7%9B%AE%E8%AE%B0%E5%BD%95/"/>
-    
       <category term="Python" scheme="http://litexy.com/categories/Python/"/>
+    
+      <category term="项目记录" scheme="http://litexy.com/categories/%E9%A1%B9%E7%9B%AE%E8%AE%B0%E5%BD%95/"/>
     
     
       <category term="MySQL" scheme="http://litexy.com/tags/MySQL/"/>
@@ -316,9 +345,9 @@
       <category term="Algorithm" scheme="http://litexy.com/categories/Algorithm/"/>
     
     
-      <category term="Algorithm" scheme="http://litexy.com/tags/Algorithm/"/>
-    
       <category term="Java" scheme="http://litexy.com/tags/Java/"/>
+    
+      <category term="Algorithm" scheme="http://litexy.com/tags/Algorithm/"/>
     
   </entry>
   
@@ -343,9 +372,9 @@
       <category term="Java" scheme="http://litexy.com/categories/Java/"/>
     
     
-      <category term="Java基础" scheme="http://litexy.com/tags/Java%E5%9F%BA%E7%A1%80/"/>
-    
       <category term="Java" scheme="http://litexy.com/tags/Java/"/>
+    
+      <category term="Java基础" scheme="http://litexy.com/tags/Java%E5%9F%BA%E7%A1%80/"/>
     
       <category term="Java编程思想" scheme="http://litexy.com/tags/Java%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/"/>
     
@@ -502,9 +531,9 @@
       <category term="Java" scheme="http://litexy.com/categories/Java/"/>
     
     
-      <category term="MySQL" scheme="http://litexy.com/tags/MySQL/"/>
-    
       <category term="Java" scheme="http://litexy.com/tags/Java/"/>
+    
+      <category term="MySQL" scheme="http://litexy.com/tags/MySQL/"/>
     
   </entry>
   

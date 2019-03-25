@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <link rel="canonical" href="http://litexy.com/2019/03/25/Java中Redis存储复杂json格式数据并返回给前端/">
+    
+    
+    <title>Java中Redis存储复杂json格式数据 | 新月的博客 | 一名在读硕士的修炼之路，关注Java/Python/数据分析/数据库等 记录学习过程中的点点滴滴...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Java,Redis">
+    <meta name="description" content="问题背景在Java Web项目中，经常需要前端请求数据，后台从数据库中查询并计算最后返回json格式数据给前端。而每次请求都需要计算一次可能比较浪费时间，这时我们可以将计算好的结果保存在redis中，下次请求时先判断redis中是否已经存在，如果是则直接从redis里取出返回，因为是在内存中，所以比较快。而自己在项目中遇到的json格式数据比较复杂，下面记录一下redis存储对象和json格式数据">
+<meta name="keywords" content="Java,Redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java中Redis存储复杂json格式数据">
+<meta property="og:url" content="http://litexy.com/2019/03/25/Java中Redis存储复杂json格式数据并返回给前端/index.html">
+<meta property="og:site_name" content="新月的博客">
+<meta property="og:description" content="问题背景在Java Web项目中，经常需要前端请求数据，后台从数据库中查询并计算最后返回json格式数据给前端。而每次请求都需要计算一次可能比较浪费时间，这时我们可以将计算好的结果保存在redis中，下次请求时先判断redis中是否已经存在，如果是则直接从redis里取出返回，因为是在内存中，所以比较快。而自己在项目中遇到的json格式数据比较复杂，下面记录一下redis存储对象和json格式数据">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-03-25T15:24:08.699Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java中Redis存储复杂json格式数据">
+<meta name="twitter:description" content="问题背景在Java Web项目中，经常需要前端请求数据，后台从数据库中查询并计算最后返回json格式数据给前端。而每次请求都需要计算一次可能比较浪费时间，这时我们可以将计算好的结果保存在redis中，下次请求时先判断redis中是否已经存在，如果是则直接从redis里取出返回，因为是在内存中，所以比较快。而自己在项目中遇到的json格式数据比较复杂，下面记录一下redis存储对象和json格式数据">
+    
+        <link rel="alternate" type="application/atom+xml" title="新月的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon2.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">litexy</h5>
+          <a href="mailto:xinyue.hfut@qq.com" title="xinyue.hfut@qq.com" class="mail">xinyue.hfut@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/xinyuexy" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                About
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Java中Redis存储复杂json格式数据</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Java中Redis存储复杂json格式数据</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-03-25T11:45:12.000Z" itemprop="datePublished" class="page-time">
+  2019-03-25
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/项目记录/">项目记录</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#问题背景"><span class="post-toc-number">1.</span> <span class="post-toc-text">问题背景</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#存储方式"><span class="post-toc-number">2.</span> <span class="post-toc-text">存储方式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-直接使用String存储"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">1. 直接使用String存储</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-使用对象序列化方式存储"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">2. 使用对象序列化方式存储</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#3-使用hash存储"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">3. 使用hash存储</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Java中Redis存储复杂json格式数据并返回给前端"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Java中Redis存储复杂json格式数据</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-03-25 19:45:12" datetime="2019-03-25T11:45:12.000Z"  itemprop="datePublished">2019-03-25</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/项目记录/">项目记录</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h3 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h3><p>在Java Web项目中，经常需要前端请求数据，后台从数据库中查询并计算最后返回<code>json</code>格式数据给前端。而每次请求都需要计算一次可能比较浪费时间，这时我们可以将计算好的结果保存在<a href="http://www.redis.net.cn/" target="_blank" rel="noopener">redis</a>中，下次请求时先判断<code>redis</code>中是否已经存在，如果是则直接从redis里取出返回，因为是在内存中，所以比较快。而自己在项目中遇到的json格式数据比较复杂，下面记录一下redis存储对象和json格式数据的几种方式以及遇到的问题。</p>
+<h3 id="存储方式"><a href="#存储方式" class="headerlink" title="存储方式"></a>存储方式</h3><h4 id="1-直接使用String存储"><a href="#1-直接使用String存储" class="headerlink" title="1. 直接使用String存储"></a>1. 直接使用String存储</h4><p><code>String</code>类型是Redis中最简单的类型了，每个<code>key</code>对应一个<code>String</code>，我们可以直接将要存储的对象转换成json字符串，代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//存储</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setJsonString</span><span class="params">(String key, Object obj)</span> </span>&#123;</span><br><span class="line">	Jedis jedis = RedisConnection.getJedis();</span><br><span class="line">	jedis.set(key, JSON.toJSONString(obj));</span><br><span class="line">	jedis.close();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//获取</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getJsonString</span><span class="params">(String key)</span> </span>&#123;</span><br><span class="line">	Jedis jedis = RedisConnection.getJedis();</span><br><span class="line">	String value = jedis.get(key);</span><br><span class="line">	jedis.close();</span><br><span class="line">	<span class="keyword">return</span> value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里是使用<code>fastjson</code>的相关函数<code>toJSONString</code>将对象转换为字符串进行存储。获取的时候直接返回json字符串给前端就可以了。使用这种方式可能只能存储简单的json字符串，对于复杂格式的可能会解析错误。</p>
+<h4 id="2-使用对象序列化方式存储"><a href="#2-使用对象序列化方式存储" class="headerlink" title="2. 使用对象序列化方式存储"></a>2. 使用对象序列化方式存储</h4><p>先将对象以字节序列化存储，然后再反序列化得到对象，这里可以封装一个序列化和反序列化的工具类：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.ByteArrayInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectOutputStream;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SerializeUtil</span> </span>&#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * 序列化</span></span><br><span class="line"><span class="comment">     * */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] serizlize(Object object)&#123;</span><br><span class="line">        ObjectOutputStream oos = <span class="keyword">null</span>;</span><br><span class="line">        ByteArrayOutputStream baos = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            baos = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">            oos = <span class="keyword">new</span> ObjectOutputStream(baos);</span><br><span class="line">            oos.writeObject(object);</span><br><span class="line">            <span class="keyword">byte</span>[] bytes = baos.toByteArray();</span><br><span class="line">            <span class="keyword">return</span> bytes;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">if</span>(baos != <span class="keyword">null</span>)&#123;</span><br><span class="line">                    baos.close();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (oos != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    oos.close();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e2) &#123;</span><br><span class="line">                e2.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * 反序列化</span></span><br><span class="line"><span class="comment">     * */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">deserialize</span><span class="params">(<span class="keyword">byte</span>[] bytes)</span></span>&#123;</span><br><span class="line">        ByteArrayInputStream bais = <span class="keyword">null</span>;</span><br><span class="line">        ObjectInputStream ois = <span class="keyword">null</span>; </span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            bais = <span class="keyword">new</span> ByteArrayInputStream(bytes);</span><br><span class="line">            ois = <span class="keyword">new</span> ObjectInputStream(bais);</span><br><span class="line">            <span class="keyword">return</span> ois.readObject();</span><br><span class="line">        &#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line"></span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e2) &#123;</span><br><span class="line">                e2.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>相应存储和获取代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setObject</span><span class="params">(String key,Object object)</span></span>&#123;</span><br><span class="line">    Jedis jedis = RedisConnection.getJedis();</span><br><span class="line">    jedis.set(key.getBytes(), SerializeUtil.serizlize(object));</span><br><span class="line">    jedis.close();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">getObject</span><span class="params">(String key)</span></span>&#123;</span><br><span class="line">    Jedis jedis = RedisConnection.getJedis();</span><br><span class="line">    <span class="keyword">byte</span>[] bytes = jedis.get(key.getBytes());</span><br><span class="line">    jedis.close();</span><br><span class="line">    <span class="keyword">return</span> SerializeUtil.deserialize(bytes);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用这种方式可能遇到嵌套的对象或者json数组等不太好解决。</p>
+<h4 id="3-使用hash存储"><a href="#3-使用hash存储" class="headerlink" title="3. 使用hash存储"></a>3. 使用hash存储</h4><p>第三种方式也是解决我问题的一种方式，由于我的json格式数据比较复杂，形如：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "cd": [&#123;"Condition": &#123;...&#125;, segs:[1,2,3]&#125;, &#123; &#125;, ...]</span><br><span class="line">  "rs": &#123;"way": "休宁路", "road":[&#123;&#125;,&#123;&#125;,..], "segList": [&#123;object&#125;, &#123;&#125;, ...] &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我刚开始是直接使用<code>fastjson</code>将其转换为字符串进行存储，但在返回解析时发现格式不太对了。分析其原因可能是json格式太复杂，然后使用redis中hash方式将数据进行分割存储，即<code>cd</code>对应一个<code>key</code>存储，<code>rs</code>为一个<code>key</code>进行存储，将这两部分都放入一个hash中。相应代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Jedis jedis = RedisConnection.getJedis();</span><br><span class="line">JSONObject res = <span class="keyword">new</span> JSONObject();	<span class="comment">//最终结果</span></span><br><span class="line"><span class="comment">//如果redis中存在,则直接从redis中取,否则计算并存储至redis</span></span><br><span class="line"><span class="keyword">if</span>(jedis.exists(lm)) &#123;</span><br><span class="line">	String rs_value = jedis.hget(lm, <span class="string">"rs"</span>);</span><br><span class="line">	String cd_value = jedis.hget(lm, <span class="string">"cd"</span>);</span><br><span class="line">	res.put(<span class="string">"cd"</span>, JSONArray.parseArray(cd_value));</span><br><span class="line">	res.put(<span class="string">"rs"</span>, JSONObject.parseObject(rs_value));</span><br><span class="line">	System.out.println(<span class="string">"redis get success"</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	res = computeRes(lm);</span><br><span class="line">	<span class="comment">//更新redis</span></span><br><span class="line">	jedis.hset(lm, <span class="string">"cd"</span>, res.getJSONArray(<span class="string">"cd"</span>).toJSONString());</span><br><span class="line">	jedis.hset(lm, <span class="string">"rs"</span>, JSON.toJSONString(res.getJSONObject(<span class="string">"rs"</span>)));</span><br><span class="line">	System.out.println(<span class="string">"redis set success"</span>);</span><br><span class="line">&#125;</span><br><span class="line">jedis.close();</span><br><span class="line">		</span><br><span class="line"><span class="comment">//候选结果集转json字符串</span></span><br><span class="line">String jsonStr = JSON.toJSONString(res, SerializerFeature.DisableCircularReferenceDetect);</span><br><span class="line"><span class="comment">//返回给前端</span></span><br><span class="line">System.out.println(<span class="string">"json string: "</span> + jsonStr);</span><br><span class="line">response.setContentType(<span class="string">"text/html;charset=utf-8"</span>);  <span class="comment">//解决前端中文乱码</span></span><br><span class="line">PrintWriter out = response.getWriter();</span><br><span class="line">out.print(jsonStr);</span><br></pre></td></tr></table></figure></p>
+<p>我是以路名(lm)作为hash的key，首先判断是否存在该key，不存在的话先进行计算<code>res = computeRes(lm);</code>，得到上述的<code>json</code>格式数据，然后使用<code>hset</code>方法将其分别作为两个<code>key</code>进行存储。注意上述<code>cd</code>为一个<code>JSONArray</code>对象，需要使用调用<code>toJSONString()</code>方法转换成字符串，而<code>rs</code>为一个<code>JSONObject</code>对象，使用的是<code>JSON.toJSONString</code>。<br>在获取时首先分别获取其字符串形式，然后分别转换成相应的类型<code>JSONArray.parseArray(cd_value)</code>和<code>JSONObject.parseObject(rs_value)</code>，最终包裹在一个<code>JSONObject</code>中。</p>
+<p>参考：</p>
+<ol>
+<li><a href="https://blog.csdn.net/CrazyLai1996/article/details/76472856" target="_blank" rel="noopener">https://blog.csdn.net/CrazyLai1996/article/details/76472856</a></li>
+<li><a href="http://www.runoob.com/redis/redis-hashes.html" target="_blank" rel="noopener">http://www.runoob.com/redis/redis-hashes.html</a></li>
+<li><a href="https://blog.csdn.net/u011008029/article/details/51315339" target="_blank" rel="noopener">https://blog.csdn.net/u011008029/article/details/51315339</a></li>
+</ol>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-03-25T15:24:08.699Z" itemprop="dateUpdated">2019-03-25 23:24:08</time>
+</span><br>
+
+
+        
+        原文链接：<a href="/2019/03/25/Java中Redis存储复杂json格式数据并返回给前端/" target="_blank" rel="external">http://litexy.com/2019/03/25/Java中Redis存储复杂json格式数据并返回给前端/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://litexy.com">
+            <img src="/img/avatar.png" alt="litexy">
+            litexy
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/">Redis</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2019/03/25/Java中Redis存储复杂json格式数据并返回给前端/&title=《Java中Redis存储复杂json格式数据》 — 新月的博客&pic=http://litexy.com/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2019/03/25/Java中Redis存储复杂json格式数据并返回给前端/&title=《Java中Redis存储复杂json格式数据》 — 新月的博客&source=web,学习笔记,算法,程序员,Java,Python" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://litexy.com/2019/03/25/Java中Redis存储复杂json格式数据并返回给前端/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Java中Redis存储复杂json格式数据》 — 新月的博客&url=http://litexy.com/2019/03/25/Java中Redis存储复杂json格式数据并返回给前端/&via=http://litexy.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://litexy.com/2019/03/25/Java中Redis存储复杂json格式数据并返回给前端/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/03/18/二叉树非递归遍历的通用解法/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">二叉树非递归遍历的通用解法</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "7NlxEKd8qTg4UUeULk4ed5lb-gzGzoHsz",
+            appKey: "6OdIgn0fr7ifpSup5Q9qYKT9",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>litexy &copy; 2018 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2019/03/25/Java中Redis存储复杂json格式数据并返回给前端/&title=《Java中Redis存储复杂json格式数据》 — 新月的博客&pic=http://litexy.com/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2019/03/25/Java中Redis存储复杂json格式数据并返回给前端/&title=《Java中Redis存储复杂json格式数据》 — 新月的博客&source=web,学习笔记,算法,程序员,Java,Python" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://litexy.com/2019/03/25/Java中Redis存储复杂json格式数据并返回给前端/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Java中Redis存储复杂json格式数据》 — 新月的博客&url=http://litexy.com/2019/03/25/Java中Redis存储复杂json格式数据并返回给前端/&via=http://litexy.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://litexy.com/2019/03/25/Java中Redis存储复杂json格式数据并返回给前端/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAADI0lEQVR42u3awY7iQAwE0Pn/n2avK6GBKjtIk+blhFBo8ppDYbt/fuLr8d/1/P7z6+dP/bbC62/57f7kngsubGxs7JuwHy+v1w+UfKrdlGS1zVNhY2Njn8pOQiL5miRmki3Ig60NPGxsbGzsaNHgn/+mwMhDDhsbGxu7Darks23Zk28QNjY29jez24bOrJBI2j35Ou0WY2NjY5/Kzqeif//1R+bb2NjY2H+Y/VhcswM9bfvpI0+OjY2NfRA7GaPmpcis0d9+Sx5p2NjY2N/AbgeuswbQ7P1Nk2u4u9jY2Ng3ZG/6MFcdx8l5yfqrYQA2Njb2bdmvl56NgWfrJJ/dxyE2Njb2qexZYygPlc04eYZ8E2zY2NjYR7CTXWmrmbaJ35YreUBiY2NjfwM7OQQzGzO0D71pGyWFTdEtw8bGxr45O9+IWfzMYqk9BlQEMDY2NvbN2ZsyI4mKWanQrlOPh7GxsbGPY7dHZPLwaFNjON+IRwjY2NjY57HbmGmRmw1tA7IdD2NjY2Ofym7x7T1tK2ozkHizJjY2NvZB7E07KYmldtiwCc78x8DGxsY+gz170M2BmwtKiLKYeXPgEhsbG/tQ9uzRZ4dprhrrFi0nbGxs7EPZ+TGaJMA2R3BmDazip8LGxsY+lJ238jdj4LynlW96HXLY2NjYX8DejATy4GmvzSD5zXgAGxsb+7bsvCWUL5e/vyk29pGGjY2NfQY7/6PfjnLzLSva+qOtKXIbGxsb+4bs9uBjy85HC1cdrCwSGxsbG/sI9r7dkz/WZthQ1FJ5dGFjY2Mfwd4cfJkNfa+6v30fGxsb+1T2LAyuKkVmraVNgfTreAAbGxv7tux2SDArJ9r4qQ/cfKIOw8bGxr4Je9ZCqmudeBSRFzybrcfGxsY+iT0Lg/ZwTP71+cbNwrLGY2NjY9+EnYfWJ5pNeVMpj7pou7GxsbGPY+fD3XyE0MZefv8+dLGxsbG/k90GxiycZnGVPPMwwLCxsbEPYifFyVX3t+u0W4yNjY19Hjsf7iYPetmotRxgFAGJjY2NfRC7XXR/aGYfSPsDQ9jY2NhHsP8B51/9YWFr9AkAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
