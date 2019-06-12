@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <link rel="canonical" href="http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/">
+    
+    
+    <title>项目中使用Jmeter进行性能测试 | 新月的博客 | 一名在读硕士的修炼之路，关注Java/Python/数据分析/数据库等 记录学习过程中的点点滴滴...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="JavaWeb,项目记录">
+    <meta name="description" content="在web项目中，需要对网站并发以及页面响应时间等性能进行测试，人为观察肯定不行，这时就需要使用压力测试工具，Jmeter是一款基于Java的压力测试工具，简单强大。下面主要记录自己项目中使用Jmeter进行测试的过程。 1. 安装Jmeter安装Jmeter之前需要先配置好Java环境，Jmeter下载地址：http://jmeter.apache.org/download_jmeter.cgi我">
+<meta name="keywords" content="JavaWeb,项目记录">
+<meta property="og:type" content="article">
+<meta property="og:title" content="项目中使用Jmeter进行性能测试">
+<meta property="og:url" content="http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/index.html">
+<meta property="og:site_name" content="新月的博客">
+<meta property="og:description" content="在web项目中，需要对网站并发以及页面响应时间等性能进行测试，人为观察肯定不行，这时就需要使用压力测试工具，Jmeter是一款基于Java的压力测试工具，简单强大。下面主要记录自己项目中使用Jmeter进行测试的过程。 1. 安装Jmeter安装Jmeter之前需要先配置好Java环境，Jmeter下载地址：http://jmeter.apache.org/download_jmeter.cgi我">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190529101532716.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190529101639629.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190529102459731.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190529103109738.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190529103246650.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190529103651694.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190529103853692.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190529104429529.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190529104740839.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190529105024584.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190529105642590.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190529105858688.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190529110849170.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190529111530849.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190529111708559.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190529111937912.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50">
+<meta property="og:updated_time" content="2019-06-12T10:09:30.286Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="项目中使用Jmeter进行性能测试">
+<meta name="twitter:description" content="在web项目中，需要对网站并发以及页面响应时间等性能进行测试，人为观察肯定不行，这时就需要使用压力测试工具，Jmeter是一款基于Java的压力测试工具，简单强大。下面主要记录自己项目中使用Jmeter进行测试的过程。 1. 安装Jmeter安装Jmeter之前需要先配置好Java环境，Jmeter下载地址：http://jmeter.apache.org/download_jmeter.cgi我">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20190529101532716.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50">
+    
+        <link rel="alternate" type="application/atom+xml" title="新月的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon2.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">litexy</h5>
+          <a href="mailto:xinyue.hfut@qq.com" title="xinyue.hfut@qq.com" class="mail">xinyue.hfut@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/xinyuexy" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                About
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">项目中使用Jmeter进行性能测试</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">项目中使用Jmeter进行性能测试</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-06-12T10:07:12.000Z" itemprop="datePublished" class="page-time">
+  2019-06-12
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JavaWeb/">JavaWeb</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JavaWeb/项目记录/">项目记录</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-安装Jmeter"><span class="post-toc-number">1.</span> <span class="post-toc-text">1. 安装Jmeter</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-创建测试"><span class="post-toc-number">2.</span> <span class="post-toc-text">2. 创建测试</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-测试计划文件"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">(1) 测试计划文件</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-创建线程组"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">(2) 创建线程组</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#3-Http请求设置"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">(3) Http请求设置</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-执行测试计划"><span class="post-toc-number">3.</span> <span class="post-toc-text">3. 执行测试计划</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-查看web报告"><span class="post-toc-number">4.</span> <span class="post-toc-text">4. 查看web报告</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-项目中使用Jmeter进行性能测试"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">项目中使用Jmeter进行性能测试</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-06-12 18:07:12" datetime="2019-06-12T10:07:12.000Z"  itemprop="datePublished">2019-06-12</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JavaWeb/">JavaWeb</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JavaWeb/项目记录/">项目记录</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>在web项目中，需要对网站并发以及页面响应时间等性能进行测试，人为观察肯定不行，这时就需要使用压力测试工具，Jmeter是一款基于Java的压力测试工具，简单强大。下面主要记录自己项目中使用Jmeter进行测试的过程。</p>
+<h3 id="1-安装Jmeter"><a href="#1-安装Jmeter" class="headerlink" title="1. 安装Jmeter"></a>1. 安装Jmeter</h3><p>安装Jmeter之前需要先配置好Java环境，Jmeter下载地址：<a href="http://jmeter.apache.org/download_jmeter.cgi" target="_blank" rel="noopener">http://jmeter.apache.org/download_jmeter.cgi</a><br>我这里选用的是4.0版本，直接下载zip包解压就好，然后运行其bin目录下的jmeter.bat文件：<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20190529101532716.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure><br>运行后界面如下：<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20190529101639629.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure><br>可以通过【Options】-&gt;【Choose Language】变更为简体中文</p>
+<h3 id="2-创建测试"><a href="#2-创建测试" class="headerlink" title="2. 创建测试"></a>2. 创建测试</h3><h4 id="1-测试计划文件"><a href="#1-测试计划文件" class="headerlink" title="(1) 测试计划文件"></a>(1) 测试计划文件</h4><p>jmeter以测试计划为单位，相当于我们的一个工程，可以向其中添加一些测试组件。我们可以对其进行重命名并保存在指定目录，可以看到是一个后缀名为.jmx的文件，这也是后序执行测试需要运行的文件。这里将其保存到myTest目录.<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20190529102459731.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure></p>
+<h4 id="2-创建线程组"><a href="#2-创建线程组" class="headerlink" title="(2) 创建线程组"></a>(2) 创建线程组</h4><p>jmeter以线程组为单位进行测试，如果测试计划为一个项目的话，那么线程组相当于模块，我们可以通过右键测试计划向其中添加多个线程组。<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20190529103109738.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure><br>这里设置线程组的线程数为50，即模拟50个用户并发访问，循环2次。<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20190529103246650.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure></p>
+<h4 id="3-Http请求设置"><a href="#3-Http请求设置" class="headerlink" title="(3) Http请求设置"></a>(3) Http请求设置</h4><p>接下来我们需要向要测试的线程组中添加Http请求的相关信息。<br><strong>1. HTTP请求默认信息</strong><br>首先在右键线程组在配置元件中为其添加HTTP请求默认信息：<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20190529103651694.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure><br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20190529103853692.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure><br>填入我们的服务器名称或项目部署的主机IP地址，端口号Tomcat为8080，后面构造的http请求都会采用此默认值。</p>
+<p><strong>2.构造HTTP请求</strong><br>同样右键线程组在Sampler中添加我们要测试的http请求：<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20190529104429529.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure><br>这里我访问的是项目中的一个servlet接口，前端对应的是一个ajax请求，在Body Data中传入请求参数。</p>
+<p><strong>3.添加HTTP请求</strong><br>同样在线程组上右键【配置元件】–&gt;【HTTP信息头管理器】<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20190529104740839.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure><br>由于需要传输json参数，所以添加<code>Content-Type:application/json</code>请求头。<br><strong>4.添加断言</strong><br>根据响应返回的代码判定请求是否正常，右键线程组【断言】–&gt;【响应断言】<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20190529105024584.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure><br><strong>5.添加监听器</strong><br>右键线程组添加【监听器】–&gt;【察看结果树】<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20190529105642590.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure><br>点击运行可以看到其请求结果。<br>同样也可为其添加Summary Report和聚合报告等监听器来查看结果信息。<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20190529105858688.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure></p>
+<h3 id="3-执行测试计划"><a href="#3-执行测试计划" class="headerlink" title="3. 执行测试计划"></a>3. 执行测试计划</h3><p>创建好测试计划后并保存，然后就可以执行测试计划，执行测试计划最好在命令行窗口下执行，因为GUI窗口可能会占有一定资源，相应执行的命令为：<br><code>jmeter -n -t [jmx file] -l [results file] -e -o [Path to web report folder]</code></p>
+<p><code>jmx file</code>为我们创建的测试文件，<code>results file</code>为测试结果文件路径，<code>Path to web report folder</code>为web报告保存路径。<br>将上述几个文件替换我们的文件路径，执行命令如下：<br><code>jmeter -n -t myTest/myTest.jmx -l myTest/result/result.txt -e -o myTest/webreport</code><br>在jmeter的bin目录中运行上述命令：<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20190529110849170.png" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure><br>最终可以看到相应目录下生成的结果和web报告<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20190529111530849.png" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure></p>
+<h3 id="4-查看web报告"><a href="#4-查看web报告" class="headerlink" title="4. 查看web报告"></a>4. 查看web报告</h3><p>打开webreport下的index.html文件，即可查看web包括，其蕴含了详细的执行结果信息，如平均响应时间，最大最小时间等。<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20190529111708559.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure><br>响应时间的变化曲线：<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20190529111937912.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMxOTAzNzMz,size_10,color_FFFFFF,t_50" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure><br>我们可以根据结果判断页面性能是否满足要求，不满足则进行相应的优化(Tomcat调优)</p>
+<p>参考：</p>
+<ol>
+<li><a href="https://www.cnblogs.com/stulzq/p/8971531.html" target="_blank" rel="noopener">https://www.cnblogs.com/stulzq/p/8971531.html</a></li>
+<li><a href="https://blog.csdn.net/lykio_881210/article/details/81078388" target="_blank" rel="noopener">https://blog.csdn.net/lykio_881210/article/details/81078388</a></li>
+<li><a href="https://blog.csdn.net/huiyunfei/article/details/79165120" target="_blank" rel="noopener">https://blog.csdn.net/huiyunfei/article/details/79165120</a></li>
+</ol>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-06-12T10:09:30.286Z" itemprop="dateUpdated">2019-06-12 18:09:30</time>
+</span><br>
+
+
+        
+        原文链接：<a href="/2019/06/12/项目中使用Jmeter进行性能测试/" target="_blank" rel="external">http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://litexy.com">
+            <img src="/img/avatar.png" alt="litexy">
+            litexy
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaWeb/">JavaWeb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/项目记录/">项目记录</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/&title=《项目中使用Jmeter进行性能测试》 — 新月的博客&pic=http://litexy.com/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/&title=《项目中使用Jmeter进行性能测试》 — 新月的博客&source=web,学习笔记,算法,程序员,Java,Python" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《项目中使用Jmeter进行性能测试》 — 新月的博客&url=http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/&via=http://litexy.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/06/12/Echarts结合百度地图API绘制热力图/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Echarts结合百度地图API绘制热力图</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "7NlxEKd8qTg4UUeULk4ed5lb-gzGzoHsz",
+            appKey: "6OdIgn0fr7ifpSup5Q9qYKT9",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>litexy &copy; 2018 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/&title=《项目中使用Jmeter进行性能测试》 — 新月的博客&pic=http://litexy.com/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/&title=《项目中使用Jmeter进行性能测试》 — 新月的博客&source=web,学习笔记,算法,程序员,Java,Python" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《项目中使用Jmeter进行性能测试》 — 新月的博客&url=http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/&via=http://litexy.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACt0lEQVR42u3awYrjMBAE0Pz/T8/Cnhaycaq6rYSB59NgYstPB3VPSY9HfP38vf79+/rO81Ov7lz/8vl6nLjw8PDwRp9+/brr4ZM71x93PRHJm1+OgoeHh3eMlxeDa3ZeKpKF/tXv8wKDh4eH911eXiQSwGay8PDw8H4Lbx9DDNvi79Y9PDw8vEUYsQkaZrzNs3h4eHjneLMNsO/+fXx/Dw8PD2+0q3694G6W4zbk/RldeHh4eCd4s6NRs2Bi03bnhwnqUwl4eHh4JW+14JZF4q7QtjjChYeHh3eMN2tq89iiLR7Joh/h8fDw8A7w8vY6GWDWEN91aAAPDw/vk7x2gOSlm4MCCakIjvHw8PAO89r7bUTblp92iv/zSzw8PLwDvHuHabfW7to2i74QDw8Pb83bx6ntFLShQztB0XErPDw8vAVvs1gXcUAcgsxIw+qEh4eHt+C1m1XJx82W+CS8qP9LwMPDw7uVlx9XShbuzefOStSb0fHw8PAO8DaFIW+O7zpY0ILx8PDwzvE2gPa4QP5UfvwrinHx8PDwbuK1g7VhRBtPJGWpKGB4eHh4x3hJ25o0xEk4e9cRhLri4eHh4d3Eax+7N1BoR2yjEzw8PLzP8PYb9nkTvF+923fi4eHh7Xn557bNcX5QYFZaouYbDw8P7zAvP9iUF4miix9FIW8mFw8PD+8Ar22L2ylojxTMIokigMDDw8Nb89oWdtOCt+WkzlGepw8PDw/v47zNJlayiO/f8KYFx8PDwzvAaxfcJK7dt8V5BLwPPvDw8PBmvFkc0C7T7SGA2YjDSAIPDw9vxMsX/XxqZtS2OX4zcXh4eHhf5bUxRLv05+HCkcKAh4eHd5iXt9TtxlVbMN4ExHh4eHjHeO1H5wt3e9TgrlAYDw8P7xxvtgG2jxja7f/6o/Hw8PDu5/0BpbBzqJUGIMoAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
