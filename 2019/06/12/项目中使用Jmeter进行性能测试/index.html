@@ -31,27 +31,27 @@
 <meta property="og:site_name" content="新月的博客">
 <meta property="og:description" content="在web项目中，需要对网站并发以及页面响应时间等性能进行测试，人为观察肯定不行，这时就需要使用压力测试工具，Jmeter是一款基于Java的压力测试工具，简单强大。下面主要记录自己项目中使用Jmeter进行测试的过程。 1. 安装Jmeter安装Jmeter之前需要先配置好Java环境，Jmeter下载地址：http://jmeter.apache.org/download_jmeter.cgi我">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hdyo3wtj30nw0d7teh.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hevm8vsj30nx0dd3zj.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hfnahnlj30nx0f1q4t.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hg5mn1ij30o20cnn0i.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hgotr1lj30nu0d5taj.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hh7cdgaj30nr0ebn1n.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hhphjczj30nv08ddgp.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hi8u33xj30nx09wgn1.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hismicwj30nu06y755.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hjaq4i2j30nx0a5abi.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hk79cmqj30nt0cpmzw.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hkp3ucoj30nv04zwfl.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hl8k1o3j30nq044myi.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hlo358kj30nu06smyh.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hm37e9qj30nu0b875n.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hmjn95mj30ns0avjse.jpg">
-<meta property="og:updated_time" content="2019-06-20T04:05:44.892Z">
+<meta property="og:image" content="http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/01.png">
+<meta property="og:image" content="http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/02.png">
+<meta property="og:image" content="http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/03.png">
+<meta property="og:image" content="http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/04.png">
+<meta property="og:image" content="http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/05.png">
+<meta property="og:image" content="http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/06.png">
+<meta property="og:image" content="http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/07.png">
+<meta property="og:image" content="http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/08.png">
+<meta property="og:image" content="http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/09.png">
+<meta property="og:image" content="http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/10.png">
+<meta property="og:image" content="http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/11.png">
+<meta property="og:image" content="http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/12.png">
+<meta property="og:image" content="http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/13.png">
+<meta property="og:image" content="http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/14.png">
+<meta property="og:image" content="http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/15.png">
+<meta property="og:image" content="http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/16.png">
+<meta property="og:updated_time" content="2019-06-27T15:37:58.119Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="项目中使用Jmeter进行性能测试">
 <meta name="twitter:description" content="在web项目中，需要对网站并发以及页面响应时间等性能进行测试，人为观察肯定不行，这时就需要使用压力测试工具，Jmeter是一款基于Java的压力测试工具，简单强大。下面主要记录自己项目中使用Jmeter进行测试的过程。 1. 安装Jmeter安装Jmeter之前需要先配置好Java环境，Jmeter下载地址：http://jmeter.apache.org/download_jmeter.cgi我">
-<meta name="twitter:image" content="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hdyo3wtj30nw0d7teh.jpg">
+<meta name="twitter:image" content="http://litexy.com/2019/06/12/项目中使用Jmeter进行性能测试/01.png">
     
         <link rel="alternate" type="application/atom+xml" title="新月的博客" href="/atom.xml">
     
@@ -209,15 +209,15 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <p>在web项目中，需要对网站并发以及页面响应时间等性能进行测试，人为观察肯定不行，这时就需要使用压力测试工具，Jmeter是一款基于Java的压力测试工具，简单强大。下面主要记录自己项目中使用Jmeter进行测试的过程。</p>
-<h3 id="1-安装Jmeter"><a href="#1-安装Jmeter" class="headerlink" title="1. 安装Jmeter"></a>1. 安装Jmeter</h3><p>安装Jmeter之前需要先配置好Java环境，Jmeter下载地址：<a href="http://jmeter.apache.org/download_jmeter.cgi" target="_blank" rel="noopener">http://jmeter.apache.org/download_jmeter.cgi</a><br>我这里选用的是4.0版本，直接下载zip包解压就好，然后运行其bin目录下的jmeter.bat文件：<br><img src="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hdyo3wtj30nw0d7teh.jpg" style="zoom:80%"><br>运行后界面如下：<br><img src="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hevm8vsj30nx0dd3zj.jpg" style="zoom:80%"><br>可以通过【Options】-&gt;【Choose Language】变更为简体中文</p>
-<h3 id="2-创建测试"><a href="#2-创建测试" class="headerlink" title="2. 创建测试"></a>2. 创建测试</h3><h4 id="1-测试计划文件"><a href="#1-测试计划文件" class="headerlink" title="(1) 测试计划文件"></a>(1) 测试计划文件</h4><p>jmeter以测试计划为单位，相当于我们的一个工程，可以向其中添加一些测试组件。我们可以对其进行重命名并保存在指定目录，可以看到是一个后缀名为.jmx的文件，这也是后序执行测试需要运行的文件。这里将其保存到myTest目录.<br><img src="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hfnahnlj30nx0f1q4t.jpg" style="zoom:80%"></p>
-<h4 id="2-创建线程组"><a href="#2-创建线程组" class="headerlink" title="(2) 创建线程组"></a>(2) 创建线程组</h4><p>jmeter以线程组为单位进行测试，如果测试计划为一个项目的话，那么线程组相当于模块，我们可以通过右键测试计划向其中添加多个线程组。<br><img src="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hg5mn1ij30o20cnn0i.jpg" style="zoom:80%"><br>这里设置线程组的线程数为50，即模拟50个用户并发访问，循环2次。<br><img src="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hgotr1lj30nu0d5taj.jpg" style="zoom:80%"></p>
-<h4 id="3-Http请求设置"><a href="#3-Http请求设置" class="headerlink" title="(3) Http请求设置"></a>(3) Http请求设置</h4><p>接下来我们需要向要测试的线程组中添加Http请求的相关信息。<br><strong>1. HTTP请求默认信息</strong><br>首先在右键线程组在配置元件中为其添加HTTP请求默认信息：<br><img src="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hh7cdgaj30nr0ebn1n.jpg" style="zoom:80%"><br><img src="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hhphjczj30nv08ddgp.jpg" style="zoom:80%"><br>填入我们的服务器名称或项目部署的主机IP地址，端口号Tomcat为8080，后面构造的http请求都会采用此默认值。</p>
-<p><strong>2.构造HTTP请求</strong><br>同样右键线程组在Sampler中添加我们要测试的http请求：<br><img src="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hi8u33xj30nx09wgn1.jpg" style="zoom:80%"><br>这里我访问的是项目中的一个servlet接口，前端对应的是一个ajax请求，在Body Data中传入请求参数。</p>
-<p><strong>3.添加HTTP请求</strong><br>同样在线程组上右键【配置元件】–&gt;【HTTP信息头管理器】<br><img src="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hismicwj30nu06y755.jpg" style="zoom:80%"><br>由于需要传输json参数，所以添加<code>Content-Type:application/json</code>请求头。<br><strong>4.添加断言</strong><br>根据响应返回的代码判定请求是否正常，右键线程组【断言】–&gt;【响应断言】<br><img src="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hjaq4i2j30nx0a5abi.jpg" style="zoom:80%"><br><strong>5.添加监听器</strong><br>右键线程组添加【监听器】–&gt;【察看结果树】<br><img src="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hk79cmqj30nt0cpmzw.jpg" style="zoom:80%"><br>点击运行可以看到其请求结果。<br>同样也可为其添加Summary Report和聚合报告等监听器来查看结果信息。<br><img src="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hkp3ucoj30nv04zwfl.jpg" style="zoom:80%"></p>
+<h3 id="1-安装Jmeter"><a href="#1-安装Jmeter" class="headerlink" title="1. 安装Jmeter"></a>1. 安装Jmeter</h3><p>安装Jmeter之前需要先配置好Java环境，Jmeter下载地址：<a href="http://jmeter.apache.org/download_jmeter.cgi" target="_blank" rel="noopener">http://jmeter.apache.org/download_jmeter.cgi</a><br>我这里选用的是4.0版本，直接下载zip包解压就好，然后运行其bin目录下的jmeter.bat文件：<br><img src="01.png" style="zoom:80%"><br>运行后界面如下：<br><img src="02.png" style="zoom:80%"><br>可以通过【Options】-&gt;【Choose Language】变更为简体中文</p>
+<h3 id="2-创建测试"><a href="#2-创建测试" class="headerlink" title="2. 创建测试"></a>2. 创建测试</h3><h4 id="1-测试计划文件"><a href="#1-测试计划文件" class="headerlink" title="(1) 测试计划文件"></a>(1) 测试计划文件</h4><p>jmeter以测试计划为单位，相当于我们的一个工程，可以向其中添加一些测试组件。我们可以对其进行重命名并保存在指定目录，可以看到是一个后缀名为.jmx的文件，这也是后序执行测试需要运行的文件。这里将其保存到myTest目录.<br><img src="03.png" style="zoom:80%"></p>
+<h4 id="2-创建线程组"><a href="#2-创建线程组" class="headerlink" title="(2) 创建线程组"></a>(2) 创建线程组</h4><p>jmeter以线程组为单位进行测试，如果测试计划为一个项目的话，那么线程组相当于模块，我们可以通过右键测试计划向其中添加多个线程组。<br><img src="04.png" style="zoom:80%"><br>这里设置线程组的线程数为50，即模拟50个用户并发访问，循环2次。<br><img src="05.png" style="zoom:80%"></p>
+<h4 id="3-Http请求设置"><a href="#3-Http请求设置" class="headerlink" title="(3) Http请求设置"></a>(3) Http请求设置</h4><p>接下来我们需要向要测试的线程组中添加Http请求的相关信息。<br><strong>1. HTTP请求默认信息</strong><br>首先在右键线程组在配置元件中为其添加HTTP请求默认信息：<br><img src="06.png" style="zoom:80%"><br><img src="07.png" style="zoom:80%"><br>填入我们的服务器名称或项目部署的主机IP地址，端口号Tomcat为8080，后面构造的http请求都会采用此默认值。</p>
+<p><strong>2.构造HTTP请求</strong><br>同样右键线程组在Sampler中添加我们要测试的http请求：<br><img src="08.png" style="zoom:80%"><br>这里我访问的是项目中的一个servlet接口，前端对应的是一个ajax请求，在Body Data中传入请求参数。</p>
+<p><strong>3.添加HTTP请求</strong><br>同样在线程组上右键【配置元件】–&gt;【HTTP信息头管理器】<br><img src="09.png" style="zoom:80%"><br>由于需要传输json参数，所以添加<code>Content-Type:application/json</code>请求头。<br><strong>4.添加断言</strong><br>根据响应返回的代码判定请求是否正常，右键线程组【断言】–&gt;【响应断言】<br><img src="10.png" style="zoom:80%"><br><strong>5.添加监听器</strong><br>右键线程组添加【监听器】–&gt;【察看结果树】<br><img src="11.png" style="zoom:80%"><br>点击运行可以看到其请求结果。<br>同样也可为其添加Summary Report和聚合报告等监听器来查看结果信息。<br><img src="12.png" style="zoom:80%"></p>
 <h3 id="3-执行测试计划"><a href="#3-执行测试计划" class="headerlink" title="3. 执行测试计划"></a>3. 执行测试计划</h3><p>创建好测试计划后并保存，然后就可以执行测试计划，执行测试计划最好在命令行窗口下执行，因为GUI窗口可能会占有一定资源，相应执行的命令为：<br><code>jmeter -n -t [jmx file] -l [results file] -e -o [Path to web report folder]</code></p>
-<p><code>jmx file</code>为我们创建的测试文件，<code>results file</code>为测试结果文件路径，<code>Path to web report folder</code>为web报告保存路径。<br>将上述几个文件替换我们的文件路径，执行命令如下：<br><code>jmeter -n -t myTest/myTest.jmx -l myTest/result/result.txt -e -o myTest/webreport</code><br>在jmeter的bin目录中运行上述命令：<br><img src="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hl8k1o3j30nq044myi.jpg" style="zoom:80%"><br>最终可以看到相应目录下生成的结果和web报告<br><img src="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hlo358kj30nu06smyh.jpg" style="zoom:80%"></p>
-<h3 id="4-查看web报告"><a href="#4-查看web报告" class="headerlink" title="4. 查看web报告"></a>4. 查看web报告</h3><p>打开webreport下的index.html文件，即可查看web包括，其蕴含了详细的执行结果信息，如平均响应时间，最大最小时间等。<br><img src="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hm37e9qj30nu0b875n.jpg" style="zoom:80%"><br>响应时间的变化曲线：<br><img src="http://ww1.sinaimg.cn/mw690/006SQxbply1g47hmjn95mj30ns0avjse.jpg" style="zoom:80%"><br>我们可以根据结果判断页面性能是否满足要求，不满足则进行相应的优化(Tomcat调优)</p>
+<p><code>jmx file</code>为我们创建的测试文件，<code>results file</code>为测试结果文件路径，<code>Path to web report folder</code>为web报告保存路径。<br>将上述几个文件替换我们的文件路径，执行命令如下：<br><code>jmeter -n -t myTest/myTest.jmx -l myTest/result/result.txt -e -o myTest/webreport</code><br>在jmeter的bin目录中运行上述命令：<br><img src="13.png" style="zoom:80%"><br>最终可以看到相应目录下生成的结果和web报告<br><img src="14.png" style="zoom:80%"></p>
+<h3 id="4-查看web报告"><a href="#4-查看web报告" class="headerlink" title="4. 查看web报告"></a>4. 查看web报告</h3><p>打开webreport下的index.html文件，即可查看web包括，其蕴含了详细的执行结果信息，如平均响应时间，最大最小时间等。<br><img src="15.png" style="zoom:80%"><br>响应时间的变化曲线：<br><img src="16.png" style="zoom:80%"><br>我们可以根据结果判断页面性能是否满足要求，不满足则进行相应的优化(Tomcat调优)</p>
 <p>参考：</p>
 <ol>
 <li><a href="https://www.cnblogs.com/stulzq/p/8971531.html" target="_blank" rel="noopener">https://www.cnblogs.com/stulzq/p/8971531.html</a></li>
@@ -232,7 +232,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-06-20T04:05:44.892Z" itemprop="dateUpdated">2019-06-20 12:05:44</time>
+    最后更新时间：<time datetime="2019-06-27T15:37:58.119Z" itemprop="dateUpdated">2019-06-27 23:37:58</time>
 </span><br>
 
 
