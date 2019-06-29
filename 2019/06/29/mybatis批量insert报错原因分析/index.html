@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <link rel="canonical" href="http://litexy.com/2019/06/29/mybatis批量insert报错原因分析/">
+    
+    
+    <title>mybatis批量insert报错原因分析 | 新月的博客 | 发现问题，解决问题，不逃避问题本身</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="JavaWeb,MyBatis">
+    <meta name="description" content="最近在项目中需要使用mybatis的批量插入功能，但是不知道为什么出现奇怪的错误，调试了很久，最终解决。我的最初的mybatis批量插入语句如下：123456&amp;lt;insert id=&quot;insertDfldBatch&quot; useGeneratedKeys=&quot;true&quot; keyProperty=&quot;id&quot;&amp;gt;  	    insert into dfld_new4 (way,sjdwz,ejdwz">
+<meta name="keywords" content="JavaWeb,MyBatis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mybatis批量insert报错原因分析">
+<meta property="og:url" content="http://litexy.com/2019/06/29/mybatis批量insert报错原因分析/index.html">
+<meta property="og:site_name" content="新月的博客">
+<meta property="og:description" content="最近在项目中需要使用mybatis的批量插入功能，但是不知道为什么出现奇怪的错误，调试了很久，最终解决。我的最初的mybatis批量插入语句如下：123456&amp;lt;insert id=&quot;insertDfldBatch&quot; useGeneratedKeys=&quot;true&quot; keyProperty=&quot;id&quot;&amp;gt;  	    insert into dfld_new4 (way,sjdwz,ejdwz">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://litexy.com/2019/06/29/mybatis批量insert报错原因分析/01.jpg">
+<meta property="og:updated_time" content="2019-06-29T07:51:57.687Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mybatis批量insert报错原因分析">
+<meta name="twitter:description" content="最近在项目中需要使用mybatis的批量插入功能，但是不知道为什么出现奇怪的错误，调试了很久，最终解决。我的最初的mybatis批量插入语句如下：123456&amp;lt;insert id=&quot;insertDfldBatch&quot; useGeneratedKeys=&quot;true&quot; keyProperty=&quot;id&quot;&amp;gt;  	    insert into dfld_new4 (way,sjdwz,ejdwz">
+<meta name="twitter:image" content="http://litexy.com/2019/06/29/mybatis批量insert报错原因分析/01.jpg">
+    
+        <link rel="alternate" type="application/atom+xml" title="新月的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon2.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">litexy</h5>
+          <a href="mailto:xinyue.hfut@qq.com" title="xinyue.hfut@qq.com" class="mail">xinyue.hfut@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/xinyuexy" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                About
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">mybatis批量insert报错原因分析</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">mybatis批量insert报错原因分析</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-06-29T07:45:12.000Z" itemprop="datePublished" class="page-time">
+  2019-06-29
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/项目记录/">项目记录</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+
+<article id="post-mybatis批量insert报错原因分析"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">mybatis批量insert报错原因分析</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-06-29 15:45:12" datetime="2019-06-29T07:45:12.000Z"  itemprop="datePublished">2019-06-29</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/项目记录/">项目记录</a></li></ul>
+
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>最近在项目中需要使用mybatis的批量插入功能，但是不知道为什么出现奇怪的错误，调试了很久，最终解决。<br>我的最初的mybatis批量插入语句如下：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">"insertDfldBatch"</span> <span class="attr">useGeneratedKeys</span>=<span class="string">"true"</span> <span class="attr">keyProperty</span>=<span class="string">"id"</span>&gt;</span></span><br><span class="line">  	    insert into dfld_new4 (way,sjdwz,ejdwz,stime,etime,sgcount,sgrate,distance,interval) values</span><br><span class="line"> 		<span class="tag">&lt;<span class="name">foreach</span> <span class="attr">item</span>=<span class="string">"item"</span> <span class="attr">collection</span>=<span class="string">"list"</span> <span class="attr">separator</span>=<span class="string">","</span>&gt;</span></span><br><span class="line">   		(#&#123;item.way&#125;, #&#123;item.sjdwz&#125;, #&#123;item.ejdwz&#125;, #&#123;item.stime&#125;, #&#123;item.etime&#125;, #&#123;item.sgcount&#125;, #&#123;item.sgrate&#125;,#&#123;item.distance&#125;,#&#123;item.interval&#125;)</span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">foreach</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">insert</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>Java中的调用如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">List&lt;SegProne&gt; data = <span class="keyword">new</span> ArrayList&lt;&gt;();	<span class="comment">//保存多发路段</span></span><br><span class="line">...</span><br><span class="line">ScanDao sd = <span class="keyword">new</span> ScanDao();</span><br><span class="line">sd.saveDfldBatch(data);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//批量存储多发路段</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">saveDfldBatch</span><span class="params">(List&lt;SegProne&gt; data, String lm)</span> </span>&#123;</span><br><span class="line">	SqlSession session = MyBatisUtil.getSqlSession();</span><br><span class="line">	ScanMapper sm = session.getMapper(ScanMapper.class);</span><br><span class="line">	<span class="keyword">if</span>(data.size() &gt; <span class="number">0</span>) &#123;	<span class="comment">//有的道路没有多发路段</span></span><br><span class="line">		sm.insertDfldBatch(data);</span><br><span class="line">	&#125;</span><br><span class="line">	session.commit();</span><br><span class="line">	session.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码中<code>data</code>为需要存储的数据，由多个<code>SegProne</code>实体对象组成，通过调用<code>saveDfldBatch</code>方法保存。但是保存时出现如下错误：</p>
+<p><img src="01.jpg" style="zoom:80%"></p>
+<p>网上搜索了一堆，最开始以为时插入的sql语句过长，于是删掉了<code>interval</code>，莫名奇妙居然好了，后来才发现原来<code>interval</code>是mysql中的<strong>关键字</strong>，sql语句中包含其关键字会报上述错误，好吧，居然是这个问题，当时完全没有考虑到。</p>
+<p>当时还遇到的一个错误是mybatis一次性批量插入几万条记录可能会报错，因为mysql对语句的长度有限制，默认是 4M。遇到这种情况可以分批次进行插入，即将数据分成几个小批次，然后对每个小批次批量insert。<br>这里参考网上的封装一个对<code>List</code>数据分批的工具类：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.vcc.utils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListGrouper</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 将集合按指定数量分组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> list 数据集合</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> quantity 分组数量</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 分组结果</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; List&lt;List&lt;T&gt;&gt; groupListByQuantity(List&lt;T&gt; list, <span class="keyword">int</span> quantity) &#123;</span><br><span class="line">        <span class="keyword">if</span> (list == <span class="keyword">null</span> || list.size() == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (quantity &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Wrong quantity."</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        List&lt;List&lt;T&gt;&gt; wrapList = <span class="keyword">new</span> ArrayList&lt;List&lt;T&gt;&gt;();</span><br><span class="line">        <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (count &lt; list.size()) &#123;</span><br><span class="line">            wrapList.add(<span class="keyword">new</span> ArrayList&lt;T&gt;(list.subList(count, (count + quantity) &gt; list.size() ? list.size() : count + quantity)));</span><br><span class="line">            count += quantity;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> wrapList;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">1011</span>; i++) &#123;</span><br><span class="line">            list.add(i);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; resultList = ListGrouper.groupListByQuantity(list, <span class="number">50</span>);</span><br><span class="line">        <span class="keyword">for</span> (List&lt;Integer&gt; l : resultList) &#123;</span><br><span class="line">            System.out.println(l);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(resultList.size());</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用上述工具类对带插入数据分批处理，相应代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">List&lt;SegProne&gt; data = <span class="keyword">new</span> ArrayList&lt;&gt;();	<span class="comment">//保存多发路段</span></span><br><span class="line">...</span><br><span class="line">ScanDao sd = <span class="keyword">new</span> ScanDao();</span><br><span class="line"><span class="comment">//分批处理(mybatis批量插入长度有限制)</span></span><br><span class="line">List&lt;List&lt;SegProne&gt;&gt; resultList = ListGrouper.groupListByQuantity(data, <span class="number">1000</span>);</span><br><span class="line">System.out.println(<span class="string">"分批: "</span> + resultList.size());</span><br><span class="line"><span class="keyword">for</span>(List&lt;SegProne&gt; li: resultList) &#123;</span><br><span class="line">	sd.saveDfldBatch(li);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上述以1000条记录为一个批次进行插入。</p>
+<p>参考:<br>（1）<a href="https://my.oschina.net/zjllovecode/blog/1818716" target="_blank" rel="noopener">https://my.oschina.net/zjllovecode/blog/1818716</a><br>（2）<a href="https://blog.csdn.net/hdg745979749/article/details/77921085" target="_blank" rel="noopener">https://blog.csdn.net/hdg745979749/article/details/77921085</a></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-06-29T07:51:57.687Z" itemprop="dateUpdated">2019-06-29 15:51:57</time>
+</span><br>
+
+
+        
+        原文链接：<a href="/2019/06/29/mybatis批量insert报错原因分析/" target="_blank" rel="external">http://litexy.com/2019/06/29/mybatis批量insert报错原因分析/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://litexy.com">
+            <img src="/img/avatar.png" alt="litexy">
+            litexy
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaWeb/">JavaWeb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MyBatis/">MyBatis</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2019/06/29/mybatis批量insert报错原因分析/&title=《mybatis批量insert报错原因分析》 — 新月的博客&pic=http://litexy.com/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2019/06/29/mybatis批量insert报错原因分析/&title=《mybatis批量insert报错原因分析》 — 新月的博客&source=web,学习笔记,算法,程序员,Java,Python" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://litexy.com/2019/06/29/mybatis批量insert报错原因分析/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《mybatis批量insert报错原因分析》 — 新月的博客&url=http://litexy.com/2019/06/29/mybatis批量insert报错原因分析/&via=http://litexy.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://litexy.com/2019/06/29/mybatis批量insert报错原因分析/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/06/12/项目中使用Jmeter进行性能测试/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">项目中使用Jmeter进行性能测试</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>litexy &copy; 2018 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://litexy.com/2019/06/29/mybatis批量insert报错原因分析/&title=《mybatis批量insert报错原因分析》 — 新月的博客&pic=http://litexy.com/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://litexy.com/2019/06/29/mybatis批量insert报错原因分析/&title=《mybatis批量insert报错原因分析》 — 新月的博客&source=web,学习笔记,算法,程序员,Java,Python" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://litexy.com/2019/06/29/mybatis批量insert报错原因分析/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《mybatis批量insert报错原因分析》 — 新月的博客&url=http://litexy.com/2019/06/29/mybatis批量insert报错原因分析/&via=http://litexy.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://litexy.com/2019/06/29/mybatis批量insert报错原因分析/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACsUlEQVR42u3aQVLDMAwF0Nz/0nAASPq/bEMWz6tMaRs/dSYWkq4rXl836+d77j6Vv+f57teJhYeHh7dp6z+31W4l+bZnwF1okrvg4eHhnebdbfT5OnklCUdyACTfiYeHh/dmXpIuryfcs3fi4eHhvY3XlifyTeckPDw8vDfwkvLB7BHfXudp+uZaCx4eHl7My7tI77k+0t/Dw8PDW+6qt4dE3jzLH+hfCwsPDw/vBC9/4M4GrVbKr3lj7MM+8fDw8Lby2lJseyS0JY+kwFEUnfHw8PD+iZeny7OgtNfFgYGHh4d3jJd/uE2s2yGDtnRblCHw8PDwtvJWmkw5Y1YszgMaVVDw8PDwlnn5jWfp9Sxw7RHy4UfCw8PDO8bL2115I6oNyvp76q3g4eHhlbznPydfUccyHiCYjQv8MjqAh4eHt5XXPtbbkax2DGtDAp2k73h4eHhbeW16PWv2twHN2Xh4eHineStbqUeg4kLtLLhRMQIPDw/vGG92+/bh3oY4OX6imTI8PDy8Tby2zJqXIYoNLQfutkqNh4eHt4mXp87rBdz1NlhybODh4eGd5rW3z1/ZlhbH67YYgYeHh3eAt6FvFlCTNTt+8PDw8P6St57arheCV8IRNeHw8PDwDvBa5EpJYrbFNpXHw8PDO83Lk+Z84Cl/ZO8tAV+z3wcPDw9vxFt5QO/ddJ6IJ40xPDw8vHO8tmzaps4rYwFLBxseHh7eVt7mUukoNHlbKzk2boeu8PDw8DbxZg/95JU2+Z4dKteuhYeHh7dc58xT4ecbt0WKPKDJuBgeHh7eaV5bw8hvMAvWysmGh4eH9zbe8xEyC0HR0GqLFHh4eHgv4M0GAmYDBMNxATw8PLw/4bVNr+R4aAuvK4XgD5MReHh4eFt57b/3eXF2VzvtOr3w8PDw0vUNsMR9gnl2mu8AAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
