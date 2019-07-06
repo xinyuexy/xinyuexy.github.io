@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://litexy.com/"/>
-  <updated>2019-06-29T07:51:57.687Z</updated>
+  <updated>2019-07-06T14:57:40.187Z</updated>
   <id>http://litexy.com/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Java对象创建的过程</title>
+    <link href="http://litexy.com/2019/07/06/Java%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E7%9A%84%E8%BF%87%E7%A8%8B/"/>
+    <id>http://litexy.com/2019/07/06/Java对象创建的过程/</id>
+    <published>2019-07-06T14:57:12.000Z</published>
+    <updated>2019-07-06T14:57:40.187Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="1-执行类加载过程"><a href="#1-执行类加载过程" class="headerlink" title="1. 执行类加载过程"></a>1. 执行类加载过程</h4><p>虚拟机遇到一条new指令时，首先检查该对象对应的类是否已被加载、解析和初始化过，如果没有，则先执行相应的类加载过程。</p><h4 id="2-为对象分配内存"><a href="#2-为对象分配内存" class="headerlink" title="2. 为对象分配内存"></a>2. 为对象分配内存</h4><p>类加载检查通过后，虚拟机就会为新生对象分配内存（对象所需的内存大小在类加载完成后便可完全确定），为对象分配内存的任务相当于从Java堆中划分出一块确定大小的内存，根据Java堆中内存是否是规整的（是否规整由采用的垃圾收集器是否带有压缩整理的功能决定），有两种内存分配方式：</p><ul><li><strong>1）指针碰撞方式</strong>：所有用过的内存放在一边，空闲的放在另一边，中间有一个指针作为分界点，分配内存就是将指针移动一段与对象内存大小相等的距离。</li><li><strong>2）空闲列表方式</strong>：由于已使用的内存和空闲内存是交错分配的，所以需要知道内存可分配，为此，虚拟机维护一个空闲列表，用来记录哪些内存块是可用的，在分配的时候，直接从列表中找到一个足够大的空间划分给对象，然后更新列表记录。</li></ul><p>还需要考虑并发情况下内存分配时线程安全问题，可能正在给对象A分配内存，指针还没来得及修改，对象B又同时使用了原来的指针来分配内存。JVM采用给每个线程在堆中首先分配一块线程私有的分配缓冲TLAB，哪个线程需要分配内存，就在哪个线程的TLAB上分配。</p><h4 id="3-内存空间初始化"><a href="#3-内存空间初始化" class="headerlink" title="3. 内存空间初始化"></a>3. 内存空间初始化</h4><p>内存分配后，JVM将分配到的内存空间都初始化为零值（不包括对象头），所以我们在定义Java类的实例字段中可以不赋初值就直接使用，程序能访问到这些数据类型对应的零值。</p><h4 id="4-设置对象头"><a href="#4-设置对象头" class="headerlink" title="4. 设置对象头"></a>4. 设置对象头</h4><p>设置对象运行时所需要的必要信息，如对象是哪个类的实例，对象的哈希码、GC分代年龄等。</p><p>对象在内存中的布局分为三部分：</p><ul><li><strong>对象头</strong>：包括两部分信息，第一部分存储对象自身运行时数据，如哈希码、GC分代年龄、线程持有的锁等，称为“Mark Word”。在32位和64位虚拟机下的长度分别为32bit和64bit。另一部分是类型指针，用来指向所属类，虚拟机通过这个指针来确定这个对象是哪个类的实例；如果是对象是一个数组的话，还有一块用于记录数组长度的数据。</li></ul><figure class="image-bubble">                <div class="img-lightbox">                    <div class="overlay"></div>                    <img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly93czEuc2luYWltZy5jbi9tdzY5MC8wMDZTUXhicGx5MWc0bm1jdTRpOGVqMzA5ZDA0ejc0by5qcGc" alt="在这里插入图片描述" title="">                </div>                <div class="image-caption">在这里插入图片描述</div>            </figure><figure class="image-bubble">                <div class="img-lightbox">                    <div class="overlay"></div>                    <img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly93czEuc2luYWltZy5jbi9tdzY5MC8wMDZTUXhicGx5MWc0bm1rdmsyOWxqMzBpdzAydnQ5aS5qcGc" alt="在这里插入图片描述" title="">                </div>                <div class="image-caption">在这里插入图片描述</div>            </figure><ul><li><strong>实例数据</strong>：是对象真正存储的有效信息，也是我们在程序中所定义的各种类型的字段内容。这部分的存储顺序会受到虚拟机分配策略参数（FieldsAllocationStyle）和字段在 Java 源码中定义顺序的影响。</li><li><strong>对齐填充</strong>：因为HotSpot VM 的自动内存管理系统要求对象起始地址必须是 8 字节的整数倍，也就是对象的大小必须是8字节的整数倍，对象头的大小已经是8字节的整数倍，因此，当实例数据没有对齐时，会通过对齐填充来使整个对象大小为8字节的整数倍。</li></ul><p>参考：<a href="https://www.cnblogs.com/zhengbin/p/6490953.html" target="_blank" rel="noopener">https://www.cnblogs.com/zhengbin/p/6490953.html</a></p><h4 id="5-实例对象初始化"><a href="#5-实例对象初始化" class="headerlink" title="5. 实例对象初始化"></a>5. 实例对象初始化</h4><p>上面的工作完成后，从虚拟机的角度看，一个对象已经产生了，但从Java程序的角度，对象的创建才刚刚开始，我们在对象中定义的成员变量都还没初始化，还是零值。对于实例对象执行new指令后还会接着执行<code>&lt;init&gt;</code>方法，初始化其中的实例变量以及构造块等。</p><p>这里注意<code>&lt;init&gt;</code>和<code>&lt;clinit&gt;</code>方法的区别：<br><br>这两个方法都是Java虚拟机生成的，Java在编译之后会在字节码文件中生成<code>&lt;init&gt;</code>和<code>&lt;clinit&gt;</code>。都是用来放置初始化相关的代码的。</p><ul><li><code>&lt;init&gt;</code>方法：称之为实例构造器，Java编译后会将初始化块、变量初始化、调用父类的构造函数和自身的构造函数等操作都统一放到该方法中去执行。操作顺序为：<br></li></ul><ol><li>父类变量初始化 2. 父类初始化块 3. 父类构造函数 4. 子类变量初始化 5. 子类初始化块 6. 子类构造函数</li></ol><ul><li><code>&lt;clinit&gt;</code>方法：称之为类构造器，将静态初始化块、静态变量初始化等都统一收敛到该方法中，收敛顺序为：<br></li></ul><ol><li>父类静态变量初始化 2. 父类静态初始化块 3. 子类静态变量初始化 4. 子类静态初始化块</li></ol><p>代码例子：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">X</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">static</span> Log log = LogFactory.getLog(); <span class="comment">// &lt;clinit&gt;</span></span><br><span class="line"></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">int</span> x = <span class="number">1</span>;   <span class="comment">// &lt;init&gt;</span></span><br><span class="line"></span><br><span class="line">   X()&#123;</span><br><span class="line">      <span class="comment">// &lt;init&gt;</span></span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">static</span> &#123;</span><br><span class="line">      <span class="comment">// &lt;clinit&gt;</span></span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p><code>&lt;clinit&gt;</code>方法是在类加载的时候执行的，而<code>&lt;init&gt;</code>是在对象实例化时执行的(即执行new指令的时候)，所以<code>&lt;clinit&gt;</code>会比<code>&lt;init&gt;</code>先执行。所以最终整个初始化的顺序为:</p><ol><li>父类静态变量初始化</li><li>父类静态初始化块</li><li>子类静态变量初始化</li><li>子类静态初始化块</li><li>父类变量初始化</li><li>父类初始化块</li><li>父类构造函数</li><li>子类变量初始化</li><li>子类初始化块</li><li>子类构造函数</li></ol><p>参考：</p><ol><li>《深入理解Java虚拟机》</li><li><a href="https://stackoverflow.com/questions/8517121/java-what-is-the-difference-between-init-and-clinit" target="_blank" rel="noopener">https://stackoverflow.com/questions/8517121/java-what-is-the-difference-between-init-and-clinit</a></li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;1-执行类加载过程&quot;&gt;&lt;a href=&quot;#1-执行类加载过程&quot; class=&quot;headerlink&quot; title=&quot;1. 执行类加载过程&quot;&gt;&lt;/a&gt;1. 执行类加载过程&lt;/h4&gt;&lt;p&gt;虚拟机遇到一条new指令时，首先检查该对象对应的类是否已被加载、解析和初始化过，
+      
+    
+    </summary>
+    
+      <category term="Java" scheme="http://litexy.com/categories/Java/"/>
+    
+    
+      <category term="Java" scheme="http://litexy.com/tags/Java/"/>
+    
+      <category term="JVM" scheme="http://litexy.com/tags/JVM/"/>
+    
+  </entry>
   
   <entry>
     <title>mybatis批量insert报错原因分析</title>
@@ -174,9 +201,9 @@
     
     </summary>
     
-      <category term="MySQL" scheme="http://litexy.com/categories/MySQL/"/>
-    
       <category term="项目记录" scheme="http://litexy.com/categories/%E9%A1%B9%E7%9B%AE%E8%AE%B0%E5%BD%95/"/>
+    
+      <category term="MySQL" scheme="http://litexy.com/categories/MySQL/"/>
     
     
       <category term="MySQL" scheme="http://litexy.com/tags/MySQL/"/>
@@ -208,9 +235,9 @@
       <category term="Python" scheme="http://litexy.com/categories/Python/"/>
     
     
-      <category term="MySQL" scheme="http://litexy.com/tags/MySQL/"/>
-    
       <category term="Python" scheme="http://litexy.com/tags/Python/"/>
+    
+      <category term="MySQL" scheme="http://litexy.com/tags/MySQL/"/>
     
       <category term="flask" scheme="http://litexy.com/tags/flask/"/>
     
@@ -239,9 +266,9 @@
       <category term="Python" scheme="http://litexy.com/categories/Python/"/>
     
     
-      <category term="MySQL" scheme="http://litexy.com/tags/MySQL/"/>
-    
       <category term="Python" scheme="http://litexy.com/tags/Python/"/>
+    
+      <category term="MySQL" scheme="http://litexy.com/tags/MySQL/"/>
     
       <category term="flask" scheme="http://litexy.com/tags/flask/"/>
     
@@ -431,9 +458,9 @@
       <category term="Java" scheme="http://litexy.com/categories/Java/"/>
     
     
-      <category term="Java" scheme="http://litexy.com/tags/Java/"/>
-    
       <category term="Java基础" scheme="http://litexy.com/tags/Java%E5%9F%BA%E7%A1%80/"/>
+    
+      <category term="Java" scheme="http://litexy.com/tags/Java/"/>
     
       <category term="Java编程思想" scheme="http://litexy.com/tags/Java%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/"/>
     
