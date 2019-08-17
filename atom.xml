@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://litexy.com/"/>
-  <updated>2019-07-06T14:57:40.187Z</updated>
+  <updated>2019-08-17T13:19:36.099Z</updated>
   <id>http://litexy.com/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Java中的fail-fast机制</title>
+    <link href="http://litexy.com/2019/08/17/Java%E4%B8%AD%E7%9A%84fail-fast%E6%9C%BA%E5%88%B6/"/>
+    <id>http://litexy.com/2019/08/17/Java中的fail-fast机制/</id>
+    <published>2019-08-17T13:17:53.000Z</published>
+    <updated>2019-08-17T13:19:36.099Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="什么是fail-fast机制"><a href="#什么是fail-fast机制" class="headerlink" title="什么是fail-fast机制"></a>什么是fail-fast机制</h3><p>fail-fast是一种错误检测机制，一般意义上的fail-fast是当我们的代码可能出现异常情况时，会立即抛出异常并中断执行，而不是继续执行。相反就是fail-safe机制。</p><p>在java中的fail-fast机制通常是指在集合中使用迭代器遍历时，当多个线程对同一集合进行操作时，就可能会产生fail-fast。比如当一个线程A通过迭代器正在遍历集合时，另一个线程又对该集合中的内容进行了修改，那么线程A在访问集合时，就会抛出<code>ConcurrentModificationException</code>异常，产生fail-fast机制。而采用fail-safe机制的集合在遍历时任何对集合内容的修改都会先复制一份原来，在复制的集合上进行修改，不影响原来的，所以不会抛出<code>ConcurrentModificationException</code></p><p>在java中，线程不安全的集合类的迭代器实现一般都是fail-fast的，如HashMap，ArrayList等，而线程安全的集合是fail-safe的，如CopyOnWriteArrayList，ConcurrentHashMap</p><h3 id="fail-fast实现机制"><a href="#fail-fast实现机制" class="headerlink" title="fail-fast实现机制"></a>fail-fast实现机制</h3><p>在java中，fail-fast是如何实现的呢？比如在ArrayList等集合中，都会维护一个<code>modCount</code>变量，当对集合进行增删等操作时，就会将<code>modCount</code>值加1。在迭代器中，会有一个<code>expectedModCount</code>，初始化设为<code>modCount</code>的值，在使用迭代器调用next，remove等方法时，会先调用函数<code>checkForComodification()</code>检查这两个值是否相等，不相等就抛出<code>ConcurrentModificationException</code>异常。</p><p>后续当一个线程在使用迭代器进行遍历时，另一个线程如果对集合做了修改，则会使modCount的值和expectedModCount的值不相等，则会抛出<code>ConcurrentModificationException</code>异常，导致fail-fast.</p><p>源码如下：</p><p><img src="https://ws1.sinaimg.cn/mw690/006SQxbply1g4te1v3d6pj30an07d75c.jpg"></p><p><img src="https://ws1.sinaimg.cn/mw690/006SQxbply1g4te2e2ohuj30br02eq37.jpg"></p><h3 id="CopyOnWriteArrayList解决fail-fast"><a href="#CopyOnWriteArrayList解决fail-fast" class="headerlink" title="CopyOnWriteArrayList解决fail-fast"></a>CopyOnWriteArrayList解决fail-fast</h3><p>CopyOnWriteArrayList是juc包下的一个线程安全的集合，在需要同步的ArrayList时，可采用CopyOnWriteArrayList来替换Vector。使用CopyOnWriteArrayList集合进行遍历时不会产生fail-fast，即其是fail-safe的，其基本思想是每次对集合进行修改时都会拷贝一份原数组的副本，在拷贝的数组上进行修改，然后将原数组的指针指向拷贝后的。所以在当一个线程A对集合遍历时，另一个线程修改了集合，但线程A不会看到修改后的内容，迭代器遍历时是在原数组上遍历，所以不会发生fail-fast。</p><p>对比ArrayList和CopyOnWriteArrayList的源码：</p><p><img src="https://ws1.sinaimg.cn/mw690/006SQxbply1g4tf700ltrj30bc02aaa8.jpg"></p><p><img src="https://ws1.sinaimg.cn/mw690/006SQxbply1g4tf8rajmsj30cu05yjs7.jpg"></p><p><img src="https://ws1.sinaimg.cn/mw690/006SQxbply1g4tfaftx58j30b205q74z.jpg"></p><p><img src="https://ws1.sinaimg.cn/mw690/006SQxbply1g4tfbcyt4nj30bj06lwfl.jpg"></p><p>可以看到CopyOnWriteArrayList中进行增删等修改操作时，都是先复制一份原来的数组，然后对复制的数组修改后再将原数组的指针指向复制的数组<code>setArray</code></p><p>查看CopyOnWriteArrayList迭代器源码：</p><p><img src="https://ws1.sinaimg.cn/mw690/006SQxbply1g4tffv44cdj30co0ay0uj.jpg"></p><p><img src="https://ws1.sinaimg.cn/mw690/006SQxbply1g4tfgwupu5j309501l0sq.jpg"></p><h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>Copy-On-Write是一种延时懒惰策略的思想，是写时复制的容器。CopyOnWriteArrayList中add/remove等写方法是需要加锁的，目的是为了避免Copy出N个副本出来，导致并发写。但是，CopyOnWriteArrayList中的读方法是没有加锁的。所以可以进行并发读，但是读到的数据可能不是最新的。所以CopyOnWrite容器是一种读写分离的思想，读和写不同的容器。而Vector在读写的时候使用同一个容器，读写互斥，同时只能做一件事儿。</p><h3 id="subList中的fail-fast"><a href="#subList中的fail-fast" class="headerlink" title="subList中的fail-fast"></a>subList中的fail-fast</h3><h4 id="什么是subList"><a href="#什么是subList" class="headerlink" title="什么是subList"></a>什么是subList</h4><p><code>subList</code>是ArrayList中的一个方法，用来返回子列表，返回的子列表其实是原列表的视图。使用方式如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; master = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">master.add(<span class="number">1</span>);</span><br><span class="line">master.add(<span class="number">2</span>);</span><br><span class="line"><span class="comment">//子列表</span></span><br><span class="line">List&lt;Integer&gt; sub = master.subList(<span class="number">0</span>, master.size());</span><br><span class="line"><span class="comment">//复制列表</span></span><br><span class="line">List&lt;Integer&gt; copy = <span class="keyword">new</span> ArrayList&lt;&gt;(master);</span><br><span class="line"></span><br><span class="line"><span class="comment">//修改子列表</span></span><br><span class="line">sub.add(<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">"master == sub: "</span> + master.equals(sub));</span><br><span class="line">System.out.println(<span class="string">"master == copy: "</span> + master.equals(copy));</span><br></pre></td></tr></table></figure></p><p>输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">master == sub: true</span><br><span class="line">master == copy: false</span><br></pre></td></tr></table></figure></p><p>说明subList方法返回的是原来列表的一个视图，对子列表的修改其实是在原列表上进行修改。而通过构造函数复制的列表则是新建了一个列表对象。</p><p>查看源码，看subList如何创建的：</p><p><img src="http://ww1.sinaimg.cn/mw690/006SQxbpgy1g62yk83b8sj30er03a74r.jpg"></p><p><code>this</code>直接把原列表引用传递进去了。<code>subList</code>为<code>ArrayList</code>的一个内部类。</p><p><img src="http://ww1.sinaimg.cn/mw690/006SQxbpgy1g62ymoszskj30i608emyt.jpg"></p><p><code>parent</code>即为传递进来的<code>this</code>，同时记录偏移量，计算size，以及将原列表的<code>modCount</code>复制过来。</p><p>我们再来看下<code>subList</code>的add，get等方法。</p><p><img src="http://ww1.sinaimg.cn/mw690/006SQxbpgy1g62yqbm52jj30do04v0ta.jpg"></p><p><img src="http://ww1.sinaimg.cn/mw690/006SQxbpgy1g62yqqxdm5j30e603aglz.jpg"></p><p>可以看到都是在原列表上进行修改的（只不过加了offset偏移量表示子列表的开始处）。注意上述为什么是<code>ArrayList.this</code>而不是this，因为是在<code>subList</code>内部类中访问外部类<code>ArrayList</code>的成员变量。</p><p>综上，所以对子列表的修改也会导致原列表发生变化。</p><h4 id="为什么会发生fail-fast"><a href="#为什么会发生fail-fast" class="headerlink" title="为什么会发生fail-fast"></a>为什么会发生fail-fast</h4><p>如果我们对原列表进行修改后，然后再访问子列表，则访问子列表的代码就会发生<code>ConcurrentModificationException</code>异常。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; master = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">master.add(<span class="number">1</span>);</span><br><span class="line">master.add(<span class="number">2</span>);</span><br><span class="line"><span class="comment">//子列表</span></span><br><span class="line">List&lt;Integer&gt; sub = master.subList(<span class="number">0</span>, master.size());</span><br><span class="line"></span><br><span class="line"><span class="comment">//修改原列表</span></span><br><span class="line">master.add(<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">"master size: "</span> + master.size());</span><br><span class="line">System.out.println(<span class="string">"sub size: "</span> + sub.size());</span><br></pre></td></tr></table></figure></p><p>输出：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">master size: <span class="number">3</span></span><br><span class="line">Exception in thread <span class="string">"main"</span> java.util.ConcurrentModificationException</span><br><span class="line">at java.util.ArrayList$SubList.checkForComodification(ArrayList.java:<span class="number">1231</span>)</span><br><span class="line">at java.util.ArrayList$SubList.size(ArrayList.java:<span class="number">1040</span>)</span><br><span class="line">at com.xinyue.App.main(App.java:<span class="number">24</span>)</span><br></pre></td></tr></table></figure></p><p>对原列表修改后，访问子列表时抛出了<code>ConcurrentModificationException</code>异常，即发生了fail-fast机制。<strong>为什么会这样呢</strong>？</p><p>我们调用了子列表的size方法：</p><p><img src="http://ww1.sinaimg.cn/mw690/006SQxbpgy1g62z71qeeoj30de02uaa4.jpg"></p><p>不管是size方法，还是之前的get，add等方法，都会调用<code>checkForComodification</code>函数检查是否修改。</p><p><img src="http://ww1.sinaimg.cn/mw690/006SQxbpgy1g62z88y1c6j30e202mmxi.jpg"></p><p>所以很明显了，我们对子列表的修改其实是对原列表的修改，所以会导致原列表的<code>modCount</code>发生变化，而子列表的<code>modCount</code>是在一开始创建的时候就已经复制过来的，这时与原列表的不相等了，所以抛出异常，也就是我们所说的fail-fast检测。</p><blockquote><p>参考：</p><ol><li><a href="https://www.cnblogs.com/skywang12345/p/3308762.html" target="_blank" rel="noopener">https://www.cnblogs.com/skywang12345/p/3308762.html</a></li><li><a href="https://juejin.im/post/5cb683d6518825186d65402c" target="_blank" rel="noopener">https://juejin.im/post/5cb683d6518825186d65402c</a></li><li><a href="https://www.cnblogs.com/chenssy/p/3893976.html" target="_blank" rel="noopener">https://www.cnblogs.com/chenssy/p/3893976.html</a></li></ol></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h3 id=&quot;什么是fail-fast机制&quot;&gt;&lt;a href=&quot;#什么是fail-fast机制&quot; class=&quot;headerlink&quot; title=&quot;什么是fail-fast机制&quot;&gt;&lt;/a&gt;什么是fail-fast机制&lt;/h3&gt;&lt;p&gt;fail-fast是一种错误检测机制，一般意
+      
+    
+    </summary>
+    
+      <category term="Java" scheme="http://litexy.com/categories/Java/"/>
+    
+    
+      <category term="Java" scheme="http://litexy.com/tags/Java/"/>
+    
+      <category term="JDK源码" scheme="http://litexy.com/tags/JDK%E6%BA%90%E7%A0%81/"/>
+    
+  </entry>
   
   <entry>
     <title>Java对象创建的过程</title>
@@ -237,9 +264,9 @@
     
       <category term="Python" scheme="http://litexy.com/tags/Python/"/>
     
-      <category term="MySQL" scheme="http://litexy.com/tags/MySQL/"/>
-    
       <category term="flask" scheme="http://litexy.com/tags/flask/"/>
+    
+      <category term="MySQL" scheme="http://litexy.com/tags/MySQL/"/>
     
   </entry>
   
@@ -268,9 +295,9 @@
     
       <category term="Python" scheme="http://litexy.com/tags/Python/"/>
     
-      <category term="MySQL" scheme="http://litexy.com/tags/MySQL/"/>
-    
       <category term="flask" scheme="http://litexy.com/tags/flask/"/>
+    
+      <category term="MySQL" scheme="http://litexy.com/tags/MySQL/"/>
     
   </entry>
   
@@ -458,9 +485,9 @@
       <category term="Java" scheme="http://litexy.com/categories/Java/"/>
     
     
-      <category term="Java基础" scheme="http://litexy.com/tags/Java%E5%9F%BA%E7%A1%80/"/>
-    
       <category term="Java" scheme="http://litexy.com/tags/Java/"/>
+    
+      <category term="Java基础" scheme="http://litexy.com/tags/Java%E5%9F%BA%E7%A1%80/"/>
     
       <category term="Java编程思想" scheme="http://litexy.com/tags/Java%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/"/>
     
